@@ -1,0 +1,18 @@
+version: "2"
+services:
+  mongo:
+    container_name: urrsk_mongo
+    build:
+      context: ./.mongo
+    ports:
+      - "27017:27017"
+
+  adminMongo:
+    container_name: urrsk_adminMongo
+    image: adicom/admin-mongo
+    depends_on:
+      - mongo
+    ports:
+      - "1234:1234"
+    volumes:
+      - ./.adminMongo/config:/app/config

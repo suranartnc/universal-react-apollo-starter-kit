@@ -1,0 +1,8 @@
+{
+  "connections": {
+    "urrsk": {
+      "connection_string": "mongodb://mongo",
+      "connection_options": {}
+    }
+  }
+}
