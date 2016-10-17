@@ -1,0 +1,23 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "ecmaFeatures": {
+    "jsx": true,
+    "es6": true,
+    "classes": true
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+  },
+  "rules": {
+    "semi": ["error", "never"],
+    "react/jsx-filename-extension": ["error", {"extensions": [".js"]}],
+    "react/no-unused-prop-types": [0],
+    "import/extensions": [0],
+    "import/no-unresolved": [0], // Until import plugin supports webpack 2 "resolveModules"
+    "import/no-extraneous-dependencies": [0],
+    "linebreak-style": [0],
+    "import/prefer-default-export": ["warn"],
+  },
+}

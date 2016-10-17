@@ -1,0 +1,48 @@
+@import "shared";
+
+.container {
+  width: 100%;
+
+  @include min-screen( getDeviceWidth('mobile', 'xlg') + 1 ) {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  @include min-screen( getDeviceWidth('desktop','xs') ) {
+    width: auto;
+    margin: 0 20px;
+  }
+
+  @include min-screen( getDeviceWidth('desktop','md') ) {
+    margin: 0 20px;
+    width: auto;
+  }
+
+  @include min-screen( 1800px ) {
+    width: 80%;
+    margin: 0 auto;
+  }
+
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+
+  @include min-screen( getDeviceWidth('desktop','xs') ) {
+    padding: 10px 0;
+  }
+
+}
+
+.item {
+  margin: 10px 0;
+
+  @include min-screen( getDeviceWidth('desktop','md') ) {
+    margin: 10px 0;
+  }
+
+  @include min-screen( getDeviceWidth('desktop','xlg') ) {
+    margin: 20px 0;
+  }
+}

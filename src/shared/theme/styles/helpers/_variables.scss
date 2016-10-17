@@ -1,0 +1,111 @@
+// # Sass Variables
+$enable-grid-classes:				true !default;
+$enable-responsive-classes:			true !default;
+$enable-margin-padding-classes:		true !default;
+$enable-flex:						true !default;
+
+// max-width of wrapper
+$wrapper-max-width: 960px;
+
+// Grid columns
+$total-columns: 12;
+
+// Gutter
+$gutter-default: 20px;
+$gutter-small:  $gutter-default;
+$gutter-medium: $gutter-default;
+$gutter-large:  $gutter-default;
+
+// Breakpoints
+$bp-xs: 480px;
+$bp-sm: 640px;
+$bp-md: 768px;
+$bp-lg: 960px;
+$bp-xl: 1280px;
+$bp-xxl: 1440px;
+$bp-xxxl: 1680px;
+$bp-xxxxl: 1800px;
+
+/* Device with information by http://screensiz.es/ */
+$device-width : (
+  'mobile': (
+    'xs'  : 320px,
+    'sm'  : 360px,
+    'md'  : 375px,
+    'lg'  : 384px,
+    'xlg' : 414px
+  ),
+  'tablet': (
+    'xs'  : 533px,
+    'sm'  : 600px,
+    'md'  : 768px,
+    'lg'  : 800px,
+    'xlg' : 1024px
+  ),
+  'desktop': (
+    'xs'  : 1280px,
+    'sm'  : 1366px,
+    'md'  : 1440px,
+    'lg'  : 1600px,
+    'xlg' : 1920px
+  )
+);
+
+$grid-breakpoints: (
+  xs: $bp-xs,
+  sm: $bp-sm,
+  md: $bp-md,
+  lg: $bp-lg,
+  xl: $bp-xl
+) !default;
+
+// COLOR
+$brand-primary : #c2a661 !default;
+$gray          : #999999 !default;
+$gray-lighter  : lighten($gray, 29.5%) !default;
+$gray-light    : lighten($gray, 20%) !default;
+$gray-dark     : darken($gray, 20%) !default;
+$gray-darker   : darken($gray, 30%) !default;
+
+
+//** Background color for `<body>`.
+$body-bg:               #fafafa !default;
+
+$wrapper-bg-color:		#fff !default;
+
+//** Global text color on `<body>`.
+$text-color:            $gray-dark !default;
+
+//** Global textual link color.
+$link-color:            $brand-primary !default;
+//** Link hover color set via `darken()` function.
+$link-hover-color:      darken($link-color, 15%) !default;
+
+$border-color : #e6e6e6 !default;
+
+//== Typography
+//
+//## Font, line-height, and color for body text, headings, and more.
+$font-family-base:        tahoma, Helvetica !default;
+
+// Pixel value used to responsively scale all typography. Applied to the `<html>` element.
+$font-size-root: 14px !default;
+
+$font-size-base: 1rem !default;
+$font-size-lg:   1.25rem !default;
+$font-size-sm:   .875rem !default;
+$font-size-xs:   .75rem !default;
+
+$line-height-base: 1.5 !default;
+
+$dt-font-weight: bold !default;
+
+$abbr-border-color: $gray-light !default;
+
+// FORM
+$cursor-disabled:                not-allowed !default;
+
+$z-layers: (
+	'default': 1,
+	'header-fixed': 1000
+);

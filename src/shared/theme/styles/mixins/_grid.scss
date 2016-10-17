@@ -1,0 +1,93 @@
+/// Grid system
+//
+// Generate semantic grid columns with these mixins.
+
+@mixin make-container($gutter: $gutter-default) {
+	max-width: $wrapper-max-width;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left:  ($gutter / 2);
+  padding-right: ($gutter / 2);
+
+  @if not $enable-flex {
+    @include clearfix();
+  }
+
+}
+
+@mixin make-row($gutter: $gutter-default) {
+  @if $enable-flex {
+    display: flex;
+    flex-wrap: wrap;
+  } @else {
+    @include clearfix();
+  }
+  margin-left:  ($gutter / -2);
+  margin-right: ($gutter / -2);
+}
+
+@mixin grid-column($gutter: $gutter-default) {
+    position: relative;
+    // Prevent columns from collapsing when empty
+    min-height: 1px;
+    // Inner gutter via padding
+    padding-right: ($gutter / 2);
+    padding-left: ($gutter / 2);
+		width: 100%;
+
+    @if not($enable-flex) {
+      float: left;
+    }
+}
+
+@mixin make-col($size, $columns: $total-columns) {
+  @if $enable-flex {
+    flex: 0 0 percentage($size / $columns);
+    // Add a `max-width` to ensure content within each column does not blow out
+    // the width of the column. Applies to IE10+ and Firefox. Chrome and Safari
+    // do not appear to require this.
+    max-width: percentage($size / $columns);
+  } @else {
+    width: percentage($size / $columns);
+  }
+}
+
+@mixin spanGrid($bp-name) {
+  // Provide basic `.{bp}` classes for equal-width flexbox columns
+  @if $enable-flex {
+    .#{$bp-name} {
+      position: relative;
+      flex-basis: 0;
+      flex-grow: 1;
+      max-width: 100%;
+      min-height: 1px;
+      padding-right: ($gutter-default / 2);
+      padding-left:  ($gutter-default / 2);
+    }
+  }
+  @for $i from 1 through $total-columns {
+    .#{$bp-name}-#{$i} {
+     @include make-col($i, $total-columns);
+    }
+  }
+}
+
+@mixin orderingGrid($type, $bp-name) {
+  @if ($type == 'push') {
+    @for $i from 1 through $total-columns {
+      .#{$bp-name}-push-#{$i} {
+        left: percentage($i / $total-columns);
+      }
+    }
+  }
+  @if ($type == 'pull') {
+    @for $i from 1 through $total-columns {
+      .#{$bp-name}-pull-#{$i} {
+        right: percentage($i / $total-columns);
+      }
+    }
+  }
+}
+
+
+

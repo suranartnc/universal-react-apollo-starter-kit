@@ -1,0 +1,130 @@
+.icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'tripbyme' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-picture:before {
+  content: "\e914";
+}
+.icon-reward-ribbon:before {
+  content: "\e916";
+}
+.icon-bell:before {
+  content: "\e900";
+}
+.icon-bookmark:before {
+  content: "\e901";
+}
+.icon-bottle:before {
+  content: "\e902";
+}
+.icon-check-circle:before {
+  content: "\e903";
+}
+.icon-circle-dot:before {
+  content: "\e904";
+}
+.icon-clock:before {
+  content: "\e905";
+}
+.icon-collection:before {
+  content: "\e906";
+}
+.icon-comment:before {
+  content: "\e907";
+}
+.icon-compass:before {
+  content: "\e908";
+}
+.icon-cup:before {
+  content: "\e909";
+}
+.icon-curve-list:before {
+  content: "\e90a";
+}
+.icon-facebook:before {
+  content: "\e90b";
+}
+.icon-google-plus:before {
+  content: "\e90c";
+}
+.icon-heart:before {
+  content: "\e90d";
+}
+.icon-home:before {
+  content: "\e90e";
+}
+.icon-ig:before {
+  content: "\e90f";
+}
+.icon-location:before {
+  content: "\e910";
+}
+.icon-mail:before {
+  content: "\e911";
+}
+.icon-map:before {
+  content: "\e912";
+}
+.icon-people:before {
+  content: "\e913";
+}
+.icon-plus-circle:before {
+  content: "\e915";
+}
+.icon-sad:before {
+  content: "\e917";
+}
+.icon-search:before {
+  content: "\e918";
+}
+.icon-setting:before {
+  content: "\e919";
+}
+.icon-share:before {
+  content: "\e91a";
+}
+.icon-smile:before {
+  content: "\e91b";
+}
+.icon-spoon:before {
+  content: "\e91c";
+}
+.icon-star:before {
+  content: "\e91d";
+}
+.icon-trash:before {
+  content: "\e91e";
+}
+.icon-twitter:before {
+  content: "\e91f";
+}
+.icon-user:before {
+  content: "\e920";
+}
+.icon-user-list:before {
+  content: "\e921";
+}
+.icon-user-plus:before {
+  content: "\e922";
+}
+.icon-wine-glass:before {
+  content: "\e923";
+}
+.icon-write:before {
+  content: "\e924";
+}
+.icon-youtube:before {
+  content: "\e925";
+}
+

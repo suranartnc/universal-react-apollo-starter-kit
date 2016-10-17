@@ -1,0 +1,80 @@
+@import "shared";
+
+.container {
+  width: 100%;
+
+  img {
+    max-width: 100%;
+  }
+}
+
+.item {
+  position: relative;
+}
+
+.detail {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 15px 30px;
+  width: 100%;
+  background: linear-gradient(to bottom,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.1) 16%,rgba(0,0,0,0.34) 56%,rgba(0,0,0,0.34) 100%);
+
+  @include min-screen( getDeviceWidth('desktop','xs') ) {
+    padding: 10px 20px;
+  }
+
+  @include min-screen( 1800px ) {
+    padding: 15px 30px;
+  }
+
+}
+
+.title {
+  @include main-font();
+  @include font-size(32);
+  line-height: 1.2;
+  margin-bottom: 3px;
+  color: #fff;
+  position: relative;
+  display: inline-block;
+
+
+  @include min-screen( getDeviceWidth('desktop','xs') ) {
+    @include font-size(36);
+    line-height: 1.4;
+    margin-bottom: 3px;
+  }
+
+  @include min-screen( 1800px ) {
+    @include font-size(48);
+    line-height: 1.2;
+    margin-bottom: 3px;
+  }
+
+  &:before {
+    content: '';
+    display: block;
+    height: 3px;
+    background: $brand-primary;
+    width: 60%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+.desc {
+  @include main-font(300);
+  @include font-size(20);
+  color: #fff;
+
+  @include min-screen( getDeviceWidth('desktop','xs') ) {
+    @include font-size(22);
+  }
+
+  @include min-screen( 1800px ) {
+    @include font-size(24);
+  }
+
+}

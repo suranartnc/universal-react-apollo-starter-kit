@@ -1,0 +1,45 @@
+// # Typography rules
+@include font-face('DB Heavent', 'DBHeavent-Light', '../fonts/DBHeavent/', 300);
+@include font-face('DB Heavent', 'DBHeavent-LightIt', '../fonts/DBHeavent/', 300, italic);
+
+@include font-face('DB Heavent', 'DBHeavent', '../fonts/DBHeavent/', 400);
+@include font-face('DB Heavent', 'DBHeavent-Italic', '../fonts/DBHeavent/', 400, italic);
+
+@include font-face('DB Heavent', 'DBHeavent-Med', '../fonts/DBHeavent/', 500);
+@include font-face('DB Heavent', 'DBHeavent-MedIt', '../fonts/DBHeavent/', 500, italic);
+
+@include font-face('DB Heavent', 'DBHeavent-Bold', '../fonts/DBHeavent/', 700);
+@include font-face('DB Heavent', 'DBHeavent-BoldIt', '../fonts/DBHeavent/', 700, italic);
+
+@include font-face('MN Paethai', 'MNPaethai', '../fonts/DBPaethai/', 400);
+@include font-face('MN Paethai', 'MNPaethai-Italic', '../fonts/DBPaethai/', 400, italic);
+
+@include font-face('MN Paethai', 'MNPaethai-DemiBold', '../fonts/DBPaethai/', 700);
+@include font-face('MN Paethai', 'MNPaethai-DemiBoldItalic', '../fonts/DBPaethai/', 700, italic);
+
+@font-face {
+  font-family: 'tripbyme';
+  src:
+    url('../fonts/icon/tripbyme.ttf') format('truetype'),
+    url('../fonts/icon/tripbyme.woff') format('woff'),
+    url('../fonts/icon/tripbyme.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+// reset type
+h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+	font-size: $font-size-base;
+	font-family: $font-family-base;
+	font-weight: 400;
+}
+p, ol, ul {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	vertical-align: baseline;
+}
+ol, ul {
+	list-style: none;
+}

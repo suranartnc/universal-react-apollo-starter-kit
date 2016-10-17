@@ -1,0 +1,138 @@
+// # Sass Mixins
+
+@mixin font-size ($sizeValue, $unit: 'rem') {
+    @if $unit == 'rem' {
+        @if not($enable-flex) {
+            font-size: $sizeValue + px;
+        }
+        font-size: ($sizeValue / strip-units($font-size-root))+rem;
+    } @else {
+        font-size: $sizeValue + em;
+    }
+}
+
+@mixin font-face($fontName, $fileName, $path, $weight:normal, $style:normal) {
+    @font-face {
+        font-family: $fontName;
+        src: url($path+$fileName+'.woff2') format('woff2'),
+            url($path+$fileName+'.woff') format('woff'),
+            url($path+$fileName+'.ttf') format('truetype');
+        font-weight: $weight;
+        font-style: $style;
+    }
+}
+
+// ===========================================================================================
+//   @ min-screen(width)                      // shortcut for @media screen and (min-width ...)
+//   @ max-screen(width)                      // shortcut for @media screen and (max-width ...)
+@mixin max-screen($res) {
+    @media screen and (max-width: $res)
+    {
+        @content;
+    }
+}
+
+@mixin min-screen($res){
+    @media screen and (min-width: $res)
+    {
+        @content;
+    }
+}
+
+// WebKit-style focus
+
+@mixin tab-focus() {
+  // WebKit-specific. Other browsers will keep their default outline style.
+  // (Initially tried to also force default via `outline: initial`,
+  // but that seems to erroneously remove the outline in Firefox altogether.)
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+
+// Utilities
+// -------------------------
+
+// Clearfix
+@mixin clearfix() {
+    &:before,
+    &:after {
+        content: " "; // 1
+        display: table; // 2
+    }
+    &:after {
+        clear: both;
+    }
+}
+
+// Image Replacement
+@mixin imageReplacement() {
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+@mixin visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px; height: 1px;
+}
+
+
+// strip-units
+@function strip-units($number) {
+  @return $number / ($number * 0 + 1);
+}
+
+
+// mixin for center position
+@mixin centre($axis: "both", $width:"", $height:""){
+    position:absolute;
+
+    @if $axis == "y"{
+        top:50%;
+        height: $height;
+        margin-top: - $height / 2;
+    }
+    @if $axis == "x"{
+        left:50%;
+        width: $width;
+        margin-left: - $width / 2;
+    }
+    @if $axis == "both"{
+        left: 50%;
+        top: 50%;
+        height: $height;
+        width: $width;
+        margin-left: - $width / 2;
+        margin-top: - $height / 2;
+    }
+}
+
+@mixin visuallyhidden { border: 0; clip: rect(0 0 0 0); overflow: hidden; padding: 0; position: absolute; width: 1px; height: 1px; }
+
+// Maintain Aspect Ratio Mixin
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+  }
+  > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+@import "mixins/grid";
+@import "mixins/create-column-class";
+@import "mixins/text-truncate";
+@import "helpers/utilities";

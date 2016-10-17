@@ -1,0 +1,233 @@
+@import "shared";
+
+.article {
+  width: 100%;
+  box-shadow: 0 0 30px rgba(0,0,0, 0.1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+
+  @include max-screen( getDeviceWidth('desktop', 'xs') ) {
+    padding-top: 75px;
+  }
+
+  @include min-screen( getDeviceWidth('desktop', 'xs') + 1 ) {
+    flex-direction: row;
+  }
+
+}
+
+.image {
+
+  .ratio-placeholder {
+    position: relative;
+    background: #fff;
+    background: #fcfcfc;
+    display: block;
+    width: 100%;
+    padding-top: percentage(4/6);
+
+    :global(.icon) {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      font-size: 64px;
+      color: #eee;
+      margin-top: -32px;
+      margin-left: -32px;
+    }
+  }
+  .media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  img {
+    max-width: 100%;
+  }
+
+  @include min-screen( getDeviceWidth('desktop','xs') + 1) {
+    flex: 0 0 350px;
+  }
+
+  @include min-screen( getDeviceWidth('desktop','md') ) {
+    flex: 0 0 380px;
+  }
+
+  @include min-screen( getDeviceWidth('desktop','lg') ) {
+    flex: 0 0 470px;
+  }
+
+}
+
+.user-info {
+  display: flex;
+  flex: 0 0 100%;
+  align-items: center;
+  padding: 5px 0 10px;
+
+  @include max-screen( getDeviceWidth('desktop', 'xs') ) {
+    position: absolute;
+    top: 0;
+    left: 15px;
+    right: 15px;
+  }
+  @include min-screen( getDeviceWidth('desktop', 'xs') + 1) {
+    border-bottom: 1px solid $border-color;
+    height: 50px;
+    margin-bottom: 10px;
+  }
+
+  @include min-screen( getDeviceWidth('desktop', 'md')) {
+    height: 60px;
+  }
+
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+
+  @include min-screen( getDeviceWidth('mobile','xlg') + 1 ) {
+    padding: 10px 20px 15px;
+  }
+
+  @include max-screen( getDeviceWidth('desktop', 'xs') ) {
+    padding: 15px 20px;
+  }
+
+  @include max-screen( getDeviceWidth('mobile','xlg') ) {
+    padding: 10px 15px 0;
+  }
+
+}
+
+.title {
+  @include main-font();
+  @include font-size(26);
+  line-height: .9;
+  max-height: 74px;
+  overflow: hidden;
+  flex: 0 0 100%;
+  @include max-screen( getDeviceWidth('mobile','xlg') ) {
+    margin: 5px 0 10px;
+  }
+
+  @include min-screen( getDeviceWidth('desktop','xs') ) {
+    @include font-size(32);
+    margin-bottom: 10px;
+    max-height: 57px;
+  }
+
+  @include min-screen( getDeviceWidth('desktop','md') ) {
+    margin-bottom: 5px;
+  }
+
+  @include min-screen( getDeviceWidth('desktop','lg') ) {
+    @include font-size(42);
+    max-height: 74px;
+  }
+
+  &, & a {
+    color: #303036;
+  }
+  a:hover {
+    color: $brand-primary;
+  }
+
+}
+
+.desc {
+  @include second-font();
+  @include font-size(24);
+  line-height: .95;
+  color: #64646a;
+  max-height: 50px;
+  overflow: hidden;
+  flex: 0 0 100%;
+  @include max-screen( getDeviceWidth('mobile','xlg') ) {
+    display: none;
+  }
+
+  @include max-screen( getDeviceWidth('desktop', 'xs') ) {
+    margin-bottom: 10px;
+  }
+
+  @include min-screen( getDeviceWidth('desktop','xs') ) {
+    @include font-size(24);
+    display: block;
+  }
+
+  @include min-screen( getDeviceWidth('desktop','lg') ) {
+    @include font-size(27);
+  }
+
+}
+
+.action {
+  display: flex;
+  align-self: flex-end;
+  flex: 0 0 100%;
+  @include max-screen( getDeviceWidth('mobile','xlg') ) {
+    margin: 0 -15px;
+    justify-content: space-around;
+    border-top: 1px solid #efefef;
+  }
+
+}
+
+.action-item {
+
+  @include min-screen( getDeviceWidth('mobile','xlg') + 1) {
+    margin-right: 15px;
+  }
+
+  @include min-screen( getDeviceWidth('desktop','xs') + 1) {
+    margin-right: 8px;
+  }
+
+  @include min-screen( getDeviceWidth('desktop','sm')) {
+    margin-right: 15px;
+  }
+
+}
+
+.action-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #b7bbbc;
+  outline: none;
+  @include font-size(18);
+  @include main-font();
+  padding: 5px 0;
+
+  :global(.icon) {
+    position: relative;
+    top: 3px;
+    margin-right: 5px;
+  }
+
+  @include min-screen( getDeviceWidth('desktop', 'xs')) {
+    &:hover {
+      color: $brand-primary;
+    }
+  }
+
+  @include min-screen( getDeviceWidth('mobile','lg') + 1) {
+    :global(.icon) {
+      margin-right: 10px;
+    }
+  }
+
+  @include min-screen( getDeviceWidth('desktop','sm') ) {
+    @include font-size(20);
+  }
+  @include min-screen( getDeviceWidth('desktop','lg') ) {
+    @include font-size(22);
+  }
+
+}

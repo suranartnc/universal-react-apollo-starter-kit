@@ -1,0 +1,19 @@
+@mixin main-font($weight: false, $style: false) {
+  font-family: 'DB Heavent';
+  @if $weight {
+    font-weight: $weight;
+  }
+  @if $style {
+    font-style: $style;
+  }
+}
+
+@mixin second-font($weight: false, $style: false) {
+  font-family: 'MN Paethai';
+  @if $weight {
+    font-weight: $weight;
+  }
+  @if $style {
+    font-style: $style;
+  }
+}
