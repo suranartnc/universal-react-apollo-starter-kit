@@ -1,22 +1,37 @@
 import mongoose from 'mongoose'
 
 const PostSchema = new mongoose.Schema({
-  title: String,
+  title: {
+    type: String,
+    trim: true,
+  },
   body: String,
   excerpt: String,
+  category: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+  }],
   tags: [String],
   likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  shares: {
+    type: Number,
+    min: 0,
+  },
+  comments: [{
+    body: String,
+    date: Date,
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
   }],
-  shares: Number,
-  comments: [{
-    body: String,
-    date: Date,
-  }],
-  staffpick: Boolean,
+  staffpick: {
+    type: Boolean,
+    indexed: true,
+  },
   date: {
     type: Date,
     default: Date.now,
