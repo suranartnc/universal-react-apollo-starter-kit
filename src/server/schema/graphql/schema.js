@@ -65,13 +65,26 @@ const Comment = new GraphQLObjectType({
       type: Author,
       resolve: comment => UserModel.findById(comment.userId),
     },
-    // replies: {
-    //   type: new GraphQLList(Comment),
-    //   description: "Replies for the comment",
-    //   resolve: () => {
-    //     return ReplyList
-    //   }
-    // }
+    replies: {
+      type: new GraphQLList(Comment),
+      description: "Replies for the comment",
+      args: {
+        limit: {
+          type: GraphQLInt,
+          description: 'Limit the replies returing',
+        },
+      },
+      resolve: (comment, { limit }) => {
+        if (limit >= 0) {
+          return CommentModel.find({
+            repliedTo: comment._id,
+          }).limit(limit).sort('-date')
+        }
+        return CommentModel.find({
+          repliedTo: comment._id,
+        })
+      },
+    }
   }),
 })
 
@@ -84,10 +97,10 @@ const Post = new GraphQLObjectType({
     title: { type: GraphQLString },
     categories: {
       type: new GraphQLList(Category),
-      resolve: ({ categories }) => CategoryModel.find({
+      resolve: post => CategoryModel.find({
         _id: {
-          $in: categories
-        }
+          $in: post.categories,
+        },
       }),
     },
     excerpt: { type: GraphQLString },
@@ -113,16 +126,18 @@ const Post = new GraphQLObjectType({
         if (limit >= 0) {
           return CommentModel.find({
             postId: post._id,
+            repliedTo: null,
           }).limit(limit).sort('-date')
         }
         return CommentModel.find({
           postId: post._id,
+          repliedTo: null,
         })
       },
     },
     author: {
       type: Author,
-      resolve: ({ userId }) => UserModel.findById(userId),
+      resolve: post => UserModel.findById(post.userId),
     },
   }),
 })
