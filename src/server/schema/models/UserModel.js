@@ -3,19 +3,19 @@ import mongoose from 'mongoose'
 const UserSchema = new mongoose.Schema({
   displayName: {
     type: String,
+    unique: true,
   },
   email: {
     type: String,
     unique: true,
   },
-  photoURL: {
-    type: String,
-  },
+  avatar: String,
   oauthID: Number,
   oauthStrategy: String,
-  createdAt: Number,
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 })
 
-const User = mongoose.model('User', UserSchema)
-
-export default User
+export default mongoose.model('User', UserSchema)

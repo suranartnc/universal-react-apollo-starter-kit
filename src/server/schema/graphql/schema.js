@@ -4,7 +4,7 @@ import PostsList from 'server/data/posts'
 import AuthorsMap from 'server/data/authors'
 import {CommentList, ReplyList} from 'server/data/comments'
 
-import PostCollection from 'server/schema/mongoose/PostSchema'
+import PostModel from 'server/schema/models/PostModel'
 
 import {
   GraphQLList,
@@ -138,7 +138,7 @@ const Query = new GraphQLObjectType({
         // } else {
         //   return PostsList
         // }
-        return PostCollection.find()
+        return PostModel.find()
       }
     },
 
@@ -183,7 +183,7 @@ const Query = new GraphQLObjectType({
       },
       resolve: function(source, {_id}) {
         // return _.filter(PostsList, post => post._id === _id)[0]
-        return PostCollection.findById(_id)
+        return PostModel.findById(_id)
       }
     },
 
