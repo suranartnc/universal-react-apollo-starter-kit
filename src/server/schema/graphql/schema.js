@@ -91,9 +91,7 @@ const Post = new GraphQLObjectType({
     title: { type: GraphQLString },
     categories: {
       type: new GraphQLList(Category),
-      resolve: ({ categories }) => {
-        return CategoryModel.find({ _id: { $in: categories } })
-      },
+      resolve: ({ categories }) => CategoryModel.find({ _id: { $in: categories } }),
     },
     excerpt: { type: GraphQLString },
     body: { type: GraphQLString },
@@ -101,11 +99,10 @@ const Post = new GraphQLObjectType({
       type: GraphQLFloat,
       resolve: (post) => {
         if (post.date) {
-          return new Date(post.date['$date']).getTime()
-        } else {
-          return null
+          return new Date(post.date).getTime()
         }
-      }
+        return null
+      },
     },
     // comments: {
     //   type: new GraphQLList(Comment),
@@ -122,12 +119,9 @@ const Post = new GraphQLObjectType({
     // },
     author: {
       type: Author,
-      resolve: ({ userId }) => {
-        // return AuthorsMap[author]
-        return UserModel.findById(userId)
-      }
-    }
-  })
+      resolve: ({ userId }) => UserModel.findById(userId),
+    },
+  }),
 })
 
 const Query = new GraphQLObjectType({
@@ -148,38 +142,17 @@ const Query = new GraphQLObjectType({
       },
     },
 
-    // latestPost: {
-    //   type: Post,
-    //   description: "Latest post in the blog",
-    //   resolve: function() {
-    //     PostsList.sort((a, b) => {
-    //       var bTime = new Date(b.date['$date']).getTime()
-    //       var aTime = new Date(a.date['$date']).getTime()
-
-    //       return bTime - aTime
-    //     })
-
-    //     return PostsList[0]
-    //   }
-    // },
-
-    // recentPosts: {
-    //   type: new GraphQLList(Post),
-    //   description: "Recent posts in the blog",
-    //   args: {
-    //     count: {type: new GraphQLNonNull(GraphQLInt), description: 'Number of recent items'}
-    //   },
-    //   resolve: function(source, {count}) {
-    //     PostsList.sort((a, b) => {
-    //       var bTime = new Date(b.date['$date']).getTime()
-    //       var aTime = new Date(a.date['$date']).getTime()
-
-    //       return bTime - aTime
-    //     })
-
-    //     return PostsList.slice(0, count)
-    //   }
-    // },
+    latestPosts: {
+      type: new GraphQLList(Post),
+      description: 'Recent posts in the blog',
+      args: {
+        count: {
+          type: new GraphQLNonNull(GraphQLInt),
+          description: 'Number of recent items',
+        },
+      },
+      resolve: (source, { count }) => PostModel.find().limit(count).sort('-date'),
+    },
 
     post: {
       type: Post,
@@ -187,9 +160,7 @@ const Query = new GraphQLObjectType({
       args: {
         _id: { type: new GraphQLNonNull(GraphQLString) },
       },
-      resolve: (source, { _id }) => {
-        return PostModel.findById(_id)
-      },
+      resolve: (source, { _id }) => PostModel.findById(_id),
     },
 
     // authors: {
