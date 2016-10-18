@@ -146,6 +146,17 @@ const Query = new GraphQLObjectType({
       },
     },
 
+    post: {
+      type: Post,
+      description: 'Post by _id',
+      args: {
+        _id: {
+          type: new GraphQLNonNull(GraphQLString)
+        },
+      },
+      resolve: (source, { _id }) => PostModel.findById(_id),
+    },
+
     latestPosts: {
       type: new GraphQLList(Post),
       description: 'Recent posts in the blog',
@@ -158,33 +169,22 @@ const Query = new GraphQLObjectType({
       resolve: (source, { count }) => PostModel.find().limit(count).sort('-date'),
     },
 
-    post: {
-      type: Post,
-      description: 'Post by _id',
-      args: {
-        _id: { type: new GraphQLNonNull(GraphQLString) },
-      },
-      resolve: (source, { _id }) => PostModel.findById(_id),
+    authors: {
+      type: new GraphQLList(Author),
+      description: 'Available authors in the blog',
+      resolve: () => UserModel.find(),
     },
 
-    // authors: {
-    //   type: new GraphQLList(Author),
-    //   description: "Available authors in the blog",
-    //   resolve: function() {
-    //     return _.values(AuthorsMap)
-    //   }
-    // },
-
-    // author: {
-    //   type: Author,
-    //   description: "Author by _id",
-    //   args: {
-    //     _id: {type: new GraphQLNonNull(GraphQLString)}
-    //   },
-    //   resolve: function(source, {_id}) {
-    //     return AuthorsMap[_id]
-    //   }
-    // }
+    author: {
+      type: Author,
+      description: 'Author by _id',
+      args: {
+        _id: {
+          type: new GraphQLNonNull(GraphQLString),
+        },
+      },
+      resolve: (source, { _id }) => UserModel.findById(_id),
+    }
   })
 })
 
