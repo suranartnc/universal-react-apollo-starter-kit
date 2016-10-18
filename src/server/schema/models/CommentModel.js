@@ -10,6 +10,10 @@ const CommentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
+  postId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post',
+  },
 })
 
 export default mongoose.model('Comment', CommentSchema)

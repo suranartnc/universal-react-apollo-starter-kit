@@ -60,11 +60,11 @@ const Comment = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLString },
     body: { type: GraphQLString },
+    date: { type: GraphQLFloat },
     author: {
       type: Author,
-      resolve: ({ userId }) => UserModel.findById(userId),
+      resolve: comment => UserModel.findById(comment.userId),
     },
-    date: { type: GraphQLFloat },
     // replies: {
     //   type: new GraphQLList(Comment),
     //   description: "Replies for the comment",
@@ -109,14 +109,14 @@ const Post = new GraphQLObjectType({
           description: 'Limit the comments returing',
         },
       },
-      resolve: ({ _id }, { limit }) => {
+      resolve: (post, { limit }) => {
         if (limit >= 0) {
           return CommentModel.find({
-            userId: _id,
+            postId: post._id,
           }).limit(limit).sort('-date')
         }
         return CommentModel.find({
-          userId: _id,
+          postId: post._id,
         })
       },
     },
