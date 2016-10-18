@@ -1,6 +1,7 @@
 import PostModel from 'server/schema/models/PostModel'
 import UserModel from 'server/schema/models/UserModel'
 import CategoryModel from 'server/schema/models/CategoryModel'
+import CommentModel from 'server/schema/models/CommentModel'
 
 import {
   GraphQLList,
@@ -52,29 +53,27 @@ const Author = new GraphQLObjectType({
 //   }
 // })
 
-// const Comment = new GraphQLObjectType({
-//   name: "Comment",
-//   interfaces: [HasAuthor],
-//   description: "Represent the type of a comment",
-//   fields: () => ({
-//     _id: {type: GraphQLString},
-//     content: {type: GraphQLString},
-//     author: {
-//       type: Author,
-//       resolve: function({author}) {
-//         return AuthorsMap[author]
-//       }
-//     },
-//     timestamp: {type: GraphQLFloat},
-//     replies: {
-//       type: new GraphQLList(Comment),
-//       description: "Replies for the comment",
-//       resolve: function() {
-//         return ReplyList
-//       }
-//     }
-//   })
-// })
+const Comment = new GraphQLObjectType({
+  name: 'Comment',
+  // interfaces: [HasAuthor],
+  description: 'Represent the type of a comment',
+  fields: () => ({
+    _id: { type: GraphQLString },
+    body: { type: GraphQLString },
+    author: {
+      type: Author,
+      resolve: ({ userId }) => UserModel.findById(userId),
+    },
+    date: { type: GraphQLFloat },
+    // replies: {
+    //   type: new GraphQLList(Comment),
+    //   description: "Replies for the comment",
+    //   resolve: () => {
+    //     return ReplyList
+    //   }
+    // }
+  }),
+})
 
 const Post = new GraphQLObjectType({
   name: 'Post',
@@ -85,7 +84,11 @@ const Post = new GraphQLObjectType({
     title: { type: GraphQLString },
     categories: {
       type: new GraphQLList(Category),
-      resolve: ({ categories }) => CategoryModel.find({ _id: { $in: categories } }),
+      resolve: ({ categories }) => CategoryModel.find({
+        _id: {
+          $in: categories
+        }
+      }),
     },
     excerpt: { type: GraphQLString },
     body: { type: GraphQLString },
@@ -98,19 +101,25 @@ const Post = new GraphQLObjectType({
         return null
       },
     },
-    // comments: {
-    //   type: new GraphQLList(Comment),
-    //   args: {
-    //     limit: {type: GraphQLInt, description: "Limit the comments returing"}
-    //   },
-    //   resolve: function(post, {limit}) {
-    //     if(limit >= 0) {
-    //       return CommentList.slice(0, limit)
-    //     }
-
-    //     return CommentList
-    //   }
-    // },
+    comments: {
+      type: new GraphQLList(Comment),
+      args: {
+        limit: {
+          type: GraphQLInt,
+          description: 'Limit the comments returing',
+        },
+      },
+      resolve: ({ _id }, { limit }) => {
+        if (limit >= 0) {
+          return CommentModel.find({
+            userId: _id,
+          }).limit(limit).sort('-date')
+        }
+        return CommentModel.find({
+          userId: _id,
+        })
+      },
+    },
     author: {
       type: Author,
       resolve: ({ userId }) => UserModel.findById(userId),
