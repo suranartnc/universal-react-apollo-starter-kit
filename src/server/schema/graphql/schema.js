@@ -132,11 +132,15 @@ const Query = new GraphQLObjectType({
       type: new GraphQLList(Post),
       description: 'List of posts in the blog',
       args: {
-        category: { type: GraphQLString },
+        categoryId: { type: GraphQLString },
       },
-      resolve: (source, { category }) => {
-        if (category) {
-          return PostModel.find({ category })
+      resolve: (source, { categoryId }) => {
+        if (categoryId) {
+          return PostModel.find({
+            categories: {
+              $in: [categoryId],
+            },
+          })
         }
         return PostModel.find()
       },
