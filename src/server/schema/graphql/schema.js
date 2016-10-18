@@ -2,10 +2,11 @@ import * as _ from 'underscore'
 
 import PostsList from 'server/data/posts'
 import AuthorsMap from 'server/data/authors'
-import {CommentList, ReplyList} from 'server/data/comments'
+// import { CommentList, ReplyList } from 'server/data/comments'
 
 import PostModel from 'server/schema/models/PostModel'
 import UserModel from 'server/schema/models/UserModel'
+import CategoryModel from 'server/schema/models/CategoryModel'
 
 import {
   GraphQLList,
@@ -25,13 +26,8 @@ const Category = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLString },
     title: { type: GraphQLString },
+    slug: { type: GraphQLString },
   }),
-  // values: {
-  //   METEOR: {value: "meteor"},
-  //   PRODUCT: {value: "product"},
-  //   USER_STORY: {value: "user-story"},
-  //   OTHER: {value: 'other'}
-  // }
 })
 
 const Author = new GraphQLObjectType({
@@ -94,11 +90,10 @@ const Post = new GraphQLObjectType({
     _id: { type: GraphQLString },
     title: { type: GraphQLString },
     category: {
-      type: GraphQLString,
-      // type: Category,
-      // resolve: ({ categoryId }) => {
-      //   return CategoryModel.findById(categoryId)
-      // }
+      type: Category,
+      resolve: ({ categoryId }) => {
+        return CategoryModel.findById(categoryId)
+      },
     },
     excerpt: { type: GraphQLString },
     body: { type: GraphQLString },
@@ -146,7 +141,6 @@ const Query = new GraphQLObjectType({
         category: { type: GraphQLString },
       },
       resolve: (source, { category }) => {
-        console.log(category)
         if (category) {
           return PostModel.find({ category })
         }
@@ -154,133 +148,132 @@ const Query = new GraphQLObjectType({
       },
     },
 
-    latestPost: {
-      type: Post,
-      description: "Latest post in the blog",
-      resolve: function() {
-        PostsList.sort((a, b) => {
-          var bTime = new Date(b.date['$date']).getTime()
-          var aTime = new Date(a.date['$date']).getTime()
+    // latestPost: {
+    //   type: Post,
+    //   description: "Latest post in the blog",
+    //   resolve: function() {
+    //     PostsList.sort((a, b) => {
+    //       var bTime = new Date(b.date['$date']).getTime()
+    //       var aTime = new Date(a.date['$date']).getTime()
 
-          return bTime - aTime
-        })
+    //       return bTime - aTime
+    //     })
 
-        return PostsList[0]
-      }
-    },
+    //     return PostsList[0]
+    //   }
+    // },
 
-    recentPosts: {
-      type: new GraphQLList(Post),
-      description: "Recent posts in the blog",
-      args: {
-        count: {type: new GraphQLNonNull(GraphQLInt), description: 'Number of recent items'}
-      },
-      resolve: function(source, {count}) {
-        PostsList.sort((a, b) => {
-          var bTime = new Date(b.date['$date']).getTime()
-          var aTime = new Date(a.date['$date']).getTime()
+    // recentPosts: {
+    //   type: new GraphQLList(Post),
+    //   description: "Recent posts in the blog",
+    //   args: {
+    //     count: {type: new GraphQLNonNull(GraphQLInt), description: 'Number of recent items'}
+    //   },
+    //   resolve: function(source, {count}) {
+    //     PostsList.sort((a, b) => {
+    //       var bTime = new Date(b.date['$date']).getTime()
+    //       var aTime = new Date(a.date['$date']).getTime()
 
-          return bTime - aTime
-        })
+    //       return bTime - aTime
+    //     })
 
-        return PostsList.slice(0, count)
-      }
-    },
+    //     return PostsList.slice(0, count)
+    //   }
+    // },
 
     post: {
       type: Post,
-      description: "Post by _id",
+      description: 'Post by _id',
       args: {
-        _id: {type: new GraphQLNonNull(GraphQLString)}
+        _id: { type: new GraphQLNonNull(GraphQLString) },
       },
-      resolve: function(source, {_id}) {
-        // return _.filter(PostsList, post => post._id === _id)[0]
+      resolve: (source, { _id }) => {
         return PostModel.findById(_id)
-      }
-    },
-
-    authors: {
-      type: new GraphQLList(Author),
-      description: "Available authors in the blog",
-      resolve: function() {
-        return _.values(AuthorsMap)
-      }
-    },
-
-    author: {
-      type: Author,
-      description: "Author by _id",
-      args: {
-        _id: {type: new GraphQLNonNull(GraphQLString)}
       },
-      resolve: function(source, {_id}) {
-        return AuthorsMap[_id]
-      }
-    }
+    },
+
+    // authors: {
+    //   type: new GraphQLList(Author),
+    //   description: "Available authors in the blog",
+    //   resolve: function() {
+    //     return _.values(AuthorsMap)
+    //   }
+    // },
+
+    // author: {
+    //   type: Author,
+    //   description: "Author by _id",
+    //   args: {
+    //     _id: {type: new GraphQLNonNull(GraphQLString)}
+    //   },
+    //   resolve: function(source, {_id}) {
+    //     return AuthorsMap[_id]
+    //   }
+    // }
   })
 })
 
-const Mutation = new GraphQLObjectType({
-  name: "BlogMutations",
-  fields: {
-    createPost: {
-      type: Post,
-      description: "Create a new blog post",
-      args: {
-        _id: { type: new GraphQLNonNull(GraphQLString) },
-        title: { type: new GraphQLNonNull(GraphQLString) },
-        content: { type: new GraphQLNonNull(GraphQLString) },
-        summary: { type: GraphQLString },
-        category: { type: new GraphQLList(GraphQLString), description: 'Id of categories' },
-        author: { type: new GraphQLNonNull(GraphQLString), description: 'Id of the author' },
-      },
-      resolve: function(source, {...args}) {
-        let post = args
-        var alreadyExists = _.findIndex(PostsList, p => p._id === post._id) >= 0
-        if(alreadyExists) {
-          throw new Error("Post already exists: " + post._id)
-        }
+// const Mutation = new GraphQLObjectType({
+//   name: "BlogMutations",
+//   fields: {
+//     createPost: {
+//       type: Post,
+//       description: "Create a new blog post",
+//       args: {
+//         _id: { type: new GraphQLNonNull(GraphQLString) },
+//         title: { type: new GraphQLNonNull(GraphQLString) },
+//         content: { type: new GraphQLNonNull(GraphQLString) },
+//         summary: { type: GraphQLString },
+//         category: { type: new GraphQLList(GraphQLString), description: 'Id of categories' },
+//         author: { type: new GraphQLNonNull(GraphQLString), description: 'Id of the author' },
+//       },
+//       resolve: function(source, {...args}) {
+//         let post = args
+//         var alreadyExists = _.findIndex(PostsList, p => p._id === post._id) >= 0
+//         if(alreadyExists) {
+//           throw new Error("Post already exists: " + post._id)
+//         }
 
-        if(!AuthorsMap[post.author]) {
-          throw new Error("No such author: " + post.author)
-        }
+//         if(!AuthorsMap[post.author]) {
+//           throw new Error("No such author: " + post.author)
+//         }
 
-        if(!post.summary) {
-          post.summary = post.content.substring(0, 100)
-        }
+//         if(!post.summary) {
+//           post.summary = post.content.substring(0, 100)
+//         }
 
-        post.comments = []
-        post.date = {$date: new Date().toString()}
+//         post.comments = []
+//         post.date = {$date: new Date().toString()}
 
-        PostsList.push(post)
-        return post
-      }
-    },
+//         PostsList.push(post)
+//         return post
+//       }
+//     },
 
-    createAuthor: {
-      type: Author,
-      description: "Create a new author",
-      args: {
-        _id: {type: new GraphQLNonNull(GraphQLString)},
-        name: {type: new GraphQLNonNull(GraphQLString)},
-        twitterHandle: {type: GraphQLString}
-      },
-      resolve: function(source, {...args}) {
-        let author = args
-        if(AuthorsMap[args._id]) {
-          throw new Error("Author already exists: " + author._id)
-        }
+//     createAuthor: {
+//       type: Author,
+//       description: "Create a new author",
+//       args: {
+//         _id: {type: new GraphQLNonNull(GraphQLString)},
+//         name: {type: new GraphQLNonNull(GraphQLString)},
+//         twitterHandle: {type: GraphQLString}
+//       },
+//       resolve: function(source, {...args}) {
+//         let author = args
+//         if(AuthorsMap[args._id]) {
+//           throw new Error("Author already exists: " + author._id)
+//         }
 
-        AuthorsMap[author._id] = author
-        return author
-      }
-    }
-  }
-})
+//         AuthorsMap[author._id] = author
+//         return author
+//       }
+//     }
+//   }
+// })
 
 const Schema = new GraphQLSchema({
   query: Query,
-  mutation: Mutation
+  // mutation: Mutation
 })
 
 export default Schema
