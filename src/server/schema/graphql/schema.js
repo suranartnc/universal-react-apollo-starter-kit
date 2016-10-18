@@ -1,9 +1,3 @@
-import * as _ from 'underscore'
-
-import PostsList from 'server/data/posts'
-import AuthorsMap from 'server/data/authors'
-// import { CommentList, ReplyList } from 'server/data/comments'
-
 import PostModel from 'server/schema/models/PostModel'
 import UserModel from 'server/schema/models/UserModel'
 import CategoryModel from 'server/schema/models/CategoryModel'
@@ -15,14 +9,14 @@ import {
   GraphQLString,
   GraphQLInt,
   GraphQLFloat,
-  GraphQLEnumType,
+  // GraphQLEnumType,
   GraphQLNonNull,
-  GraphQLInterfaceType,
+  // GraphQLInterfaceType,
 } from 'graphql'
 
 const Category = new GraphQLObjectType({
-  name: "Category",
-  description: "A Category of the blog",
+  name: 'Category',
+  description: 'A Category of the blog',
   fields: () => ({
     _id: { type: GraphQLString },
     title: { type: GraphQLString },
@@ -31,8 +25,8 @@ const Category = new GraphQLObjectType({
 })
 
 const Author = new GraphQLObjectType({
-  name: "Author",
-  description: "Represent the type of an author of a blog post or a comment",
+  name: 'Author',
+  description: 'Represent the type of an author of a blog post or a comment',
   fields: () => ({
     _id: { type: GraphQLString },
     displayName: { type: GraphQLString },
@@ -83,9 +77,9 @@ const Author = new GraphQLObjectType({
 // })
 
 const Post = new GraphQLObjectType({
-  name: "Post",
+  name: 'Post',
   // interfaces: [HasAuthor],
-  description: "Represent the type of a blog post",
+  description: 'Represent the type of a blog post',
   fields: () => ({
     _id: { type: GraphQLString },
     title: { type: GraphQLString },
@@ -151,7 +145,7 @@ const Query = new GraphQLObjectType({
       description: 'Post by _id',
       args: {
         _id: {
-          type: new GraphQLNonNull(GraphQLString)
+          type: new GraphQLNonNull(GraphQLString),
         },
       },
       resolve: (source, { _id }) => PostModel.findById(_id),
@@ -184,8 +178,8 @@ const Query = new GraphQLObjectType({
         },
       },
       resolve: (source, { _id }) => UserModel.findById(_id),
-    }
-  })
+    },
+  }),
 })
 
 // const Mutation = new GraphQLObjectType({
