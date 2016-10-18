@@ -7,10 +7,10 @@ const PostSchema = new mongoose.Schema({
   },
   body: String,
   excerpt: String,
-  categoryId: {
+  categories: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
-  },
+  }],
   tags: [String],
   likes: [{
     type: mongoose.Schema.Types.ObjectId,

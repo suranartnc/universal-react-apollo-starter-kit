@@ -89,10 +89,10 @@ const Post = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLString },
     title: { type: GraphQLString },
-    category: {
-      type: Category,
-      resolve: ({ categoryId }) => {
-        return CategoryModel.findById(categoryId)
+    categories: {
+      type: new GraphQLList(Category),
+      resolve: ({ categories }) => {
+        return CategoryModel.find({ _id: { $in: categories } })
       },
     },
     excerpt: { type: GraphQLString },
