@@ -45,26 +45,8 @@ const Author = new GraphQLObjectType({
   }),
 })
 
-// const HasAuthor = new GraphQLInterfaceType({
-//   name: "HasAuthor",
-//   description: "This type has an author",
-//   fields: () => ({
-//     author: {type: Author}
-//   }),
-//   resolveType: (obj) => {
-//     if(obj.title) {
-//       return Post
-//     } else if(obj.replies) {
-//       return Comment
-//     } else {
-//       return null
-//     }
-//   }
-// })
-
 const Comment = new GraphQLObjectType({
   name: 'Comment',
-  // interfaces: [HasAuthor],
   description: 'Represent the type of a comment',
   fields: () => ({
     _id: { type: GraphQLString },
@@ -99,7 +81,6 @@ const Comment = new GraphQLObjectType({
 
 const Post = new GraphQLObjectType({
   name: 'Post',
-  // interfaces: [HasAuthor],
   description: 'Represent the type of a blog post',
   fields: () => ({
     _id: { type: GraphQLString },
