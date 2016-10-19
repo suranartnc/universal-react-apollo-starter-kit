@@ -29,6 +29,32 @@ import CategoryModel from './models/CategoryModel'
 import CommentModel from './models/CommentModel'
 
 /**
+ * We get the node interface and field from the Relay library.
+ *
+ * The first method defines the way we resolve an ID to its object.
+ * The second defines the way we resolve an object to its GraphQL type.
+ */
+const { nodeInterface, nodeField } = nodeDefinitions(
+  (globalId) => {
+    const { type, id } = fromGlobalId(globalId)
+    if (type === 'User') {
+      return getUser(id)
+    } else if (type === 'Feature') {
+      return getFeature(id)
+    }
+    return null
+  },
+  (obj) => {
+    if (obj instanceof User) {
+      return userType
+    } else if (obj instanceof Feature) {
+      return featureType
+    }
+    return null
+  }
+)
+
+/**
  * Define your own types here
  */
 
@@ -94,6 +120,11 @@ const commentType = new GraphQLObjectType({
   }),
 })
 
+const { connectionType: commentConnection } = connectionDefinitions({
+  name: 'Comment',
+  nodeType: commentType,
+})
+
 const postType = new GraphQLObjectType({
   name: 'Post',
   description: 'Represent the type of a blog post',
@@ -120,25 +151,13 @@ const postType = new GraphQLObjectType({
       },
     },
     comments: {
-      type: new GraphQLList(commentType),
-      args: {
-        limit: {
-          type: GraphQLInt,
-          description: 'Limit the comments returing',
-        },
-      },
-      resolve: (post, { limit }) => {
-        if (limit >= 0) {
-          return CommentModel.find({
-            postId: post._id,
-            repliedTo: null,
-          }).limit(limit).sort('-date')
-        }
-        return CommentModel.find({
-          postId: post._id,
-          repliedTo: null,
-        })
-      },
+      type: commentConnection,
+      description: 'A post\'s collection of comments',
+      args: connectionArgs,
+      resolve: (post, args) => CommentModel.find({
+        postId: post._id,
+        repliedTo: null,
+      }).then(result => connectionFromArray(result, args)),
     },
     author: {
       type: authorType,
@@ -151,6 +170,7 @@ const queryType = new GraphQLObjectType({
   name: 'Query',
   description: 'Root of the Blog Schema',
   fields: () => ({
+    node: nodeField,
     posts: {
       type: new GraphQLList(postType),
       description: 'List of posts in the blog',
