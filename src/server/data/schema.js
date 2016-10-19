@@ -166,6 +166,11 @@ const postType = new GraphQLObjectType({
   }),
 })
 
+const { connectionType: postConnection, edgeType: postEdge } = connectionDefinitions({
+  name: 'Post',
+  nodeType: postType,
+})
+
 const queryType = new GraphQLObjectType({
   name: 'Query',
   description: 'Root of the Blog Schema',
@@ -231,9 +236,42 @@ const queryType = new GraphQLObjectType({
   }),
 })
 
+
+const addPostMutation = mutationWithClientMutationId({
+  name: 'AddPost',
+  inputFields: {
+    title: { type: new GraphQLNonNull(GraphQLString) },
+    body: { type: new GraphQLNonNull(GraphQLString) },
+    excerpt: { type: GraphQLString },
+    categories: { type: new GraphQLList(GraphQLString), description: 'Id of categories' },
+    userId: { type: new GraphQLNonNull(GraphQLString), description: 'Id of the author' },
+  },
+  outputFields: {
+    postEdge: {
+      type: postEdge,
+      resolve: postItem => PostModel.find()
+        .then((allPosts) => {
+          let itemToPass
+          for (const i of allPosts) {
+            if (i.title === postItem.title) {
+              itemToPass = i
+            }
+          }
+          const cursorId = cursorForObjectInConnection(allPosts, itemToPass)
+          return {
+            node: postItem,
+            cursor: cursorId,
+          }
+        }),
+    },
+  },
+  mutateAndGetPayload: post => PostModel.create(post).catch(error => outputError(error)),
+})
+
 const mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
+    addPost: addPostMutation,
     createPost: {
       type: postType,
       description: 'Create a new blog post',
