@@ -67,7 +67,7 @@ const Comment = new GraphQLObjectType({
     },
     replies: {
       type: new GraphQLList(Comment),
-      description: "Replies for the comment",
+      description: 'Replies for the comment',
       args: {
         limit: {
           type: GraphQLInt,
@@ -206,67 +206,49 @@ const Query = new GraphQLObjectType({
   }),
 })
 
-// const Mutation = new GraphQLObjectType({
-//   name: "BlogMutations",
-//   fields: {
-//     createPost: {
-//       type: Post,
-//       description: "Create a new blog post",
-//       args: {
-//         _id: { type: new GraphQLNonNull(GraphQLString) },
-//         title: { type: new GraphQLNonNull(GraphQLString) },
-//         content: { type: new GraphQLNonNull(GraphQLString) },
-//         summary: { type: GraphQLString },
-//         category: { type: new GraphQLList(GraphQLString), description: 'Id of categories' },
-//         author: { type: new GraphQLNonNull(GraphQLString), description: 'Id of the author' },
-//       },
-//       resolve: function(source, {...args}) {
-//         let post = args
-//         var alreadyExists = _.findIndex(PostsList, p => p._id === post._id) >= 0
-//         if(alreadyExists) {
-//           throw new Error("Post already exists: " + post._id)
-//         }
+const Mutation = new GraphQLObjectType({
+  name: 'BlogMutations',
+  fields: {
+    createPost: {
+      type: Post,
+      description: 'Create a new blog post',
+      args: {
+        title: { type: new GraphQLNonNull(GraphQLString) },
+        body: { type: new GraphQLNonNull(GraphQLString) },
+        excerpt: { type: GraphQLString },
+        categories: { type: new GraphQLList(GraphQLString), description: 'Id of categories' },
+        userId: { type: new GraphQLNonNull(GraphQLString), description: 'Id of the author' },
+      },
+      resolve: (source, args) => {
+        const post = Object.assign({}, args)
+        return PostModel.create(post)
+      },
+    },
 
-//         if(!AuthorsMap[post.author]) {
-//           throw new Error("No such author: " + post.author)
-//         }
+    // createAuthor: {
+    //   type: Author,
+    //   description: "Create a new author",
+    //   args: {
+    //     _id: {type: new GraphQLNonNull(GraphQLString)},
+    //     name: {type: new GraphQLNonNull(GraphQLString)},
+    //     twitterHandle: {type: GraphQLString}
+    //   },
+    //   resolve: function(source, {...args}) {
+    //     let author = args
+    //     if(AuthorsMap[args._id]) {
+    //       throw new Error("Author already exists: " + author._id)
+    //     }
 
-//         if(!post.summary) {
-//           post.summary = post.content.substring(0, 100)
-//         }
-
-//         post.comments = []
-//         post.date = {$date: new Date().toString()}
-
-//         PostsList.push(post)
-//         return post
-//       }
-//     },
-
-//     createAuthor: {
-//       type: Author,
-//       description: "Create a new author",
-//       args: {
-//         _id: {type: new GraphQLNonNull(GraphQLString)},
-//         name: {type: new GraphQLNonNull(GraphQLString)},
-//         twitterHandle: {type: GraphQLString}
-//       },
-//       resolve: function(source, {...args}) {
-//         let author = args
-//         if(AuthorsMap[args._id]) {
-//           throw new Error("Author already exists: " + author._id)
-//         }
-
-//         AuthorsMap[author._id] = author
-//         return author
-//       }
-//     }
-//   }
-// })
+    //     AuthorsMap[author._id] = author
+    //     return author
+    //   }
+    // }
+  }
+})
 
 const Schema = new GraphQLSchema({
   query: Query,
-  // mutation: Mutation
+  mutation: Mutation,
 })
 
 export default Schema
