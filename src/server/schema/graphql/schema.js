@@ -229,6 +229,25 @@ const Mutation = new GraphQLObjectType({
       },
     },
 
+    createComment: {
+      type: Post,
+      description: 'Create a new comment',
+      args: {
+        body: { type: new GraphQLNonNull(GraphQLString) },
+        postId: { type: new GraphQLNonNull(GraphQLString) },
+        repliedTo: { type: GraphQLString },
+        userId: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve: (source, args) => {
+        const comment = Object.assign({}, args)
+        return CommentModel.create(comment)
+          .then((result) => {
+            return PostModel.findById(result.postId)
+          })
+          .catch(error => outputError(error))
+      },
+    },
+
   },
 })
 
