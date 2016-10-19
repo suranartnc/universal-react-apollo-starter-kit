@@ -1,3 +1,5 @@
+import config from 'shared/configs'
+
 import PostModel from 'server/schema/models/PostModel'
 import UserModel from 'server/schema/models/UserModel'
 import CategoryModel from 'server/schema/models/CategoryModel'
@@ -14,6 +16,13 @@ import {
   GraphQLNonNull,
   // GraphQLInterfaceType,
 } from 'graphql'
+
+function outputError(error) {
+  if (config.isProduction === false) {
+    return error
+  }
+  throw new Error('Internal Server Error')
+}
 
 const Category = new GraphQLObjectType({
   name: 'Category',
@@ -221,29 +230,25 @@ const Mutation = new GraphQLObjectType({
       },
       resolve: (source, args) => {
         const post = Object.assign({}, args)
-        return PostModel.create(post)
+        return PostModel.create(post).catch(error => outputError(error))
       },
     },
 
-    // createAuthor: {
-    //   type: Author,
-    //   description: "Create a new author",
-    //   args: {
-    //     _id: {type: new GraphQLNonNull(GraphQLString)},
-    //     name: {type: new GraphQLNonNull(GraphQLString)},
-    //     twitterHandle: {type: GraphQLString}
-    //   },
-    //   resolve: function(source, {...args}) {
-    //     let author = args
-    //     if(AuthorsMap[args._id]) {
-    //       throw new Error("Author already exists: " + author._id)
-    //     }
+    createAuthor: {
+      type: Author,
+      description: 'Create a new author',
+      args: {
+        displayName: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        avatar: { type: GraphQLString },
+      },
+      resolve: (source, args) => {
+        const author = Object.assign({}, args)
+        return UserModel.create(author).catch(error => outputError(error))
+      },
+    },
 
-    //     AuthorsMap[author._id] = author
-    //     return author
-    //   }
-    // }
-  }
+  },
 })
 
 const Schema = new GraphQLSchema({
