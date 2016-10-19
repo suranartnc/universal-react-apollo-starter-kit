@@ -1,10 +1,3 @@
-import config from 'shared/configs'
-
-import PostModel from 'server/schema/models/PostModel'
-import UserModel from 'server/schema/models/UserModel'
-import CategoryModel from 'server/schema/models/CategoryModel'
-import CommentModel from 'server/schema/models/CommentModel'
-
 import {
   GraphQLList,
   GraphQLObjectType,
@@ -27,6 +20,13 @@ import {
   nodeDefinitions,
   cursorForObjectInConnection,
 } from 'graphql-relay'
+
+import config from 'shared/configs'
+
+import PostModel from './models/PostModel'
+import UserModel from './models/UserModel'
+import CategoryModel from './models/CategoryModel'
+import CommentModel from './models/CommentModel'
 
 /**
  * Define your own types here
@@ -256,9 +256,7 @@ const mutationType = new GraphQLObjectType({
       resolve: (source, args) => {
         const comment = Object.assign({}, args)
         return CommentModel.create(comment)
-          .then((result) => {
-            return PostModel.findById(result.postId)
-          })
+          .then(result => PostModel.findById(result.postId))
           .catch(error => outputError(error))
       },
     },
