@@ -17,6 +17,21 @@ import {
   // GraphQLInterfaceType,
 } from 'graphql'
 
+import {
+  connectionArgs,
+  connectionDefinitions,
+  connectionFromArray,
+  fromGlobalId,
+  globalIdField,
+  mutationWithClientMutationId,
+  nodeDefinitions,
+  cursorForObjectInConnection,
+} from 'graphql-relay'
+
+/**
+ * Define your own types here
+ */
+
 function outputError(error) {
   if (config.isProduction === false) {
     return error
@@ -24,7 +39,7 @@ function outputError(error) {
   throw new Error('Internal Server Error')
 }
 
-const Category = new GraphQLObjectType({
+const categoryType = new GraphQLObjectType({
   name: 'Category',
   description: 'A Category of the blog',
   fields: () => ({
@@ -34,7 +49,7 @@ const Category = new GraphQLObjectType({
   }),
 })
 
-const Author = new GraphQLObjectType({
+const authorType = new GraphQLObjectType({
   name: 'Author',
   description: 'Represent the type of an author of a blog post or a comment',
   fields: () => ({
@@ -45,7 +60,7 @@ const Author = new GraphQLObjectType({
   }),
 })
 
-const Comment = new GraphQLObjectType({
+const commentType = new GraphQLObjectType({
   name: 'Comment',
   description: 'Represent the type of a comment',
   fields: () => ({
@@ -53,11 +68,11 @@ const Comment = new GraphQLObjectType({
     body: { type: GraphQLString },
     date: { type: GraphQLFloat },
     author: {
-      type: Author,
+      type: authorType,
       resolve: comment => UserModel.findById(comment.userId),
     },
     replies: {
-      type: new GraphQLList(Comment),
+      type: new GraphQLList(commentType),
       description: 'Replies for the comment',
       args: {
         limit: {
@@ -79,14 +94,14 @@ const Comment = new GraphQLObjectType({
   }),
 })
 
-const Post = new GraphQLObjectType({
+const postType = new GraphQLObjectType({
   name: 'Post',
   description: 'Represent the type of a blog post',
   fields: () => ({
     _id: { type: GraphQLString },
     title: { type: GraphQLString },
     categories: {
-      type: new GraphQLList(Category),
+      type: new GraphQLList(categoryType),
       resolve: post => CategoryModel.find({
         _id: {
           $in: post.categories,
@@ -105,7 +120,7 @@ const Post = new GraphQLObjectType({
       },
     },
     comments: {
-      type: new GraphQLList(Comment),
+      type: new GraphQLList(commentType),
       args: {
         limit: {
           type: GraphQLInt,
@@ -126,18 +141,18 @@ const Post = new GraphQLObjectType({
       },
     },
     author: {
-      type: Author,
+      type: authorType,
       resolve: post => UserModel.findById(post.userId),
     },
   }),
 })
 
-const Query = new GraphQLObjectType({
-  name: 'BlogSchema',
+const queryType = new GraphQLObjectType({
+  name: 'Query',
   description: 'Root of the Blog Schema',
   fields: () => ({
     posts: {
-      type: new GraphQLList(Post),
+      type: new GraphQLList(postType),
       description: 'List of posts in the blog',
       args: {
         categoryId: { type: GraphQLString },
@@ -155,7 +170,7 @@ const Query = new GraphQLObjectType({
     },
 
     post: {
-      type: Post,
+      type: postType,
       description: 'Post by _id',
       args: {
         _id: {
@@ -166,7 +181,7 @@ const Query = new GraphQLObjectType({
     },
 
     latestPosts: {
-      type: new GraphQLList(Post),
+      type: new GraphQLList(postType),
       description: 'Recent posts in the blog',
       args: {
         count: {
@@ -178,13 +193,13 @@ const Query = new GraphQLObjectType({
     },
 
     authors: {
-      type: new GraphQLList(Author),
+      type: new GraphQLList(authorType),
       description: 'Available authors in the blog',
       resolve: () => UserModel.find(),
     },
 
     author: {
-      type: Author,
+      type: authorType,
       description: 'Author by _id',
       args: {
         _id: {
@@ -196,11 +211,11 @@ const Query = new GraphQLObjectType({
   }),
 })
 
-const Mutation = new GraphQLObjectType({
-  name: 'BlogMutations',
+const mutationType = new GraphQLObjectType({
+  name: 'Mutation',
   fields: {
     createPost: {
-      type: Post,
+      type: postType,
       description: 'Create a new blog post',
       args: {
         title: { type: new GraphQLNonNull(GraphQLString) },
@@ -216,7 +231,7 @@ const Mutation = new GraphQLObjectType({
     },
 
     createAuthor: {
-      type: Author,
+      type: authorType,
       description: 'Create a new author',
       args: {
         displayName: { type: new GraphQLNonNull(GraphQLString) },
@@ -230,7 +245,7 @@ const Mutation = new GraphQLObjectType({
     },
 
     createComment: {
-      type: Post,
+      type: postType,
       description: 'Create a new comment',
       args: {
         body: { type: new GraphQLNonNull(GraphQLString) },
@@ -252,8 +267,8 @@ const Mutation = new GraphQLObjectType({
 })
 
 const Schema = new GraphQLSchema({
-  query: Query,
-  mutation: Mutation,
+  query: queryType,
+  mutation: mutationType,
 })
 
 export default Schema
