@@ -272,21 +272,6 @@ const mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
     addPost: addPostMutation,
-    createPost: {
-      type: postType,
-      description: 'Create a new blog post',
-      args: {
-        title: { type: new GraphQLNonNull(GraphQLString) },
-        body: { type: new GraphQLNonNull(GraphQLString) },
-        excerpt: { type: GraphQLString },
-        categories: { type: new GraphQLList(GraphQLString), description: 'Id of categories' },
-        userId: { type: new GraphQLNonNull(GraphQLString), description: 'Id of the author' },
-      },
-      resolve: (source, args) => {
-        const post = Object.assign({}, args)
-        return PostModel.create(post).catch(error => outputError(error))
-      },
-    },
 
     createAuthor: {
       type: authorType,
