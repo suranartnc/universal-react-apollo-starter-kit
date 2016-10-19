@@ -1,6 +1,14 @@
 import mongoose from 'mongoose'
 
 const PostSchema = new mongoose.Schema({
+  id: {
+    type: String,
+    required: true,
+    unique: true,
+    index: true,
+    default: mongoose.Types.ObjectId,
+  },
+  type: String,
   title: {
     type: String,
     trim: true,
