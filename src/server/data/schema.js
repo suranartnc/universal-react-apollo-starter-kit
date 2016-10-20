@@ -13,7 +13,7 @@ import {
 import {
   connectionArgs,
   connectionDefinitions,
-  connectionFromArray,
+  connectionFromPromisedArray,
   fromGlobalId,
   globalIdField,
   mutationWithClientMutationId,
@@ -116,7 +116,7 @@ const commentType = new GraphQLObjectType({
           repliedTo: comment._id,
         })
       },
-    }
+    },
   }),
 })
 
@@ -154,10 +154,10 @@ const postType = new GraphQLObjectType({
       type: commentConnection,
       description: 'A post\'s collection of comments',
       args: connectionArgs,
-      resolve: (post, args) => CommentModel.find({
+      resolve: (post, args) => connectionFromPromisedArray(CommentModel.find({
         postId: post._id,
         repliedTo: null,
-      }).then(result => connectionFromArray(result, args)),
+      }), args),
     },
     author: {
       type: authorType,
