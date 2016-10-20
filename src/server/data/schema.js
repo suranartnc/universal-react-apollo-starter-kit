@@ -5,9 +5,7 @@ import {
   GraphQLString,
   GraphQLInt,
   GraphQLFloat,
-  // GraphQLEnumType,
   GraphQLNonNull,
-  // GraphQLInterfaceType,
 } from 'graphql'
 
 import {
