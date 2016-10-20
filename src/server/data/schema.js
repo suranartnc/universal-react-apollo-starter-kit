@@ -255,13 +255,13 @@ const addPostMutation = mutationWithClientMutationId({
       type: postEdge,
       resolve: postItem => PostModel.find()
         .then((allPosts) => {
-          let itemToPass
-          for (const i of allPosts) {
-            if (i.title === postItem.title) {
-              itemToPass = i
+          let postToFindIndex
+          for (const post of allPosts) {
+            if (post._id.toString() === postItem._id.toString()) {
+              postToFindIndex = post
             }
           }
-          const cursorId = cursorForObjectInConnection(allPosts, itemToPass)
+          const cursorId = cursorForObjectInConnection(allPosts, postToFindIndex)
           return {
             node: postItem,
             cursor: cursorId,
