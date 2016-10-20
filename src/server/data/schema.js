@@ -37,20 +37,20 @@ import CommentModel from './models/CommentModel'
 const { nodeInterface, nodeField } = nodeDefinitions(
   (globalId) => {
     const { type, id } = fromGlobalId(globalId)
-    if (type === 'User') {
-      return getUser(id)
-    } else if (type === 'Feature') {
-      return getFeature(id)
+    switch (type) {
+      case 'Post':
+        return PostModel.findById(id)
+      default:
+        return null
     }
-    return null
   },
   (obj) => {
-    if (obj instanceof User) {
-      return userType
-    } else if (obj instanceof Feature) {
-      return featureType
+    switch (obj.type) {
+      case 'Post':
+        return postType
+      default:
+        return null
     }
-    return null
   }
 )
 
@@ -69,28 +69,30 @@ const categoryType = new GraphQLObjectType({
   name: 'Category',
   description: 'A Category of the blog',
   fields: () => ({
-    _id: { type: GraphQLString },
+    id: globalIdField('Category', ({ _id }) => _id),
     title: { type: GraphQLString },
     slug: { type: GraphQLString },
   }),
+  interfaces: [nodeInterface],
 })
 
 const authorType = new GraphQLObjectType({
   name: 'Author',
   description: 'Represent the type of an author of a blog post or a comment',
   fields: () => ({
-    _id: { type: GraphQLString },
+    id: globalIdField('Author', ({ _id }) => _id),
     displayName: { type: GraphQLString },
     email: { type: GraphQLString },
     avatar: { type: GraphQLString },
   }),
+  interfaces: [nodeInterface],
 })
 
 const commentType = new GraphQLObjectType({
   name: 'Comment',
   description: 'Represent the type of a comment',
   fields: () => ({
-    _id: { type: GraphQLString },
+    id: globalIdField('Comment', ({ _id }) => _id),
     body: { type: GraphQLString },
     date: { type: GraphQLFloat },
     author: {
@@ -118,6 +120,7 @@ const commentType = new GraphQLObjectType({
       },
     },
   }),
+  interfaces: [nodeInterface],
 })
 
 const { connectionType: commentConnection } = connectionDefinitions({
@@ -129,7 +132,7 @@ const postType = new GraphQLObjectType({
   name: 'Post',
   description: 'Represent the type of a blog post',
   fields: () => ({
-    _id: { type: GraphQLString },
+    id: globalIdField('Post', ({ _id }) => _id),
     title: { type: GraphQLString },
     categories: {
       type: new GraphQLList(categoryType),
@@ -164,6 +167,7 @@ const postType = new GraphQLObjectType({
       resolve: post => UserModel.findById(post.userId),
     },
   }),
+  interfaces: [nodeInterface],
 })
 
 const { connectionType: postConnection, edgeType: postEdge } = connectionDefinitions({
