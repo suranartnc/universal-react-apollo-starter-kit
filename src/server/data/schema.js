@@ -177,12 +177,14 @@ const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   fields: {
     id: globalIdField('User', ({ _id }) => _id),
+
     myPosts: {
       type: postConnection,
       description: 'List of posts written by viewer',
       args: connectionArgs,
       resolve: (user, args) => connectionFromPromisedArray(PostModel.find({ userId: user._id }), args),
     },
+
     posts: {
       type: postConnection,
       description: 'List of posts in the blog',
@@ -192,7 +194,7 @@ const GraphQLUser = new GraphQLObjectType({
         },
         ...connectionArgs,
       },
-      resolve: (source, { categoryId, ...args }) => {
+      resolve: (user, { categoryId, ...args }) => {
         if (categoryId) {
           return connectionFromPromisedArray(PostModel.find({
             categories: {
@@ -212,7 +214,7 @@ const GraphQLUser = new GraphQLObjectType({
           type: new GraphQLNonNull(GraphQLString),
         },
       },
-      resolve: (source, { _id }) => PostModel.findById(_id),
+      resolve: (user, { _id }) => PostModel.findById(_id),
     },
 
     latestPosts: {
@@ -224,7 +226,7 @@ const GraphQLUser = new GraphQLObjectType({
           description: 'Number of recent items',
         },
       },
-      resolve: (source, { count }) => PostModel.find().limit(count).sort('-date'),
+      resolve: (user, { count }) => PostModel.find().limit(count).sort('-date'),
     },
 
     authors: {
@@ -241,8 +243,9 @@ const GraphQLUser = new GraphQLObjectType({
           type: new GraphQLNonNull(GraphQLString),
         },
       },
-      resolve: (source, { _id }) => UserModel.findById(_id),
+      resolve: (user, { _id }) => UserModel.findById(_id),
     },
+
   },
   interfaces: [nodeInterface],
 })
@@ -330,7 +333,6 @@ const mutationType = new GraphQLObjectType({
           .catch(error => outputError(error))
       },
     },
-
   },
 })
 
