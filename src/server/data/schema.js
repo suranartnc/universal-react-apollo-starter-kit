@@ -174,7 +174,7 @@ const { connectionType: postConnection, edgeType: postEdge } = connectionDefinit
 })
 
 const GraphQLUser = new GraphQLObjectType({
-  name: 'User',
+  name: 'Viewer',
   fields: {
     id: globalIdField('User', ({ _id }) => _id),
 

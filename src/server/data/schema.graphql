@@ -112,6 +112,15 @@ type Post implements Node {
   author: Author
 }
 
+# A connection to a list of items.
+type PostConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [PostEdge]
+}
+
 # An edge in a connection.
 type PostEdge {
   # The item at the end of the edge
@@ -128,9 +137,18 @@ type Query {
     # The ID of an object
     id: ID!
   ): Node
+  viewer: Viewer
+}
+
+type Viewer implements Node {
+  # The ID of an object
+  id: ID!
+
+  # List of posts written by viewer
+  myPosts(after: String, first: Int, before: String, last: Int): PostConnection
 
   # List of posts in the blog
-  posts(categoryId: String): [Post]
+  posts(categoryId: String, after: String, first: Int, before: String, last: Int): PostConnection
 
   # Post by _id
   post(_id: String!): Post

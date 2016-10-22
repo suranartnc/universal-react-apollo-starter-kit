@@ -20,14 +20,13 @@ class PostItem extends Component {
     const { post } = this.props
     return (
       <article className={styles.article}>
-
+        {post.title}
       </article>
     )
   }
 }
 
 PostItem.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   post: PropTypes.shape({
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
