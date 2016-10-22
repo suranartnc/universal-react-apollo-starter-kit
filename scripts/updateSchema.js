@@ -6,8 +6,7 @@ import { graphql }  from 'graphql'
 import { introspectionQuery, printSchema } from 'graphql/utilities'
 
 
-import Schema from '../src/server/schema'
-
+import Schema from '../src/server/data/schema.js'
 
 // Save JSON of full schema introspection for Babel Relay Plugin to use
 (async () => {
@@ -19,7 +18,7 @@ import Schema from '../src/server/schema'
     )
   } else {
     fs.writeFileSync(
-      path.join(__dirname, '../src/server/schema/schema.json'),
+      path.join(__dirname, '../src/server/data/schema.json'),
       JSON.stringify(result, null, 2)
     )
   }
@@ -27,6 +26,6 @@ import Schema from '../src/server/schema'
 
 // Save user readable type system shorthand of schema
 fs.writeFileSync(
-  path.join(__dirname, '../src/server/schema/schema.graphql'),
+  path.join(__dirname, '../src/server/data/schema.graphql'),
   printSchema(Schema)
 )

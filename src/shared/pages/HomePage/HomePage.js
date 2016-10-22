@@ -2,14 +2,14 @@ import React, { PropTypes } from 'react'
 
 import PostList from 'shared/components/Post/PostList/PostList'
 
-function HomepageLatest({ posts }) {
+function Homepage({ posts }) {
   return (
     <PostList posts={posts} />
   )
 }
 
-HomepageLatest.propTypes = {
+Homepage.propTypes = {
   posts: PropTypes.arrayOf(PropTypes.object),
 }
 
-export default HomepageLatest
+export default Homepage

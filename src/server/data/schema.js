@@ -19,7 +19,7 @@ import {
   cursorForObjectInConnection,
 } from 'graphql-relay'
 
-import config from 'shared/configs'
+import config from '../../shared/configs'
 
 import PostModel from './models/PostModel'
 import UserModel from './models/UserModel'

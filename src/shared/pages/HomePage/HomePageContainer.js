@@ -1,24 +1,24 @@
 import React, { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
 
-import HomePageLatest from './HomePageLatest'
+import HomePage from './HomePage'
 
-class HomepageLatestContainer extends Component {
+class HomepageContainer extends Component {
 
   render() {
     return (
-      <HomePageLatest posts={this.props.viewer.posts.edges} />
+      <HomePage posts={this.props.viewer.posts.edges} />
     )
   }
 }
 
-HomepageLatestContainer.propTypes = {
+HomepageContainer.propTypes = {
   viewer: PropTypes.shape({
     posts: PropTypes.object,
   }).isRequired,
 }
 
-export default Relay.createContainer(HomepageLatestContainer, {
+export default Relay.createContainer(HomepageContainer, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
