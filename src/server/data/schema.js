@@ -176,7 +176,13 @@ const { connectionType: postConnection, edgeType: postEdge } = connectionDefinit
 const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   fields: {
-    id: globalIdField('User'),
+    id: globalIdField('User', ({ _id }) => _id),
+    myPosts: {
+      type: postConnection,
+      description: 'List of posts written by viewer',
+      args: connectionArgs,
+      resolve: (user, args) => connectionFromPromisedArray(PostModel.find({ userId: user._id }), args),
+    },
     posts: {
       type: postConnection,
       description: 'List of posts in the blog',
@@ -250,7 +256,7 @@ const queryType = new GraphQLObjectType({
       type: GraphQLUser,
       resolve: () => {
         return {
-          id: 1, // example user
+          _id: '5805c26198f0370001ac64a3', // example user
         }
       },
     },
