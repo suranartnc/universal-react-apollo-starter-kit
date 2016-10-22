@@ -20,24 +20,14 @@ HomepageContainer.propTypes = {
 
 export default Relay.createContainer(HomepageContainer, {
   fragments: {
-    viewer: () => Relay.QL`
-      fragment on Viewer {
-        posts(first: 10) {
-          edges {
-            node {
-              id
-              title
-              excerpt
-              likes
-              comments
-              shares
-              pubDate
-              userId {
-                id
-              }
-            }
-          }
-        }
+    posts: () => Relay.QL`
+      fragment on Post {
+        id
+        title
+        excerpt
+        comments
+        date
+        author
       }
     `,
   },

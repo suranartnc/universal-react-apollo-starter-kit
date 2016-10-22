@@ -173,26 +173,28 @@ const { connectionType: postConnection, edgeType: postEdge } = connectionDefinit
   nodeType: postType,
 })
 
-const queryType = new GraphQLObjectType({
-  name: 'Query',
-  description: 'Root of the Blog Schema',
-  fields: () => ({
-    node: nodeField,
+const GraphQLUser = new GraphQLObjectType({
+  name: 'User',
+  fields: {
+    id: globalIdField('User'),
     posts: {
-      type: new GraphQLList(postType),
+      type: postConnection,
       description: 'List of posts in the blog',
       args: {
-        categoryId: { type: GraphQLString },
+        categoryId: {
+          type: GraphQLString,
+        },
+        ...connectionArgs,
       },
-      resolve: (source, { categoryId }) => {
+      resolve: (source, { categoryId, ...args }) => {
         if (categoryId) {
-          return PostModel.find({
+          return connectionFromPromisedArray(PostModel.find({
             categories: {
               $in: [categoryId],
             },
-          })
+          }), args)
         }
-        return PostModel.find()
+        return connectionFromPromisedArray(PostModel.find(), args)
       },
     },
 
@@ -234,6 +236,23 @@ const queryType = new GraphQLObjectType({
         },
       },
       resolve: (source, { _id }) => UserModel.findById(_id),
+    },
+  },
+  interfaces: [nodeInterface],
+})
+
+const queryType = new GraphQLObjectType({
+  name: 'Query',
+  description: 'Root of the Blog Schema',
+  fields: () => ({
+    node: nodeField,
+    viewer: {
+      type: GraphQLUser,
+      resolve: () => {
+        return {
+          id: 1, // example user
+        }
+      },
     },
   }),
 })

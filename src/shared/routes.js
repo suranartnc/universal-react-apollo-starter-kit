@@ -7,7 +7,7 @@ import FullLayout from 'shared/pages/App/FullLayout/FullLayout'
 
 import HomePageContainer from 'shared/pages/HomePage/HomePageContainer'
 
-const ViewerQueries = { viewer: () => Relay.QL`query { viewer }` }
+const ViewerQueries = { posts: () => Relay.QL`query { posts }` }
 
 export default function getRoutes() {
   return (
