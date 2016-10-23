@@ -1,15 +1,13 @@
 import React from 'react'
-import Relay from 'react-relay'
 import { Route, IndexRoute } from 'react-router'
+
+import { ViewerQueries, PostQueries } from 'shared/relay/queries'
 
 import App from 'shared/pages/App/App'
 import FullLayout from 'shared/pages/App/FullLayout/FullLayout'
 
 import HomePageContainer from 'shared/pages/HomePage/HomePageContainer'
 import EntryPageContainer from 'shared/pages/EntryPage/EntryPageContainer'
-
-const ViewerQueries = { viewer: () => Relay.QL`query { viewer }` }
-const PostQueries = { post: () => Relay.QL`query { post(_id: $id) }` }
 
 export default function getRoutes() {
   return (
