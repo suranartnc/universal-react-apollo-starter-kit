@@ -12,7 +12,8 @@ class AddPostMutation extends Relay.Mutation {
     return {
       title: this.props.title,
       body: this.props.body,
-      userId: this.props.viewerId,
+      // userId: this.props.viewerId,
+      userId: "5805c26198f0370001ac64a3", // use mock userId first
     }
   }
 
