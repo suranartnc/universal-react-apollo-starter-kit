@@ -131,6 +131,7 @@ const postType = new GraphQLObjectType({
   description: 'Represent the type of a blog post',
   fields: () => ({
     id: globalIdField('Post', ({ _id }) => _id),
+    _id: { type: GraphQLString },
     title: { type: GraphQLString },
     categories: {
       type: new GraphQLList(categoryType),
@@ -206,16 +207,16 @@ const GraphQLUser = new GraphQLObjectType({
       },
     },
 
-    post: {
-      type: postType,
-      description: 'Post by _id',
-      args: {
-        _id: {
-          type: new GraphQLNonNull(GraphQLString),
-        },
-      },
-      resolve: (user, { _id }) => PostModel.findById(_id),
-    },
+    // post: {
+    //   type: postType,
+    //   description: 'Post by _id',
+    //   args: {
+    //     _id: {
+    //       type: new GraphQLNonNull(GraphQLString),
+    //     },
+    //   },
+    //   resolve: (user, { _id }) => PostModel.findById(_id),
+    // },
 
     latestPosts: {
       type: new GraphQLList(postType),
@@ -262,6 +263,16 @@ const queryType = new GraphQLObjectType({
           _id: '5805c26198f0370001ac64a3', // example user
         }
       },
+    },
+    post: {
+      type: postType,
+      description: 'Post by _id',
+      args: {
+        _id: {
+          type: new GraphQLNonNull(GraphQLString),
+        },
+      },
+      resolve: (user, { _id }) => PostModel.findById(_id),
     },
   }),
 })

@@ -4,12 +4,12 @@
   "description": "A starter kit to build web apps using react and relay.",
   "main": "index.js",
   "scripts": {
-    "dev": "npm-run-all --parallel dev-ssr dev-hmr",
+    "dev": "npm-run-all --parallel update-schema dev-ssr dev-hmr",
     "dev-ssr": "better-npm-run dev",
     "dev-hmr": "webpack-dev-server --config webpack.config.dev.babel.js",
     "postinstall": "npm run build",
     "build": "better-npm-run build",
-    "start": "npm-run-all --parallel start-ssr",
+    "start": "npm-run-all --parallel update-schema start-ssr",
     "start-ssr": "better-npm-run start",
     "lint": "./node_modules/.bin/eslint ./src",
     "update-schema": "babel-node ./scripts/updateSchema.js"

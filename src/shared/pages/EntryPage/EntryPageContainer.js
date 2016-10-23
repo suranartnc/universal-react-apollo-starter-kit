@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 import EntryPage from './EntryPage'
 
 class EntryPageContainer extends Component {
@@ -10,10 +11,6 @@ class EntryPageContainer extends Component {
 }
 
 EntryPageContainer.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  params: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-  }),
   post: PropTypes.shape({
     id: PropTypes.string,
     title: PropTypes.string,
@@ -21,4 +18,14 @@ EntryPageContainer.propTypes = {
   }),
 }
 
-export default EntryPageContainer
+export default Relay.createContainer(EntryPageContainer, {
+  fragments: {
+    post: () => Relay.QL`
+      fragment on Post {
+        _id
+        title
+        body
+      }
+    `,
+  },
+})

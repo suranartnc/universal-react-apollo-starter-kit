@@ -7,7 +7,7 @@ class PostItem extends Component {
     if (post.thumbnail !== undefined) {
       return (
         <div className={styles.media}>
-          <Link to={`/posts/${post.id}`}>
+          <Link to={`/posts/${post._id}`}>
             <img src={post.thumbnail} alt="" />
           </Link>
         </div>
@@ -20,7 +20,7 @@ class PostItem extends Component {
     const { post } = this.props
     return (
       <article className={styles.article}>
-        {post.title}
+        <Link to={`/posts/${post._id}`}>{post.title}</Link>
       </article>
     )
   }
@@ -28,7 +28,7 @@ class PostItem extends Component {
 
 PostItem.propTypes = {
   post: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
   }).isRequired,
 }

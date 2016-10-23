@@ -101,6 +101,7 @@ type PageInfo {
 type Post implements Node {
   # The ID of an object
   id: ID!
+  _id: String
   title: String
   categories: [Category]
   excerpt: String
@@ -138,6 +139,9 @@ type Query {
     id: ID!
   ): Node
   viewer: Viewer
+
+  # Post by _id
+  post(_id: String!): Post
 }
 
 type Viewer implements Node {
@@ -149,9 +153,6 @@ type Viewer implements Node {
 
   # List of posts in the blog
   posts(categoryId: String, after: String, first: Int, before: String, last: Int): PostConnection
-
-  # Post by _id
-  post(_id: String!): Post
 
   # Recent posts in the blog
   latestPosts(

@@ -25,7 +25,7 @@ export default Relay.createContainer(HomepageContainer, {
         posts(first: 10) {
           edges {
             node {
-              id
+              _id
               title
             }
           }
