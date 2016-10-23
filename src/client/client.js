@@ -25,11 +25,11 @@ relay.injectNetworkLayer(
 
 IsomorphicRelay.injectPreparedData(relay, preloadedData)
 
-match({ history, routes }, (error, redirectLocation, renderProps) => {
+match({ history: browserHistory, routes }, (error, redirectLocation, renderProps) => {
   IsomorphicRouter.prepareInitialRender(relay, renderProps)
     .then((props) => {
       render(
-        <Root {...props} store={store} />,
+        <Root {...props} />,
         mountNode
       )
     })
