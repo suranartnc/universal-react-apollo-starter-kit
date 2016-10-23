@@ -9,7 +9,6 @@ import { match, browserHistory } from 'react-router'
 import Root from 'shared/Root'
 import getRoutes from 'shared/routes'
 
-const initialState = window.__INITIAL_STATE__
 const preloadedData = window.preloadedData
 const routes = getRoutes()
 const mountNode = document.getElementById('root')
