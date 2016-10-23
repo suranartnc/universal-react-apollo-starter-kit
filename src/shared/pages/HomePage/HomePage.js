@@ -2,9 +2,12 @@ import React, { PropTypes } from 'react'
 
 import PostList from 'shared/components/Post/PostList/PostList'
 
-function Homepage({ posts }) {
+function Homepage({ posts, addPost }) {
   return (
-    <PostList posts={posts} />
+    <div>
+      <button onClick={addPost}>Add new post</button>
+      <PostList posts={posts} />
+    </div>
   )
 }
 

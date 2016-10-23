@@ -305,6 +305,14 @@ const addPostMutation = mutationWithClientMutationId({
           }
         }),
     },
+    viewer: {
+      type: GraphQLUser,
+      resolve: () => {
+        return {
+          _id: '5805c26198f0370001ac64a3', // example user
+        }
+      },
+    },
   },
   mutateAndGetPayload: post => PostModel.create(post).catch(error => outputError(error)),
 })
