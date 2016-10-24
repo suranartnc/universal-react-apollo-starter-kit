@@ -43,6 +43,7 @@ export default Relay.createContainer(HomepageContainer, {
             node {
               _id
               title
+              body
             }
           }
         }
