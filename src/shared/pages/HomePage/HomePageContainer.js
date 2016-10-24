@@ -24,6 +24,9 @@ class HomepageContainer extends Component {
 }
 
 HomepageContainer.propTypes = {
+  relay: PropTypes.shape({
+    commitUpdate: PropTypes.func.isRequired,
+  }),
   viewer: PropTypes.shape({
     id: PropTypes.string,
     posts: PropTypes.object,
