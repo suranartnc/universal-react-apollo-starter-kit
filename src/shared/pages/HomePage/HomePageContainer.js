@@ -9,11 +9,11 @@ class HomepageContainer extends Component {
 
   addPost = () => {
     const addPostMutation = new AddPostMutation({
-      viewerId: this.props.viewer.id,
+      viewer: this.props.viewer,
       title: 'This is the title',
       body: 'This is the bidy',
     })
-    Relay.Store.commitUpdate(addPostMutation)
+    this.props.relay.commitUpdate(addPostMutation)
   }
 
   render() {

@@ -2,6 +2,14 @@ import Relay from 'react-relay'
 
 class AddPostMutation extends Relay.Mutation {
 
+  static fragments = {
+    viewer: () => Relay.QL`
+      fragment on Viewer {
+        id,
+      }
+    `,
+  };
+
   // which mutation to use ?
   getMutation() {
     return Relay.QL`
@@ -14,7 +22,7 @@ class AddPostMutation extends Relay.Mutation {
     return {
       title: this.props.title,
       body: this.props.body,
-      // userId: this.props.viewerId,
+      // userId: this.props.viewer.id,
       userId: "5805c26198f0370001ac64a3", // use mock userId first
     }
   }
@@ -41,11 +49,11 @@ class AddPostMutation extends Relay.Mutation {
      - REQUIRED_CHILDREN
   */
   getConfigs() {
-    console.log('viewerId', this.props.viewerId)
+    console.log('viewer id', this.props.viewer.id)
     return [{
       type: 'RANGE_ADD',
       parentName: 'viewer',
-      parentID: this.props.viewerId,
+      parentID: this.props.viewer.id,
       connectionName: 'posts',
       edgeName: 'postEdge',
       rangeBehaviors: {
@@ -61,10 +69,11 @@ class AddPostMutation extends Relay.Mutation {
         node: {
           title: this.props.title,
           body: this.props.body,
+          userId: "5805c26198f0370001ac64a3",
         },
       },
       viewer: {
-        id: this.props.viewerId,
+        id: this.props.viewer.id,
       },
     }
   }

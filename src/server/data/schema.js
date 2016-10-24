@@ -169,7 +169,10 @@ const postType = new GraphQLObjectType({
   interfaces: [nodeInterface],
 })
 
-const { connectionType: postConnection, edgeType: postEdge } = connectionDefinitions({
+const {
+  connectionType: postConnection,
+  edgeType: postEdge,
+} = connectionDefinitions({
   name: 'Post',
   nodeType: postType,
 })
