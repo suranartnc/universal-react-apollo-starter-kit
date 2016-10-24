@@ -54,6 +54,20 @@ class AddPostMutation extends Relay.Mutation {
       },
     }]
   }
+
+  getOptimisticResponse() {
+    return {
+      postEdge: {
+        node: {
+          title: this.props.title,
+          body: this.props.body,
+        },
+      },
+      viewer: {
+        id: this.props.viewerId,
+      },
+    }
+  }
 }
 
 export default AddPostMutation
