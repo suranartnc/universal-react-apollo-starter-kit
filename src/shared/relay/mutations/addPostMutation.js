@@ -2,12 +2,14 @@ import Relay from 'react-relay'
 
 class AddPostMutation extends Relay.Mutation {
 
+  // which mutation to use ?
   getMutation() {
     return Relay.QL`
       mutation { addPost }
     `
   }
 
+  // prepare variables used as input to the mutation
   getVariables() {
     return {
       title: this.props.title,
@@ -17,16 +19,29 @@ class AddPostMutation extends Relay.Mutation {
     }
   }
 
+  // define payload - every fields in your data model that could change as a result of the mutation
   getFatQuery() {
     return Relay.QL`
       fragment on AddPostPayload {
         postEdge,
-        viewer { posts }
+        viewer {
+          posts
+        }
       }
     `
   }
 
+  // how the payload interact with relay store ?
+  /*
+     Mutator configuration
+     - FIELDS_CHANGE
+     - NODE_DELETE
+     - RANGE_ADD
+     - RANGE_DELETE
+     - REQUIRED_CHILDREN
+  */
   getConfigs() {
+    console.log('viewerId', this.props.viewerId)
     return [{
       type: 'RANGE_ADD',
       parentName: 'viewer',
@@ -35,6 +50,7 @@ class AddPostMutation extends Relay.Mutation {
       edgeName: 'postEdge',
       rangeBehaviors: {
         '': 'append',
+        // 'orderby(newest)': 'prepend',
       },
     }]
   }
