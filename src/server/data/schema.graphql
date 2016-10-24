@@ -1,0 +1,169 @@
+input AddPostInput {
+  title: String!
+  body: String!
+  excerpt: String
+
+  # Id of categories
+  categories: [String]
+
+  # Id of the author
+  userId: String!
+  clientMutationId: String
+}
+
+type AddPostPayload {
+  postEdge: PostEdge
+  viewer: Viewer
+  clientMutationId: String
+}
+
+# Represent the type of an author of a blog post or a comment
+type Author implements Node {
+  # The ID of an object
+  id: ID!
+  displayName: String
+  email: String
+  avatar: String
+}
+
+# A Category of the blog
+type Category implements Node {
+  # The ID of an object
+  id: ID!
+  title: String
+  slug: String
+}
+
+# Represent the type of a comment
+type Comment implements Node {
+  # The ID of an object
+  id: ID!
+  body: String
+  date: Float
+  author: Author
+
+  # Replies for the comment
+  replies(
+    # Limit the replies returing
+    limit: Int
+  ): [Comment]
+}
+
+# A connection to a list of items.
+type CommentConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [CommentEdge]
+}
+
+# An edge in a connection.
+type CommentEdge {
+  # The item at the end of the edge
+  node: Comment
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+type Mutation {
+  addPost(input: AddPostInput!): AddPostPayload
+
+  # Create a new author
+  createAuthor(displayName: String!, email: String!, avatar: String): Author
+
+  # Create a new comment
+  createComment(body: String!, postId: String!, repliedTo: String, userId: String!): Post
+}
+
+# An object with an ID
+interface Node {
+  # The id of the object.
+  id: ID!
+}
+
+# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+}
+
+# Represent the type of a blog post
+type Post implements Node {
+  # The ID of an object
+  id: ID!
+  _id: String
+  title: String
+  categories: [Category]
+  excerpt: String
+  body: String
+  date: Float
+
+  # A post's collection of comments
+  comments(after: String, first: Int, before: String, last: Int): CommentConnection
+  author: Author
+}
+
+# A connection to a list of items.
+type PostConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [PostEdge]
+}
+
+# An edge in a connection.
+type PostEdge {
+  # The item at the end of the edge
+  node: Post
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# Root of the Blog Schema
+type Query {
+  # Fetches an object given its ID
+  node(
+    # The ID of an object
+    id: ID!
+  ): Node
+  viewer: Viewer
+
+  # Post by _id
+  post(_id: String!): Post
+}
+
+type Viewer implements Node {
+  # The ID of an object
+  id: ID!
+
+  # List of posts written by viewer
+  myPosts(after: String, first: Int, before: String, last: Int): PostConnection
+
+  # List of posts in the blog
+  posts(categoryId: String, after: String, first: Int, before: String, last: Int): PostConnection
+
+  # Recent posts in the blog
+  latestPosts(
+    # Number of recent items
+    count: Int!
+  ): [Post]
+
+  # Available authors in the blog
+  authors: [Author]
+
+  # Author by _id
+  author(_id: String!): Author
+}

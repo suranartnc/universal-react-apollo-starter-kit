@@ -9,7 +9,6 @@ import { match, browserHistory } from 'react-router'
 import Root from 'shared/Root'
 import getRoutes from 'shared/routes'
 
-const initialState = window.__INITIAL_STATE__
 const preloadedData = window.preloadedData
 const routes = getRoutes()
 const mountNode = document.getElementById('root')
@@ -25,11 +24,11 @@ relay.injectNetworkLayer(
 
 IsomorphicRelay.injectPreparedData(relay, preloadedData)
 
-match({ history, routes }, (error, redirectLocation, renderProps) => {
+match({ history: browserHistory, routes }, (error, redirectLocation, renderProps) => {
   IsomorphicRouter.prepareInitialRender(relay, renderProps)
     .then((props) => {
       render(
-        <Root {...props} store={store} />,
+        <Root {...props} />,
         mountNode
       )
     })

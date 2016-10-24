@@ -7,7 +7,7 @@ function PostList({ posts }) {
     <div className={styles.container}>
       <ul className={styles.list}>
         {posts.map(edge => edge.node).map(post => (
-          <li key={post.id} className={styles.item}>
+          <li key={post._id} className={styles.item}>
             <PostItem post={post} />
           </li>
         ))}

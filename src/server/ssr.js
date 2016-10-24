@@ -53,9 +53,7 @@ function matchRoutes(req, res) {
       IsomorphicRouter.prepareData(renderProps, networkLayer)
         .then(({ data, props }) => {
           const reactComponents = renderToString(
-            <div>
-              {IsomorphicRouter.render(props)}
-            </div>
+            IsomorphicRouter.render(props)
           )
           res.end(renderPage(reactComponents, data))
         })

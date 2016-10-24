@@ -3,9 +3,10 @@ import styles from './EntryPage.scss'
 
 function EntryPage({ post }) {
   return (
-    <div>
-
-    </div>
+    <article>
+      <h1>{post.title}</h1>
+      <p>{post.body}</p>
+    </article>
   )
 }
 

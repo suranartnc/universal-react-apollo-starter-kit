@@ -5,7 +5,7 @@ import graphqlHTTP from 'express-graphql'
 import favicon from 'serve-favicon'
 
 import config from 'shared/configs'
-import schema from 'server/schema/graphql/schema.js'
+import schema from 'server/data/schema.js'
 import ssr from './ssr'
 
 const mongodbUri = 'mongodb://localhost:27017/urrsk'

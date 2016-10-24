@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 
 const CommentSchema = new mongoose.Schema({
+  type: String,
   body: String,
   date: {
     type: Date,

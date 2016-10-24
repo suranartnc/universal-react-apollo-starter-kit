@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 
 const UserSchema = new mongoose.Schema({
+  type: String,
   displayName: {
     type: String,
     unique: true,
