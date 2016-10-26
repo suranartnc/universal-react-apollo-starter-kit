@@ -320,24 +320,38 @@ const addPostMutation = mutationWithClientMutationId({
   mutateAndGetPayload: post => PostModel.create(post).catch(error => outputError(error)),
 })
 
+const addAuthorMutation = mutationWithClientMutationId({
+  name: 'AddAuthor',
+  inputFields: {
+    displayName: { type: new GraphQLNonNull(GraphQLString) },
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    avatar: { type: GraphQLString },
+  },
+  outputFields: {
+    authorEdge: {
+      type: authorEdge,
+      resolve: authorItem => UserModel.find()
+        .then((allAuthors) => {
+
+        }),
+    },
+    viewer: {
+      type: GraphQLUser,
+      resolve: () => {
+        return {
+          _id: '5805c26198f0370001ac64a3', // example user
+        }
+      },
+    },
+  },
+  mutateAndGetPayload: author => UserModel.create(author).catch(error => outputError(error)),
+})
+
 const mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
     addPost: addPostMutation,
-
-    createAuthor: {
-      type: authorType,
-      description: 'Create a new author',
-      args: {
-        displayName: { type: new GraphQLNonNull(GraphQLString) },
-        email: { type: new GraphQLNonNull(GraphQLString) },
-        avatar: { type: GraphQLString },
-      },
-      resolve: (source, args) => {
-        const author = Object.assign({}, args)
-        return UserModel.create(author).catch(error => outputError(error))
-      },
-    },
+    addAuthor: addAuthorMutation,
 
     createComment: {
       type: postType,
