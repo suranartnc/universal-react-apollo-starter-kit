@@ -9,20 +9,35 @@ import {
   globalIdField,
   connectionArgs,
   connectionFromPromisedArray,
+  connectionDefinitions,
 } from 'graphql-relay'
-
-import { nodeInterface } from '../utils/nodeDefinitions'
 
 import UserModel from '../models/UserModel'
 import CommentModel from '../models/CommentModel'
 import CategoryModel from '../models/CategoryModel'
 
+import nodeInterface from '../types/nodeInterfaceType'
 import categoryType from './categoryType'
 import authorType from './authorType'
+import commentType from './commentType'
+
+const {
+  connectionType: commentConnection,
+} = connectionDefinitions({
+  name: 'Comment',
+  nodeType: commentType,
+})
 
 const postType = new GraphQLObjectType({
   name: 'Post',
   description: 'Represent the type of a blog post',
+  interfaces: [nodeInterface],
+  isTypeOf: (object) => {
+    if (object.title && object.body && object.author) {
+      return true
+    }
+    return false
+  },
   fields: () => ({
     id: globalIdField('Post', ({ _id }) => _id),
     _id: { type: GraphQLString },
@@ -60,7 +75,6 @@ const postType = new GraphQLObjectType({
       resolve: post => UserModel.findById(post.userId),
     },
   }),
-  interfaces: [nodeInterface],
 })
 
 export default postType

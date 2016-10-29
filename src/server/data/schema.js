@@ -1,37 +1,49 @@
 import {
   GraphQLObjectType,
   GraphQLSchema,
+  GraphQLNonNull,
+  GraphQLID,
 } from 'graphql'
 
 import {
-  connectionDefinitions,
+  fromGlobalId,
 } from 'graphql-relay'
 
-import { nodeField } from './utils/nodeDefinitions'
 import { viewerQuery, postQuery } from './queries/rootQueries'
 import { addPostMutation } from './mutations/postMutations'
 
-const {
-  connectionType: commentConnection,
-} = connectionDefinitions({
-  name: 'Comment',
-  nodeType: commentType,
-})
+import NodeInterface from './types/NodeInterfaceType'
 
-const {
-  connectionType: postConnection,
-  edgeType: postEdge,
-} = connectionDefinitions({
-  name: 'Post',
-  nodeType: postType,
-})
+function resolveNodeField(source, args, context, { rootValue: objectManager }) {
+  // // the node field will receive a globally
+  // // unique id, and here we convert that back
+  // // to the local type and id
+  // const { id, type } = fromGlobalId(args.id)
+
+  // // map the local type and id into the
+  // // actual data for the record
+  // if (type === 'Viewer') {
+  //   return objectManager.getOneObject('User', { id })
+  // }
+  // return objectManager.getOneObject(type, { id })
+  return null
+}
 
 const queryType = new GraphQLObjectType({
   name: 'Query',
   description: 'Root of the Blog Schema',
   fields: () => ({
-    node: nodeField,
-    viewer: viewerQuery,
+    // node: node.nodeField,
+    // node: {
+    //   type: NodeInterface,
+    //   args: {
+    //     id: {
+    //       type: new GraphQLNonNull(GraphQLID),
+    //     },
+    //   },
+    //   resolve: resolveNodeField,
+    // },
+    // viewer: viewerQuery,
     post: postQuery,
   }),
 })

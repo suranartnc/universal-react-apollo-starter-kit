@@ -10,18 +10,32 @@ import {
   globalIdField,
   connectionArgs,
   connectionFromPromisedArray,
+  connectionDefinitions,
 } from 'graphql-relay'
-
-import { nodeInterface } from '../utils/nodeDefinitions'
 
 import PostModel from '../models/PostModel'
 import UserModel from '../models/UserModel'
 
+import nodeInterface from '../types/nodeInterfaceType'
 import postType from './postType'
 import authorType from './authorType'
 
+const {
+  connectionType: postConnection,
+} = connectionDefinitions({
+  name: 'Post',
+  nodeType: postType,
+})
+
 const userType = new GraphQLObjectType({
   name: 'Viewer',
+  interfaces: [nodeInterface],
+  isTypeOf: (object) => {
+    if (object.myPosts) {
+      return true
+    }
+    return false
+  },
   fields: {
     id: globalIdField('User', ({ _id }) => _id),
 
@@ -83,7 +97,6 @@ const userType = new GraphQLObjectType({
     },
 
   },
-  interfaces: [nodeInterface],
 })
 
 export default userType

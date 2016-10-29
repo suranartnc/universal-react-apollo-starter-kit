@@ -7,18 +7,24 @@ import {
   globalIdField,
 } from 'graphql-relay'
 
-import { nodeInterface } from '../utils/nodeDefinitions'
+import nodeInterface from '../types/nodeInterfaceType'
 
 const authorType = new GraphQLObjectType({
   name: 'Author',
   description: 'Represent the type of an author of a blog post or a comment',
+  interfaces: [nodeInterface],
+  isTypeOf: (object) => {
+    if (object.displayName && object.avatar) {
+      return true
+    }
+    return false
+  },
   fields: () => ({
     id: globalIdField('Author', ({ _id }) => _id),
     displayName: { type: GraphQLString },
     email: { type: GraphQLString },
     avatar: { type: GraphQLString },
   }),
-  interfaces: [nodeInterface],
 })
 
 export default authorType

@@ -3,8 +3,8 @@ import {
   GraphQLString,
 } from 'graphql'
 
-import { userType } from '../types/userType'
-import { postType } from '../types/postType'
+import userType from '../types/userType'
+import postType from '../types/postType'
 
 import PostModel from '../models/PostModel'
 

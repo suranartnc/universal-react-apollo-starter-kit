@@ -7,13 +7,22 @@ import {
 import {
   mutationWithClientMutationId,
   cursorForObjectInConnection,
+  connectionDefinitions,
 } from 'graphql-relay'
 
-import PostModel from './models/PostModel'
+import PostModel from '../models/PostModel'
 
 import userType from '../types/userType'
+import postType from '../types/postType'
 
-import { outputError } from '../helpers'
+import { outputError } from '../utils/helpers'
+
+const {
+  edgeType: postEdge,
+} = connectionDefinitions({
+  name: 'Post',
+  nodeType: postType,
+})
 
 export const addPostMutation = mutationWithClientMutationId({
   name: 'AddPost',
