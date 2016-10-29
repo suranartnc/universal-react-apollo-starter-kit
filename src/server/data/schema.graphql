@@ -128,8 +128,7 @@ type PostEdge {
 
 # Root of the Blog Schema
 type Query {
-  # Post by _id
-  post(_id: String!): Post
+  node(id: ID!): Post
 }
 
 type Viewer implements Node {
