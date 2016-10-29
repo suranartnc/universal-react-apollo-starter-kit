@@ -1,3 +1,22 @@
+input AddPostInput {
+  title: String!
+  body: String!
+  excerpt: String
+
+  # Id of categories
+  categories: [String]
+
+  # Id of the author
+  userId: String!
+  clientMutationId: String
+}
+
+type AddPostPayload {
+  postEdge: PostEdge
+  viewer: Viewer
+  clientMutationId: String
+}
+
 # Represent the type of an author of a blog post or a comment
 type Author implements Node {
   # The ID of an object
@@ -48,6 +67,10 @@ type CommentEdge {
   cursor: String!
 }
 
+type Mutation {
+  addPost(input: AddPostInput!): AddPostPayload
+}
+
 # An object with a globally unique id.
 interface Node {
   # The globally unique id of the object.
@@ -85,8 +108,49 @@ type Post implements Node {
   author: Author
 }
 
+# A connection to a list of items.
+type PostConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [PostEdge]
+}
+
+# An edge in a connection.
+type PostEdge {
+  # The item at the end of the edge
+  node: Post
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
 # Root of the Blog Schema
 type Query {
   # Post by _id
   post(_id: String!): Post
+}
+
+type Viewer implements Node {
+  # The ID of an object
+  id: ID!
+
+  # List of posts written by viewer
+  myPosts(after: String, first: Int, before: String, last: Int): PostConnection
+
+  # List of posts in the blog
+  posts(categoryId: String, after: String, first: Int, before: String, last: Int): PostConnection
+
+  # Recent posts in the blog
+  latestPosts(
+    # Number of recent items
+    count: Int!
+  ): [Post]
+
+  # Available authors in the blog
+  authors: [Author]
+
+  # Author by _id
+  author(_id: String!): Author
 }

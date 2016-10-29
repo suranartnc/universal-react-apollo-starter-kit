@@ -9,7 +9,6 @@ import {
   globalIdField,
   connectionArgs,
   connectionFromPromisedArray,
-  connectionDefinitions,
 } from 'graphql-relay'
 
 import UserModel from '../models/UserModel'
@@ -19,14 +18,8 @@ import CategoryModel from '../models/CategoryModel'
 import nodeInterface from '../types/nodeInterfaceType'
 import categoryType from './categoryType'
 import authorType from './authorType'
-import commentType from './commentType'
 
-const {
-  connectionType: commentConnection,
-} = connectionDefinitions({
-  name: 'Comment',
-  nodeType: commentType,
-})
+import commentConnection from './commentConnection'
 
 const postType = new GraphQLObjectType({
   name: 'Post',
@@ -62,7 +55,7 @@ const postType = new GraphQLObjectType({
       },
     },
     comments: {
-      type: commentConnection,
+      type: commentConnection.connectionType,
       description: 'A post\'s collection of comments',
       args: connectionArgs,
       resolve: (post, args) => connectionFromPromisedArray(CommentModel.find({

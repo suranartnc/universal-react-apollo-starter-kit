@@ -10,7 +10,6 @@ import {
   globalIdField,
   connectionArgs,
   connectionFromPromisedArray,
-  connectionDefinitions,
 } from 'graphql-relay'
 
 import PostModel from '../models/PostModel'
@@ -20,12 +19,7 @@ import nodeInterface from '../types/nodeInterfaceType'
 import postType from './postType'
 import authorType from './authorType'
 
-const {
-  connectionType: postConnection,
-} = connectionDefinitions({
-  name: 'Post',
-  nodeType: postType,
-})
+import postConnection from './postConnection'
 
 const userType = new GraphQLObjectType({
   name: 'Viewer',
@@ -40,14 +34,14 @@ const userType = new GraphQLObjectType({
     id: globalIdField('User', ({ _id }) => _id),
 
     myPosts: {
-      type: postConnection,
+      type: postConnection.connectionType,
       description: 'List of posts written by viewer',
       args: connectionArgs,
       resolve: (user, args) => connectionFromPromisedArray(PostModel.find({ userId: user._id }), args),
     },
 
     posts: {
-      type: postConnection,
+      type: postConnection.connectionType,
       description: 'List of posts in the blog',
       args: {
         categoryId: {
