@@ -128,7 +128,11 @@ type PostEdge {
 
 # Root of the Blog Schema
 type Query {
-  node(id: ID!): Post
+  node(id: ID!): Node
+  viewer: Viewer
+
+  # Post by _id
+  post(_id: String!): Post
 }
 
 type Viewer implements Node {

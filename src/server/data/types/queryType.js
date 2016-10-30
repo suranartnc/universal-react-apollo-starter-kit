@@ -10,7 +10,7 @@ import {
 
 import { postQuery } from '../queries/rootQueries'
 
-import NodeInterface from './NodeInterfaceType'
+import nodeInterface from './nodeInterfaceType'
 import userType from './userType'
 
 function resolveNodeField(source, args) {
@@ -34,7 +34,7 @@ const queryType = new GraphQLObjectType({
   fields: () => ({
     // node: node.nodeField,
     node: {
-      type: NodeInterface,
+      type: nodeInterface,
       args: {
         id: {
           type: new GraphQLNonNull(GraphQLID),
