@@ -69,17 +69,11 @@ type CommentEdge {
 
 type Mutation {
   addPost(input: AddPostInput!): AddPostPayload
-
-  # Create a new author
-  createAuthor(displayName: String!, email: String!, avatar: String): Author
-
-  # Create a new comment
-  createComment(body: String!, postId: String!, repliedTo: String, userId: String!): Post
 }
 
-# An object with an ID
+# An object with a globally unique id.
 interface Node {
-  # The id of the object.
+  # The globally unique id of the object.
   id: ID!
 }
 
@@ -134,11 +128,7 @@ type PostEdge {
 
 # Root of the Blog Schema
 type Query {
-  # Fetches an object given its ID
-  node(
-    # The ID of an object
-    id: ID!
-  ): Node
+  node(id: ID!): Node
   viewer: Viewer
 
   # Post by _id

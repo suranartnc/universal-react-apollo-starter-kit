@@ -16,11 +16,11 @@
           "fields": [
             {
               "name": "node",
-              "description": "Fetches an object given its ID",
+              "description": null,
               "args": [
                 {
                   "name": "id",
-                  "description": "The ID of an object",
+                  "description": null,
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
@@ -99,11 +99,11 @@
         {
           "kind": "INTERFACE",
           "name": "Node",
-          "description": "An object with an ID",
+          "description": "An object with a globally unique id.",
           "fields": [
             {
               "name": "id",
-              "description": "The id of the object.",
+              "description": "The globally unique id of the object.",
               "args": [],
               "type": {
                 "kind": "NON_NULL",
@@ -1066,122 +1066,6 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "AddPostPayload",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "createAuthor",
-              "description": "Create a new author",
-              "args": [
-                {
-                  "name": "displayName",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "email",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "avatar",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "Author",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "createComment",
-              "description": "Create a new comment",
-              "args": [
-                {
-                  "name": "body",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "postId",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "repliedTo",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "userId",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "Post",
                 "ofType": null
               },
               "isDeprecated": false,
