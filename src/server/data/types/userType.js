@@ -25,7 +25,7 @@ const userType = new GraphQLObjectType({
   name: 'Viewer',
   interfaces: [nodeInterface],
   isTypeOf: (object) => {
-    if (object.myPosts) {
+    if (object._id) {
       return true
     }
     return false

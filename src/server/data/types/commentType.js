@@ -21,7 +21,7 @@ const commentType = new GraphQLObjectType({
   description: 'Represent the type of a comment',
   interfaces: [nodeInterface],
   isTypeOf: (object) => {
-    if (!object.title && object.body && object.replies) {
+    if (!object.title && object.body && object.postId && object.userId) {
       return true
     }
     return false

@@ -14,7 +14,7 @@ const authorType = new GraphQLObjectType({
   description: 'Represent the type of an author of a blog post or a comment',
   interfaces: [nodeInterface],
   isTypeOf: (object) => {
-    if (object.displayName && object.avatar) {
+    if (object.displayName && object.email) {
       return true
     }
     return false

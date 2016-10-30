@@ -26,7 +26,7 @@ const postType = new GraphQLObjectType({
   description: 'Represent the type of a blog post',
   interfaces: [nodeInterface],
   isTypeOf: (object) => {
-    if (object.title && object.body && object.author) {
+    if (object.title && object.userId) {
       return true
     }
     return false
