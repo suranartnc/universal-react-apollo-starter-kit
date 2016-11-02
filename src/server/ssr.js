@@ -1,10 +1,7 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
-import Relay from 'react-relay'
 import { RouterContext, match, applyRouterMiddleware } from 'react-router'
-import useRelay from 'react-router-relay'
 import getRoutes from 'shared/routes'
-import IsomorphicRouter from 'isomorphic-relay-router'
 
 import config from 'shared/configs'
 
@@ -37,7 +34,6 @@ const renderPage = (reactComponents, preloadedData) => (`
 `)
 
 const GRAPHQL_URL = `http://localhost:3000/graphql`
-const networkLayer = new Relay.DefaultNetworkLayer(GRAPHQL_URL)
 
 function matchRoutes(req, res) {
   const routes = getRoutes()
@@ -50,16 +46,7 @@ function matchRoutes(req, res) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps && renderProps.components) {
-      IsomorphicRouter.prepareData(renderProps, networkLayer)
-        .then(({ data, props }) => {
-          const reactComponents = renderToString(
-            IsomorphicRouter.render(props)
-          )
-          res.end(renderPage(reactComponents, data))
-        })
-        .catch((error) => {
-          res.status(500).send(error.message)
-        })
+
     } else {
       res.status(404).send('Not found')
     }

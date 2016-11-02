@@ -4,15 +4,9 @@ import {
   GraphQLNonNull,
 } from 'graphql'
 
-import {
-  mutationWithClientMutationId,
-  cursorForObjectInConnection,
-} from 'graphql-relay'
-
 import PostModel from '../models/PostModel'
 
 import userType from '../types/userType'
-import postConnection from '../types/postConnection'
 
 import { outputError } from '../utils/helpers'
 

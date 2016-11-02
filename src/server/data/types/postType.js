@@ -5,34 +5,17 @@ import {
   GraphQLFloat,
 } from 'graphql'
 
-import {
-  globalIdField,
-  connectionArgs,
-  connectionFromPromisedArray,
-} from 'graphql-relay'
-
 import UserModel from '../models/UserModel'
 import CommentModel from '../models/CommentModel'
 import CategoryModel from '../models/CategoryModel'
 
-import nodeInterface from '../types/nodeInterfaceType'
 import categoryType from './categoryType'
 import authorType from './authorType'
-
-import commentConnection from './commentConnection'
 
 const postType = new GraphQLObjectType({
   name: 'Post',
   description: 'Represent the type of a blog post',
-  interfaces: [nodeInterface],
-  isTypeOf: (object) => {
-    if (object.title && object.userId) {
-      return true
-    }
-    return false
-  },
   fields: () => ({
-    id: globalIdField('Post', ({ _id }) => _id),
     _id: { type: GraphQLString },
     title: { type: GraphQLString },
     categories: {
@@ -54,15 +37,15 @@ const postType = new GraphQLObjectType({
         return null
       },
     },
-    comments: {
-      type: commentConnection.connectionType,
-      description: 'A post\'s collection of comments',
-      args: connectionArgs,
-      resolve: (post, args) => connectionFromPromisedArray(CommentModel.find({
-        postId: post._id,
-        repliedTo: null,
-      }), args),
-    },
+    // comments: {
+    //   type: commentConnection.connectionType,
+    //   description: 'A post\'s collection of comments',
+    //   args: connectionArgs,
+    //   resolve: (post, args) => connectionFromPromisedArray(CommentModel.find({
+    //     postId: post._id,
+    //     repliedTo: null,
+    //   }), args),
+    // },
     author: {
       type: authorType,
       resolve: post => UserModel.findById(post.userId),

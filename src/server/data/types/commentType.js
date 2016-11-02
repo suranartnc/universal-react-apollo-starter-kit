@@ -6,28 +6,15 @@ import {
   GraphQLString,
 } from 'graphql'
 
-import {
-  globalIdField,
-} from 'graphql-relay'
-
 import UserModel from '../models/UserModel'
 import CommentModel from '../models/CommentModel'
 
-import nodeInterface from '../types/nodeInterfaceType'
 import authorType from './authorType'
 
 const commentType = new GraphQLObjectType({
   name: 'Comment',
   description: 'Represent the type of a comment',
-  interfaces: [nodeInterface],
-  isTypeOf: (object) => {
-    if (!object.title && object.body && object.postId && object.userId) {
-      return true
-    }
-    return false
-  },
   fields: () => ({
-    id: globalIdField('Comment', ({ _id }) => _id),
     body: { type: GraphQLString },
     date: { type: GraphQLFloat },
     author: {

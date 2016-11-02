@@ -11,8 +11,7 @@
     "build": "better-npm-run build",
     "start": "npm-run-all --parallel update-schema start-ssr",
     "start-ssr": "better-npm-run start",
-    "lint": "./node_modules/.bin/eslint ./src",
-    "update-schema": "babel-node ./scripts/updateSchema.js"
+    "lint": "./node_modules/.bin/eslint ./src"
   },
   "betterScripts": {
     "dev": {
@@ -67,7 +66,6 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-react-optimize": "^1.0.1",
     "babel-preset-stage-0": "^6.16.0",
-    "babel-relay-plugin": "^0.9.3",
     "better-npm-run": "0.0.11",
     "body-parser": "^1.15.2",
     "css-loader": "^0.25.0",
@@ -77,10 +75,7 @@
     "extract-text-webpack-plugin": "^2.0.0-beta.4",
     "file-loader": "^0.9.0",
     "graphql": "^0.7.2",
-    "graphql-relay": "^0.4.3",
     "isomorphic-fetch": "^2.2.1",
-    "isomorphic-relay": "^0.7.3",
-    "isomorphic-relay-router": "^0.8.4",
     "json-loader": "^0.5.4",
     "mongoose": "^4.6.4",
     "node-sass": "^3.10.1",
@@ -92,7 +87,6 @@
     "react-helmet": "^3.1.0",
     "react-relay": "^0.9.3",
     "react-router": "^2.8.1",
-    "react-router-relay": "^0.13.5",
     "react-router-scroll": "^0.3.2",
     "sass-loader": "^4.0.2",
     "serve-favicon": "^2.3.0",
