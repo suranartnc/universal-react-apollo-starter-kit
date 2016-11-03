@@ -1,11 +1,14 @@
-import React, { PropTypes } from 'react'
-import { Router, applyRouterMiddleware } from 'react-router'
-import useScroll from 'react-router-scroll/lib/useScroll'
+import React from 'react'
+import { Router, browserHistory } from 'react-router'
+import getRoutes from 'shared/routes'
 
-const Root = ({ ...renderProps }) => {
+const routes = getRoutes()
+
+const Root = () => {
   return (
     <Router
-      {...renderProps}
+      history={browserHistory}
+      routes={routes}
     />
   )
 }
