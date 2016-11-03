@@ -1,12 +1,22 @@
-import React, { PropTypes } from 'react'
-import { Router, applyRouterMiddleware } from 'react-router'
-import useScroll from 'react-router-scroll/lib/useScroll'
+import React from 'react'
+import { Router, browserHistory } from 'react-router'
 
-const Root = ({ ...renderProps }) => {
+import ApolloClient, { createNetworkInterface } from 'apollo-client'
+import { ApolloProvider } from 'react-apollo'
+
+import getRoutes from 'shared/routes'
+
+const client = new ApolloClient()
+const routes = getRoutes()
+
+const Root = () => {
   return (
-    <Router
-      {...renderProps}
-    />
+    <ApolloProvider client={client}>
+      <Router
+        history={browserHistory}
+        routes={routes}
+      />
+    </ApolloProvider>
   )
 }
 

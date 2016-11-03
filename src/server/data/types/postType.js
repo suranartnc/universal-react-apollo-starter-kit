@@ -3,36 +3,28 @@ import {
   GraphQLString,
   GraphQLList,
   GraphQLFloat,
+  GraphQLInt,
 } from 'graphql'
-
-import {
-  globalIdField,
-  connectionArgs,
-  connectionFromPromisedArray,
-} from 'graphql-relay'
 
 import UserModel from '../models/UserModel'
 import CommentModel from '../models/CommentModel'
 import CategoryModel from '../models/CategoryModel'
 
-import nodeInterface from '../types/nodeInterfaceType'
 import categoryType from './categoryType'
 import authorType from './authorType'
+import commentType from './commentType'
 
-import commentConnection from './commentConnection'
+
+import { listArgs } from '../utils/schemaUtils'
+
+import {
+  outputError,
+} from '../utils/helpers'
 
 const postType = new GraphQLObjectType({
   name: 'Post',
   description: 'Represent the type of a blog post',
-  interfaces: [nodeInterface],
-  isTypeOf: (object) => {
-    if (object.title && object.userId) {
-      return true
-    }
-    return false
-  },
   fields: () => ({
-    id: globalIdField('Post', ({ _id }) => _id),
     _id: { type: GraphQLString },
     title: { type: GraphQLString },
     categories: {
@@ -41,7 +33,8 @@ const postType = new GraphQLObjectType({
         _id: {
           $in: post.categories,
         },
-      }),
+      })
+      .catch(error => outputError(error)),
     },
     excerpt: { type: GraphQLString },
     body: { type: GraphQLString },
@@ -55,18 +48,30 @@ const postType = new GraphQLObjectType({
       },
     },
     comments: {
-      type: commentConnection.connectionType,
+      type: new GraphQLList(commentType),
       description: 'A post\'s collection of comments',
-      args: connectionArgs,
-      resolve: (post, args) => connectionFromPromisedArray(CommentModel.find({
-        postId: post._id,
-        repliedTo: null,
-      }), args),
+      args: listArgs,
+      resolve: (post, { limit }) => {
+        if (limit > 0) {
+          CommentModel.find({
+            postId: post._id,
+            repliedTo: null,
+          })
+          .limit(limit)
+          .sort('-date')
+          .catch(error => outputError(error))
+        }
+        return CommentModel.find({
+          postId: post._id,
+          repliedTo: null,
+        }).catch(error => outputError(error))
+      },
     },
     author: {
       type: authorType,
-      resolve: post => UserModel.findById(post.userId),
+      resolve: post => UserModel.findById(post.userId).catch(error => outputError(error)),
     },
+    likes: { type: GraphQLInt },
   }),
 })
 

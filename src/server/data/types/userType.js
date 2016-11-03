@@ -2,92 +2,89 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLList,
-  GraphQLInt,
-  GraphQLNonNull,
 } from 'graphql'
-
-import {
-  globalIdField,
-  connectionArgs,
-  connectionFromPromisedArray,
-} from 'graphql-relay'
 
 import PostModel from '../models/PostModel'
 import UserModel from '../models/UserModel'
 
-import nodeInterface from '../types/nodeInterfaceType'
 import postType from './postType'
 import authorType from './authorType'
 
-import postConnection from './postConnection'
+import {
+  listArgs,
+  singleArgs,
+} from '../utils/schemaUtils'
+
+import {
+  outputError,
+} from '../utils/helpers'
 
 const userType = new GraphQLObjectType({
   name: 'Viewer',
-  interfaces: [nodeInterface],
-  isTypeOf: (object) => {
-    if (object._id) {
-      return true
-    }
-    return false
-  },
   fields: {
-    id: globalIdField('User', ({ _id }) => _id),
 
     myPosts: {
-      type: postConnection.connectionType,
+      type: new GraphQLList(postType),
       description: 'List of posts written by viewer',
-      args: connectionArgs,
-      resolve: (user, args) => connectionFromPromisedArray(PostModel.find({ userId: user._id }), args),
+      args: listArgs,
+      resolve: (user, { limit }) => {
+        if (limit >= 0) {
+          return PostModel.find({
+            userId: user._id,
+          })
+          .limit(limit).sort('-date')
+          .catch(error => outputError(error))
+        }
+        return PostModel.find({
+          userId: user._id,
+        })
+        .catch(error => outputError(error))
+      },
     },
 
     posts: {
-      type: postConnection.connectionType,
-      description: 'List of posts in the blog',
+      type: new GraphQLList(postType),
+      description: 'Recent posts in the blog',
       args: {
         categoryId: {
           type: GraphQLString,
         },
-        ...connectionArgs,
+        ...listArgs,
       },
-      resolve: (user, { categoryId, ...args }) => {
+      resolve: (user, { categoryId, limit = 10, ...args }) => {
         if (categoryId) {
-          return connectionFromPromisedArray(PostModel.find({
+          return PostModel.find({
             categories: {
               $in: [categoryId],
             },
-          }), args)
+          })
+          .limit(limit).sort('-date')
+          .catch(error => outputError(error))
         }
-        return connectionFromPromisedArray(PostModel.find(), args)
+        return PostModel.find()
+          .limit(limit).sort('-date')
+          .catch(error => outputError(error))
       },
     },
 
-    latestPosts: {
-      type: new GraphQLList(postType),
-      description: 'Recent posts in the blog',
-      args: {
-        count: {
-          type: new GraphQLNonNull(GraphQLInt),
-          description: 'Number of recent items',
-        },
-      },
-      resolve: (user, { count }) => PostModel.find().limit(count).sort('-date'),
+    post: {
+      type: postType,
+      description: 'Post by _id',
+      args: singleArgs,
+      resolve: (user, { _id }) => PostModel.findById(_id).catch(error => outputError(error)),
     },
 
     authors: {
       type: new GraphQLList(authorType),
       description: 'Available authors in the blog',
-      resolve: () => UserModel.find(),
+      resolve: () => UserModel.find().catch(error => outputError(error)),
     },
 
     author: {
       type: authorType,
       description: 'Author by _id',
-      args: {
-        _id: {
-          type: new GraphQLNonNull(GraphQLString),
-        },
-      },
-      resolve: (user, { _id }) => UserModel.findById(_id),
+      args: singleArgs,
+      resolve: (user, { _id }) => UserModel.findById(_id).catch(error => outputError(error)),
     },
 
   },

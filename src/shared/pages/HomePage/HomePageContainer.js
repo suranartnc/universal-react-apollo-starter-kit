@@ -1,53 +1,40 @@
 import React, { Component, PropTypes } from 'react'
-import Relay from 'react-relay'
-
-import AddPostMutation from 'shared/relay/mutations/addPostMutation'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 
 import HomePage from './HomePage'
 
 class HomepageContainer extends Component {
 
   addPost = () => {
-    const addPostMutation = new AddPostMutation({
-      viewer: this.props.viewer,
-      title: 'This is the title',
-      body: 'This is the bidy',
-    })
-    this.props.relay.commitUpdate(addPostMutation)
+    // const addPostMutation = new AddPostMutation({
+    //   viewer: this.props.viewer,
+    //   title: 'This is the title',
+    //   body: 'This is the bidy',
+    // })
+    // this.props.relay.commitUpdate(addPostMutation)
   }
 
   render() {
-    return (
-      <HomePage addPost={this.addPost} posts={this.props.viewer.posts.edges} />
-    )
+    if (!this.props.data.loading) {
+      return (
+        <HomePage addPost={this.addPost} posts={this.props.data.viewer.posts} />
+      )
+    }
+    return null
   }
 }
 
-HomepageContainer.propTypes = {
-  relay: PropTypes.shape({
-    commitUpdate: PropTypes.func.isRequired,
-  }),
-  viewer: PropTypes.shape({
-    id: PropTypes.string,
-    posts: PropTypes.object,
-  }).isRequired,
-}
-
-export default Relay.createContainer(HomepageContainer, {
-  fragments: {
-    viewer: () => Relay.QL`
-      fragment on Viewer {
-        id,
-        posts(first: 10) {
-          edges {
-            node {
-              _id
-              title
-              body
-            }
-          }
-        }
+const GET_POSTS = gql`
+  query getPosts {
+    viewer {
+      posts {
+        _id
+        title
+        body
       }
-    `,
-  },
-})
+    }
+  }
+`
+
+export default graphql(GET_POSTS)(HomepageContainer)

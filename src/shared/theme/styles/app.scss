@@ -6,18 +6,4 @@
   @import "base/base";
   @import "components/icon";
   @import "layout/grid";
-
-
-  .image-wrapper {
-    text-align: center;
-    span {
-      @include font-size(24);
-      display: block;
-      border-style: solid;
-      padding: 5px;
-      border-width: 0 1px 1px 1px;
-      border-color: $border-color;
-    }
-  }
-
 }

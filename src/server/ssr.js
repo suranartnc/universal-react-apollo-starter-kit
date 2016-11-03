@@ -1,12 +1,14 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
-import Relay from 'react-relay'
-import { RouterContext, match, applyRouterMiddleware } from 'react-router'
-import useRelay from 'react-router-relay'
+import { RouterContext, match } from 'react-router'
 import getRoutes from 'shared/routes'
-import IsomorphicRouter from 'isomorphic-relay-router'
 
 import config from 'shared/configs'
+
+import ApolloClient from 'apollo-client'
+import { ApolloProvider } from 'react-apollo'
+
+const client = new ApolloClient()
 
 const wdsPath = `http://${config.host}:${config.wdsPort}/build/`
 const assetsManifest = process.env.webpackAssets && JSON.parse(process.env.webpackAssets)
@@ -17,7 +19,7 @@ const renderPage = (reactComponents, preloadedData) => (`
     <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>React Universal Starter Kit</title>
+      <title>Universal React GraphQL Starter Kit</title>
       ${process.env.NODE_ENV === 'production' ? `<link rel="stylesheet" href="${assetsManifest.app.css}" />` : ''}
     </head>
     <body>
@@ -36,9 +38,6 @@ const renderPage = (reactComponents, preloadedData) => (`
   </html>
 `)
 
-const GRAPHQL_URL = `http://localhost:3000/graphql`
-const networkLayer = new Relay.DefaultNetworkLayer(GRAPHQL_URL)
-
 function matchRoutes(req, res) {
   const routes = getRoutes()
   match({
@@ -50,16 +49,12 @@ function matchRoutes(req, res) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps && renderProps.components) {
-      IsomorphicRouter.prepareData(renderProps, networkLayer)
-        .then(({ data, props }) => {
-          const reactComponents = renderToString(
-            IsomorphicRouter.render(props)
-          )
-          res.end(renderPage(reactComponents, data))
-        })
-        .catch((error) => {
-          res.status(500).send(error.message)
-        })
+      const reactComponent = renderToString(
+        <ApolloProvider client={client}>
+          <RouterContext {...renderProps} />
+        </ApolloProvider>
+      )
+      res.send(renderPage(reactComponent, {}))
     } else {
       res.status(404).send('Not found')
     }

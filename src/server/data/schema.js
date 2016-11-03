@@ -4,12 +4,19 @@ import {
 } from 'graphql'
 
 import queryType from './types/queryType'
-import { addPostMutation } from './mutations/postMutations'
+
+import {
+  addPostMutation,
+  likePostMutation,
+  deletePostMutation,
+} from './mutations/postMutations'
 
 const mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
     addPost: addPostMutation,
+    likePost: likePostMutation,
+    deletePost: deletePostMutation,
   },
 })
 
