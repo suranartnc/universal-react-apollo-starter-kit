@@ -11,6 +11,14 @@ import CategoryModel from '../models/CategoryModel'
 
 import categoryType from './categoryType'
 import authorType from './authorType'
+import commentType from './commentType'
+
+
+import { listArgs } from '../utils/schemaUtils'
+
+import {
+  outputError,
+} from '../utils/helpers'
 
 const postType = new GraphQLObjectType({
   name: 'Post',
@@ -24,7 +32,8 @@ const postType = new GraphQLObjectType({
         _id: {
           $in: post.categories,
         },
-      }),
+      })
+      .catch(error => outputError(error)),
     },
     excerpt: { type: GraphQLString },
     body: { type: GraphQLString },
@@ -37,18 +46,29 @@ const postType = new GraphQLObjectType({
         return null
       },
     },
-    // comments: {
-    //   type: commentConnection.connectionType,
-    //   description: 'A post\'s collection of comments',
-    //   args: connectionArgs,
-    //   resolve: (post, args) => connectionFromPromisedArray(CommentModel.find({
-    //     postId: post._id,
-    //     repliedTo: null,
-    //   }), args),
-    // },
+    comments: {
+      type: new GraphQLList(commentType),
+      description: 'A post\'s collection of comments',
+      args: listArgs,
+      resolve: (post, { limit }) => {
+        if (limit > 0) {
+          CommentModel.find({
+            postId: post._id,
+            repliedTo: null,
+          })
+          .limit(limit)
+          .sort('-date')
+          .catch(error => outputError(error))
+        }
+        return CommentModel.find({
+          postId: post._id,
+          repliedTo: null,
+        }).catch(error => outputError(error))
+      },
+    },
     author: {
       type: authorType,
-      resolve: post => UserModel.findById(post.userId),
+      resolve: post => UserModel.findById(post.userId).catch(error => outputError(error)),
     },
   }),
 })

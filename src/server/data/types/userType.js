@@ -2,8 +2,6 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLList,
-  GraphQLInt,
-  GraphQLNonNull,
 } from 'graphql'
 
 import PostModel from '../models/PostModel'
@@ -12,18 +10,14 @@ import UserModel from '../models/UserModel'
 import postType from './postType'
 import authorType from './authorType'
 
-const listArgs = {
-  limit: {
-    type: new GraphQLNonNull(GraphQLInt),
-    description: 'Number of recent items',
-  },
-}
+import {
+  listArgs,
+  singleArgs,
+} from '../utils/schemaUtils'
 
-const singleArgs = {
-  _id: {
-    type: new GraphQLNonNull(GraphQLString),
-  },
-}
+import {
+  outputError,
+} from '../utils/helpers'
 
 const userType = new GraphQLObjectType({
   name: 'Viewer',
@@ -37,12 +31,14 @@ const userType = new GraphQLObjectType({
         if (limit >= 0) {
           return PostModel.find({
             userId: user._id,
-          }).limit(limit).sort('-date')
+          })
+          .limit(limit).sort('-date')
+          .catch(error => outputError(error))
         }
         return PostModel.find({
           userId: user._id,
         })
-
+        .catch(error => outputError(error))
       },
     },
 
@@ -55,15 +51,19 @@ const userType = new GraphQLObjectType({
         },
         ...listArgs,
       },
-      resolve: (user, { categoryId, limit, ...args }) => {
+      resolve: (user, { categoryId, limit = 10, ...args }) => {
         if (categoryId) {
           return PostModel.find({
             categories: {
               $in: [categoryId],
             },
-          }).limit(limit).sort('-date')
+          })
+          .limit(limit).sort('-date')
+          .catch(error => outputError(error))
         }
-        return PostModel.find().limit(limit).sort('-date')
+        return PostModel.find()
+          .limit(limit).sort('-date')
+          .catch(error => outputError(error))
       },
     },
 
@@ -71,20 +71,20 @@ const userType = new GraphQLObjectType({
       type: postType,
       description: 'Post by _id',
       args: singleArgs,
-      resolve: (user, { _id }) => PostModel.findById(_id),
+      resolve: (user, { _id }) => PostModel.findById(_id).catch(error => outputError(error)),
     },
 
     authors: {
       type: new GraphQLList(authorType),
       description: 'Available authors in the blog',
-      resolve: () => UserModel.find(),
+      resolve: () => UserModel.find().catch(error => outputError(error)),
     },
 
     author: {
       type: authorType,
       description: 'Author by _id',
       args: singleArgs,
-      resolve: (user, { _id }) => UserModel.findById(_id),
+      resolve: (user, { _id }) => UserModel.findById(_id).catch(error => outputError(error)),
     },
 
   },

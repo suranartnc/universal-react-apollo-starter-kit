@@ -11,6 +11,10 @@ import CommentModel from '../models/CommentModel'
 
 import authorType from './authorType'
 
+import {
+  outputError,
+} from '../utils/helpers'
+
 const commentType = new GraphQLObjectType({
   name: 'Comment',
   description: 'Represent the type of a comment',
@@ -19,7 +23,7 @@ const commentType = new GraphQLObjectType({
     date: { type: GraphQLFloat },
     author: {
       type: authorType,
-      resolve: comment => UserModel.findById(comment.userId),
+      resolve: comment => UserModel.findById(comment.userId).catch(error => outputError(error)),
     },
     replies: {
       type: new GraphQLList(commentType),
@@ -34,11 +38,14 @@ const commentType = new GraphQLObjectType({
         if (limit >= 0) {
           return CommentModel.find({
             repliedTo: comment._id,
-          }).limit(limit).sort('-date')
+          })
+          .limit(limit).sort('-date')
+          .catch(error => outputError(error))
         }
         return CommentModel.find({
           repliedTo: comment._id,
         })
+        .catch(error => outputError(error))
       },
     },
   }),
