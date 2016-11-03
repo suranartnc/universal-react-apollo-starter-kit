@@ -14,7 +14,7 @@ const renderPage = (reactComponents, preloadedData) => (`
     <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>React Universal Starter Kit</title>
+      <title>Universal React GraphQL Starter Kit</title>
       ${process.env.NODE_ENV === 'production' ? `<link rel="stylesheet" href="${assetsManifest.app.css}" />` : ''}
     </head>
     <body>
