@@ -23,3 +23,17 @@ export const addPostMutation = {
     return PostModel.create(post).catch(error => outputError(error))
   },
 }
+
+export const likePostMutation = {
+  type: postType,
+  description: 'Like a post',
+  args: {
+    _id: { type: new GraphQLNonNull(GraphQLString) },
+    userId: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  resolve: (source, { _id, userId }) => {
+    return PostModel.update({ _id }, { likes: 1, likedBy: [userId] })
+      .then(() => PostModel.findById(_id))
+      .catch(error => outputError(error))
+  },
+}

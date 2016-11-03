@@ -3,6 +3,7 @@ import {
   GraphQLString,
   GraphQLList,
   GraphQLFloat,
+  GraphQLInt,
 } from 'graphql'
 
 import UserModel from '../models/UserModel'
@@ -70,6 +71,7 @@ const postType = new GraphQLObjectType({
       type: authorType,
       resolve: post => UserModel.findById(post.userId).catch(error => outputError(error)),
     },
+    likes: { type: GraphQLInt },
   }),
 })
 
