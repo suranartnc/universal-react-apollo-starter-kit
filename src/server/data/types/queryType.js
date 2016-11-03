@@ -1,10 +1,6 @@
 import {
   GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLID,
 } from 'graphql'
-
-import { postQuery } from '../queries/rootQueries'
 
 import userType from './userType'
 
@@ -20,7 +16,6 @@ const queryType = new GraphQLObjectType({
         }
       },
     },
-    post: postQuery,
   }),
 })
 
