@@ -3,13 +3,11 @@ import React, { PropTypes } from 'react'
 import Header from 'shared/pages/App/Header/Header'
 import Sidebar from 'shared/pages/App/Sidebar/Sidebar'
 
-import styles from './FullLayout.scss'
-
 const FullLayout = props => (
-  <div className={styles.container}>
+  <div>
     <Header />
     <Sidebar />
-    <div className={styles.main}>
+    <div>
       {props.children}
     </div>
   </div>

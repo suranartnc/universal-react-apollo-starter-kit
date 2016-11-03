@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import styles from './EntryPage.scss'
 
 function EntryPage({ post }) {
   return (

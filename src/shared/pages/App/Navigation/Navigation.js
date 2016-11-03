@@ -1,10 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router'
-import styles from './Navigation.scss'
 
 const Navigation = () => (
-  <ul className={styles.menu}>
-    <li className={styles['menu-item']}>
+  <ul>
+    <li>
       <Link to="/" activeClassName="active">
         หน้าแรก
       </Link>
