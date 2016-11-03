@@ -1,7 +1,7 @@
 import React from 'react'
-import { Router, browserHistory, applyRouterMiddleware } from 'react-router'
+import { Router, browserHistory } from 'react-router'
 
-import ApolloClient from 'apollo-client'
+import ApolloClient, { createNetworkInterface } from 'apollo-client'
 import { ApolloProvider } from 'react-apollo'
 
 import getRoutes from 'shared/routes'

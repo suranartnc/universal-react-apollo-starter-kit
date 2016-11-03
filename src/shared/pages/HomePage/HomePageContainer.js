@@ -1,4 +1,7 @@
 import React, { Component, PropTypes } from 'react'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
+
 import HomePage from './HomePage'
 
 class HomepageContainer extends Component {
@@ -13,10 +16,25 @@ class HomepageContainer extends Component {
   }
 
   render() {
-    return (
-      <HomePage addPost={this.addPost} posts={[]} />
-    )
+    if (!this.props.data.loading) {
+      return (
+        <HomePage addPost={this.addPost} posts={this.props.data.viewer.posts} />
+      )
+    }
+    return null
   }
 }
 
-export default HomepageContainer
+const GET_POSTS = gql`
+  query getPosts {
+    viewer {
+      posts {
+        _id
+        title
+        body
+      }
+    }
+  }
+`
+
+export default graphql(GET_POSTS)(HomepageContainer)

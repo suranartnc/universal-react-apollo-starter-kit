@@ -1,9 +1,14 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
-import { RouterContext, match, applyRouterMiddleware } from 'react-router'
+import { RouterContext, match } from 'react-router'
 import getRoutes from 'shared/routes'
 
 import config from 'shared/configs'
+
+import ApolloClient from 'apollo-client'
+import { ApolloProvider } from 'react-apollo'
+
+const client = new ApolloClient()
 
 const wdsPath = `http://${config.host}:${config.wdsPort}/build/`
 const assetsManifest = process.env.webpackAssets && JSON.parse(process.env.webpackAssets)
@@ -33,8 +38,6 @@ const renderPage = (reactComponents, preloadedData) => (`
   </html>
 `)
 
-const GRAPHQL_URL = `http://localhost:3000/graphql`
-
 function matchRoutes(req, res) {
   const routes = getRoutes()
   match({
@@ -47,7 +50,9 @@ function matchRoutes(req, res) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps && renderProps.components) {
       const reactComponent = renderToString(
-        <RouterContext {...renderProps} />
+        <ApolloProvider client={client}>
+          <RouterContext {...renderProps} />
+        </ApolloProvider>
       )
       res.send(renderPage(reactComponent, {}))
     } else {
