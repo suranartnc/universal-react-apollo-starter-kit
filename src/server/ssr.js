@@ -46,7 +46,10 @@ function matchRoutes(req, res) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps && renderProps.components) {
-
+      const reactComponent = renderToString(
+        <RouterContext {...renderProps} />
+      )
+      res.send(renderPage(reactComponent, {}))
     } else {
       res.status(404).send('Not found')
     }

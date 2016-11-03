@@ -14,7 +14,7 @@ class HomepageContainer extends Component {
 
   render() {
     return (
-      <HomePage addPost={this.addPost} posts={this.props.posts} />
+      <HomePage addPost={this.addPost} posts={[]} />
     )
   }
 }
