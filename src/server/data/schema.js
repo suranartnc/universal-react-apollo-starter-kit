@@ -8,6 +8,7 @@ import queryType from './types/queryType'
 import {
   addPostMutation,
   likePostMutation,
+  deletePostMutation,
 } from './mutations/postMutations'
 
 const mutationType = new GraphQLObjectType({
@@ -15,6 +16,7 @@ const mutationType = new GraphQLObjectType({
   fields: {
     addPost: addPostMutation,
     likePost: likePostMutation,
+    deletePost: deletePostMutation,
   },
 })
 

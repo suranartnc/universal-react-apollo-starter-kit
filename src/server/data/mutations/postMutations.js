@@ -37,3 +37,14 @@ export const likePostMutation = {
       .catch(error => outputError(error))
   },
 }
+
+export const deletePostMutation = {
+  type: new GraphQLList(postType),
+  description: 'Delete a post',
+  args: {
+    _id: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  resolve: (source, { _id }) => PostModel.findById(_id).remove()
+    .then(() => PostModel.find())
+    .catch(error => outputError(error)),
+}
