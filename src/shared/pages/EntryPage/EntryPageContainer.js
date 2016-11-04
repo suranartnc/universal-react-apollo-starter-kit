@@ -25,9 +25,9 @@ EntryPageContainer.propTypes = {
 
 
 const GET_POST = gql`
-  query getPost {
+  query getPost($id: String!) {
     viewer {
-      post(_id: "5805a2d298f0370001ac64a2") {
+      post(_id: $id) {
         _id
         title
         body
@@ -36,4 +36,12 @@ const GET_POST = gql`
   }
 `
 
-export default graphql(GET_POST)(EntryPageContainer)
+export default graphql(GET_POST, {
+  options: ({ params }) => {
+    return {
+      variables: {
+        id: params.id,
+      },
+    }
+  },
+})(EntryPageContainer)
