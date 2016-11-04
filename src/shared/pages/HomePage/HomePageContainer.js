@@ -5,23 +5,13 @@ import gql from 'graphql-tag'
 import HomePage from './HomePage'
 
 class HomepageContainer extends Component {
-
-  addPost = () => {
-    // const addPostMutation = new AddPostMutation({
-    //   viewer: this.props.viewer,
-    //   title: 'This is the title',
-    //   body: 'This is the bidy',
-    // })
-    // this.props.relay.commitUpdate(addPostMutation)
-  }
-
   render() {
     if (!this.props.data.loading) {
       return (
-        <HomePage addPost={this.addPost} posts={this.props.data.viewer.posts} />
+        <HomePage posts={this.props.data.viewer.posts} />
       )
     }
-    return null
+    return <div>Loading...</div>
   }
 }
 
