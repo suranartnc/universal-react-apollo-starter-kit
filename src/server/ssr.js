@@ -5,43 +5,47 @@ import getRoutes from 'shared/routes'
 
 import config from 'shared/configs'
 
-import ApolloClient from 'apollo-client'
+import ApolloClient, { createNetworkInterface } from 'apollo-client'
 import { ApolloProvider } from 'react-apollo'
+import { getDataFromTree } from 'react-apollo/server'
 
-const client = new ApolloClient()
+import 'isomorphic-fetch'
+
+const routes = getRoutes()
 
 const wdsPath = `http://${config.host}:${config.wdsPort}/build/`
 const assetsManifest = process.env.webpackAssets && JSON.parse(process.env.webpackAssets)
 
-const renderPage = (reactComponents, preloadedData) => (`
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>Universal React GraphQL Starter Kit</title>
-      ${process.env.NODE_ENV === 'production' ? `<link rel="stylesheet" href="${assetsManifest.app.css}" />` : ''}
-    </head>
-    <body>
-      <div id="root">${reactComponents}</div>
-      <script>
-        window.preloadedData = ${JSON.stringify(preloadedData)}
-      </script>
-      ${process.env.NODE_ENV === 'production' ?
-        `
-          <script src="${assetsManifest.vendor.js}"></script>
-          <script src="${assetsManifest.app.js}"></script>
-        `
-        : `<script src="${wdsPath}main.js"></script>`
-      }
-    </body>
-  </html>
-`)
+function renderPage(content, state) {
+  return `
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Universal React GraphQL Starter Kit</title>
+        ${process.env.NODE_ENV === 'production' ? `<link rel="stylesheet" href="${assetsManifest.app.css}" />` : ''}
+      </head>
+      <body>
+        <div id="root">${content}</div>
+        <script>
+          window.__APOLLO_STATE__ = ${JSON.stringify({ apollo: { data: state } })};
+        </script>
+        ${process.env.NODE_ENV === 'production' ?
+          `
+            <script src="${assetsManifest.vendor.js}"></script>
+            <script src="${assetsManifest.app.js}"></script>
+          `
+          : `<script src="${wdsPath}main.js"></script>`
+        }
+      </body>
+    </html>
+  `
+}
 
 function matchRoutes(req, res) {
-  const routes = getRoutes()
   match({
-    location: req.url,
+    location: req.originalUrl,
     routes,
   }, (error, redirectLocation, renderProps) => {
     if (error) {
@@ -49,12 +53,26 @@ function matchRoutes(req, res) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps && renderProps.components) {
-      const reactComponent = renderToString(
+      const client = new ApolloClient({
+        ssrMode: true,
+        networkInterface: createNetworkInterface({
+          uri: 'http://localhost:3000/graphql',
+          credentials: 'same-origin',
+          headers: req.headers,
+        }),
+      })
+      const component = (
         <ApolloProvider client={client}>
           <RouterContext {...renderProps} />
         </ApolloProvider>
       )
-      res.send(renderPage(reactComponent, {}))
+      getDataFromTree(component)
+        .then((context) => {
+          const content = renderToString(component)
+          const html = renderPage(content, context.store.getState().apollo.data)
+          res.status(200).send(html)
+        })
+        .catch(e => console.error('RENDERING ERROR:', e))
     } else {
       res.status(404).send('Not found')
     }
