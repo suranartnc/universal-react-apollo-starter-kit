@@ -6,6 +6,7 @@ import FullLayout from 'shared/pages/App/FullLayout/FullLayout'
 
 import HomePageContainer from 'shared/pages/HomePage/HomePageContainer'
 import EntryPageContainer from 'shared/pages/EntryPage/EntryPageContainer'
+import WritePageContainer from 'shared/pages/WritePage/WritePageContainer'
 
 export default function getRoutes() {
   return (
@@ -13,6 +14,7 @@ export default function getRoutes() {
       <Route component={FullLayout}>
         <IndexRoute component={HomePageContainer} />
         <Route path="posts/:id" component={EntryPageContainer} />
+        <Route path="write" component={WritePageContainer} />
       </Route>
     </Route>
   )
