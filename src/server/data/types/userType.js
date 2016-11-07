@@ -2,6 +2,7 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLList,
+  GraphQLInt,
 } from 'graphql'
 
 import PostModel from '../models/PostModel'
@@ -49,19 +50,27 @@ const userType = new GraphQLObjectType({
         categoryId: {
           type: GraphQLString,
         },
+        offset: {
+          type: GraphQLInt,
+        },
+        limit: {
+          type: GraphQLInt,
+        },
         ...listArgs,
       },
-      resolve: (user, { categoryId, limit = 10, ...args }) => {
+      resolve: (user, { categoryId, offset = 0, limit = 10, ...args }) => {
         if (categoryId) {
           return PostModel.find({
             categories: {
               $in: [categoryId],
             },
           })
+          .skip(offset)
           .limit(limit).sort('-date')
           .catch(error => outputError(error))
         }
         return PostModel.find()
+          .skip(offset)
           .limit(limit).sort('-date')
           .catch(error => outputError(error))
       },
