@@ -26,7 +26,7 @@ app.use(express.static(path.join(process.cwd(), 'static')))
 app.post('/graphql', (req, res, next) => {
   setTimeout(() => {
     next()
-  }, 1500)
+  }, 500)
 })
 
 app.use('/graphql', graphqlHTTP({
