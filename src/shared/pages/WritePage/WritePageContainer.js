@@ -51,13 +51,26 @@ const SUBMIT_POST_MUTATION = gql`
     }
   }
 `
-export default graphql(SUBMIT_POST_MUTATION, {
-  props: ({ mutate }) => ({
-    submit: (title, body) => mutate({
-      variables: {
-        title,
-        body,
+
+const submitHandler = mutate => (title, body) => mutate({
+  variables: { title, body },
+  updateQueries: {
+    getPosts: (prev, { mutationResult }) => ({
+      viewer: {
+        ...prev.viewer,
+        posts: [
+          mutationResult.data.addPost,
+          ...prev.viewer.posts,
+        ],
       },
     }),
-  }),
+  },
+})
+
+const prepProps = ({ mutate }) => ({
+  submit: submitHandler(mutate),
+})
+
+export default graphql(SUBMIT_POST_MUTATION, {
+  props: prepProps,
 })(withRouter(WritePageContainer))
