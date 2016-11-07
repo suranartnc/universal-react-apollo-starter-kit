@@ -16,11 +16,18 @@ class PostItem extends Component {
     return null
   }
 
-  render() {
+  renderArticleBody() {
     const { post } = this.props
+
+    return post._id
+      ? <Link to={`/posts/${post._id}`}>{post.title}</Link>
+      : <p>posting...</p>
+  }
+
+  render() {
     return (
       <article className={styles.article}>
-        <Link to={`/posts/${post._id}`}>{post.title}</Link>
+        {this.renderArticleBody()}
       </article>
     )
   }
@@ -28,7 +35,7 @@ class PostItem extends Component {
 
 PostItem.propTypes = {
   post: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
+    _id: PropTypes.string,
     title: PropTypes.string.isRequired,
   }).isRequired,
 }

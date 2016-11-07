@@ -5,10 +5,6 @@ import gql from 'graphql-tag'
 import WritePage from './Writepage'
 
 class WritePageContainer extends Component {
-  state = {
-    errors: null,
-  }
-
   onSubmit = (e) => {
     e.preventDefault()
 
@@ -17,21 +13,13 @@ class WritePageContainer extends Component {
     this.props.submit(
       title.value,
       body.value
-    ).then((res) => {
-      if (res.errors) {
-        this.setState({
-          errors: res.errors,
-        })
+    ).catch(err => console.error(err))
 
-        return
-      }
-
-      this.props.router.push('/')
-    })
+    this.props.router.push('/')
   }
 
   render() {
-    return <WritePage onSubmit={this.onSubmit} errors={this.state.errors} />
+    return <WritePage onSubmit={this.onSubmit} />
   }
 }
 
@@ -54,6 +42,15 @@ const SUBMIT_POST_MUTATION = gql`
 
 const submitHandler = mutate => (title, body) => mutate({
   variables: { title, body },
+  optimisticResponse: {
+    __typename: 'Mutation',
+    addPost: {
+      __typename: 'Post',
+      _id: null,
+      title,
+      body,
+    },
+  },
   updateQueries: {
     getPosts: (prev, { mutationResult }) => ({
       viewer: {

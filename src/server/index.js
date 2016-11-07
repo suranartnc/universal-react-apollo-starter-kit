@@ -23,6 +23,12 @@ const app = express()
 app.use(favicon(path.join(process.cwd(), 'static/favicon.ico')))
 app.use(express.static(path.join(process.cwd(), 'static')))
 
+app.post('/graphql', (req, res, next) => {
+  setTimeout(() => {
+    next()
+  }, 1500)
+})
+
 app.use('/graphql', graphqlHTTP({
   schema,
   graphiql: true,

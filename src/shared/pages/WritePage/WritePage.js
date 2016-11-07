@@ -1,20 +1,8 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 
-const renderErrors = (errors) => {
-  const messages = errors.map(error => error.message)
-
-  return (
-    <div>
-      {messages.join(', ')}
-    </div>
-  )
-}
-
-const WritePage = ({ onSubmit, errors }) => (
+const WritePage = ({ onSubmit }) => (
   <form onSubmit={onSubmit}>
-    {errors && renderErrors(errors)}
-
     <div>
       <label htmlFor="title">Title</label>
       <input type="text" id="title" name="title" />
@@ -32,11 +20,6 @@ const WritePage = ({ onSubmit, errors }) => (
 
 WritePage.propTypes = {
   onSubmit: PropTypes.func.isRequired,
-  errors: PropTypes.arrayOf(
-    PropTypes.shape({
-      message: PropTypes.String,
-    })
-  ),
 }
 
 export default WritePage
