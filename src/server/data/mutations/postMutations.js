@@ -32,7 +32,7 @@ export const likePostMutation = {
     userId: { type: new GraphQLNonNull(GraphQLString) },
   },
   resolve: (source, { _id, userId }) => {
-    return PostModel.update({ _id }, { likes: 1, likedBy: [userId] })
+    return PostModel.update({ _id }, { $inc: { likes: 1 }, likedBy: [userId] })
       .then(() => PostModel.findById(_id))
       .catch(error => outputError(error))
   },

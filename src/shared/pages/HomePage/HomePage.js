@@ -3,18 +3,27 @@ import { Link } from 'react-router'
 
 import PostList from 'shared/components/Post/PostList/PostList'
 
-function Homepage({ posts, loadMorePosts }) {
+function Homepage({ posts, loadMorePosts, onClickLike }) {
   return (
     <div>
       <Link to={'write'}>Add Post</Link>
-      <PostList posts={posts} />
+      <PostList posts={posts} onClickLike={onClickLike} />
       <button onClick={loadMorePosts}>Load more</button>
     </div>
   )
 }
 
 Homepage.propTypes = {
-  posts: PropTypes.arrayOf(PropTypes.object),
+  loadMorePosts: PropTypes.func.isRequired,
+  onClickLike: PropTypes.func.isRequired,
+  posts: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string,
+      title: PropTypes.string,
+      body: PropTypes.string,
+      likes: PropTypes.number,
+    })
+  ),
 }
 
 export default Homepage

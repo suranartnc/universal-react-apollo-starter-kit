@@ -1,29 +1,41 @@
-import React, { PropTypes } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import HomePage from './HomePage'
 
-const HomepageContainer = ({ loading, loadMorePosts, posts }) => {
-  if (loading) {
-    return <div>Loading...</div>
+class HomepageContainer extends Component {
+  onClickLike = post => (event) => {
+    event.preventDefault()
+    this.props.like(post)
   }
 
-  return (
-    <HomePage
-      loadMorePosts={loadMorePosts}
-      posts={posts}
-    />
-  )
+  render() {
+    const { loading, loadMorePosts, posts } = this.props
+
+    if (loading) {
+      return <div>Loading...</div>
+    }
+
+    return (
+      <HomePage
+        loadMorePosts={loadMorePosts}
+        onClickLike={this.onClickLike}
+        posts={posts}
+      />
+    )
+  }
 }
 
 HomepageContainer.propTypes = {
   loading: PropTypes.bool.isRequired,
   loadMorePosts: PropTypes.func.isRequired,
+  like: PropTypes.func.isRequired,
   posts: PropTypes.arrayOf(
     PropTypes.shape({
-      _id: PropTypes.String,
-      title: PropTypes.String,
-      body: PropTypes.String,
+      _id: PropTypes.string,
+      title: PropTypes.string,
+      body: PropTypes.string,
+      likes: PropTypes.number,
     })
   ),
 }
@@ -35,6 +47,7 @@ const GET_POSTS = gql`
         _id
         title
         body
+        likes
       }
     }
   }
@@ -71,4 +84,32 @@ const withPosts = graphql(GET_POSTS, {
   }),
 })
 
-export default withPosts(HomepageContainer)
+const LIKE_POST_MUTATION = gql`
+  mutation likePost($id: String!) {
+    likePost(_id: $id, userId: "5805c26198f0370001ac64a3") {
+      _id
+      title
+      body
+      likes
+    }
+  }
+`
+const likePostFunction = mutate => post => mutate({
+  variables: { id: post._id },
+  optimisticResponse: {
+    __typename: 'Mutation',
+    likePost: {
+      ...post,
+      __typename: 'Post',
+      likes: post.likes + 1,
+    },
+  },
+})
+
+const withLikePostFunction = graphql(LIKE_POST_MUTATION, {
+  props: ({ mutate }) => ({
+    like: likePostFunction(mutate),
+  }),
+})
+
+export default withLikePostFunction(withPosts(HomepageContainer))

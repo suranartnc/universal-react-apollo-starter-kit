@@ -1,42 +1,28 @@
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import styles from './PostItem.scss'
 
-class PostItem extends Component {
-  renderThumbnail = (post) => {
-    if (post.thumbnail !== undefined) {
-      return (
-        <div className={styles.media}>
-          <Link to={`/posts/${post._id}`}>
-            <img src={post.thumbnail} alt="" />
-          </Link>
-        </div>
-      )
-    }
-    return null
-  }
-
-  renderArticleBody() {
-    const { post } = this.props
-
-    return post._id
-      ? <Link to={`/posts/${post._id}`}>{post.title}</Link>
-      : <p>posting...</p>
-  }
-
-  render() {
-    return (
-      <article className={styles.article}>
-        {this.renderArticleBody()}
-      </article>
-    )
-  }
-}
+const PostItem = ({ post, onClickLike }) => (
+  <article className={styles.article}>
+    <h1>
+      <Link to={`/posts/${post._id}`}>{post.title}</Link>
+    </h1>
+    <div>
+      <p>{post.likes} likes</p>
+    </div>
+    <div>
+      <button type="button" onClick={onClickLike(post)}>Like</button>
+    </div>
+  </article>
+)
 
 PostItem.propTypes = {
+  onClickLike: PropTypes.func.isRequired,
   post: PropTypes.shape({
-    _id: PropTypes.string,
+    _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
+    body: PropTypes.body,
+    likes: PropTypes.number,
   }).isRequired,
 }
 
