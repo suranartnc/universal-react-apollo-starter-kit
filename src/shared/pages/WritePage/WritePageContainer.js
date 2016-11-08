@@ -5,21 +5,48 @@ import gql from 'graphql-tag'
 import WritePage from './Writepage'
 
 class WritePageContainer extends Component {
+  state = {
+    submitting: false,
+    errors: null,
+  }
+
   onSubmit = (e) => {
     e.preventDefault()
+    this.setState({
+      submitting: true,
+      errors: null,
+    })
 
     const { title, body } = e.target
 
     this.props.submit(
       title.value,
       body.value
-    ).catch(err => console.error(err))
+    ).then((res) => {
+      if (res.errors) {
+        return this.onSubmitError(res.errors)
+      }
 
-    this.props.router.push('/')
+      return this.props.router.push('/')
+    }).catch(err => this.onSubmitError(err))
+  }
+
+  onSubmitError = (errors) => {
+    this.setState({
+      submitting: false,
+      errors,
+    })
+    return
   }
 
   render() {
-    return <WritePage onSubmit={this.onSubmit} />
+    return (
+      <WritePage
+        onSubmit={this.onSubmit}
+        submitting={this.state.submitting}
+        errors={this.state.errors}
+      />
+    )
   }
 }
 
@@ -40,7 +67,7 @@ const SUBMIT_POST_MUTATION = gql`
   }
 `
 
-const submitHandler = mutate => (title, body) => mutate({
+const submit = mutate => (title, body) => mutate({
   variables: { title, body },
   optimisticResponse: {
     __typename: 'Mutation',
@@ -51,23 +78,12 @@ const submitHandler = mutate => (title, body) => mutate({
       body,
     },
   },
-  updateQueries: {
-    getPosts: (prev, { mutationResult }) => ({
-      viewer: {
-        ...prev.viewer,
-        posts: [
-          mutationResult.data.addPost,
-          ...prev.viewer.posts,
-        ],
-      },
-    }),
-  },
 })
 
-const prepProps = ({ mutate }) => ({
-  submit: submitHandler(mutate),
+const withSubmitPost = graphql(SUBMIT_POST_MUTATION, {
+  props: ({ mutate }) => ({
+    submit: submit(mutate),
+  }),
 })
 
-export default graphql(SUBMIT_POST_MUTATION, {
-  props: prepProps,
-})(withRouter(WritePageContainer))
+export default withSubmitPost(withRouter(WritePageContainer))
