@@ -1,15 +1,13 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { RouterContext, match } from 'react-router'
-import getRoutes from 'shared/routes'
-
-import config from 'shared/configs'
-
-import ApolloClient, { createNetworkInterface } from 'apollo-client'
+import { createNetworkInterface } from 'apollo-client'
 import { ApolloProvider } from 'react-apollo'
 import { getDataFromTree } from 'react-apollo/server'
-
 import 'isomorphic-fetch'
+import getRoutes from 'shared/routes'
+import config from 'shared/configs'
+import createApolloClient from 'shared/createApolloClient'
 
 const routes = getRoutes()
 
@@ -53,7 +51,7 @@ function matchRoutes(req, res) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps && renderProps.components) {
-      const client = new ApolloClient({
+      const client = createApolloClient({
         ssrMode: true,
         networkInterface: createNetworkInterface({
           uri: 'http://localhost:3000/graphql',
@@ -61,6 +59,7 @@ function matchRoutes(req, res) {
           headers: req.headers,
         }),
       })
+
       const component = (
         <ApolloProvider client={client}>
           <RouterContext {...renderProps} />
