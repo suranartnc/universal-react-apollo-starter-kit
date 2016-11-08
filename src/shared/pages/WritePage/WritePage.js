@@ -44,9 +44,11 @@ const WritePage = ({ onSubmit, submitting, errors }) => (
 WritePage.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
-  errors: PropTypes.shape({
-    message: PropTypes.String,
-  }),
+  errors: PropTypes.arrayOf(
+    PropTypes.shape({
+      message: PropTypes.String,
+    })
+  ),
 }
 
 export default WritePage

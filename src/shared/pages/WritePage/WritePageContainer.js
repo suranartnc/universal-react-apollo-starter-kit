@@ -28,7 +28,7 @@ class WritePageContainer extends Component {
       }
 
       return this.props.router.push('/')
-    }).catch(err => this.onSubmitError(err))
+    }).catch(err => this.onSubmitError([err]))
   }
 
   onSubmitError = (errors) => {
