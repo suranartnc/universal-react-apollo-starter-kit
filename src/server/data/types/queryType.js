@@ -10,11 +10,7 @@ const queryType = new GraphQLObjectType({
   fields: () => ({
     viewer: {
       type: userType,
-      resolve: () => {
-        return {
-          _id: '5805c26198f0370001ac64a3', // example user
-        }
-      },
+      resolve: (root, args, context) => context.user,
     },
   }),
 })

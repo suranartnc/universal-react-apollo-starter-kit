@@ -1,7 +1,8 @@
 import path from 'path'
 import mongoose from 'mongoose'
 import express from 'express'
-import graphqlHTTP from 'express-graphql'
+import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
+import bodyParser from 'body-parser'
 import favicon from 'serve-favicon'
 
 import config from 'shared/configs'
@@ -23,15 +24,35 @@ const app = express()
 app.use(favicon(path.join(process.cwd(), 'static/favicon.ico')))
 app.use(express.static(path.join(process.cwd(), 'static')))
 
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+
 app.post('/graphql', (req, res, next) => {
   setTimeout(() => {
     next()
   }, 500)
 })
 
-app.use('/graphql', graphqlHTTP({
-  schema,
-  graphiql: true,
+app.use('/graphql', graphqlExpress((req) => {
+  let user = {
+    _id: '5805c26198f0370001ac64a3',  // fake user
+  }
+  if (req.user) {                     // actual user
+    user = {
+      _id: req.user._id,
+    }
+  }
+
+  return {
+    schema,
+    context: {
+      user,
+    },
+  }
+}))
+
+app.use('/graphiql', graphiqlExpress({
+  endpointURL: '/graphql',
 }))
 
 app.use(ssr)

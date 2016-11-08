@@ -86,7 +86,7 @@ const withPosts = graphql(GET_POSTS, {
 
 const LIKE_POST_MUTATION = gql`
   mutation likePost($id: String!) {
-    likePost(_id: $id, userId: "5805c26198f0370001ac64a3") {
+    likePost(_id: $id) {
       _id
       title
       body

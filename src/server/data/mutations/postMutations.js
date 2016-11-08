@@ -16,10 +16,10 @@ export const addPostMutation = {
     body: { type: new GraphQLNonNull(GraphQLString) },
     excerpt: { type: GraphQLString },
     categories: { type: new GraphQLList(GraphQLString), description: 'Id of categories' },
-    userId: { type: new GraphQLNonNull(GraphQLString), description: 'Id of the author' },
   },
-  resolve: (source, args) => {
+  resolve: (source, args, { user }) => {
     const post = Object.assign({}, args)
+    post.userId = user._id
     return PostModel.create(post).catch(error => outputError(error))
   },
 }
@@ -29,10 +29,9 @@ export const likePostMutation = {
   description: 'Like a post',
   args: {
     _id: { type: new GraphQLNonNull(GraphQLString) },
-    userId: { type: new GraphQLNonNull(GraphQLString) },
   },
-  resolve: (source, { _id, userId }) => {
-    return PostModel.update({ _id }, { $inc: { likes: 1 }, likedBy: [userId] })
+  resolve: (source, { _id }, { user }) => {
+    return PostModel.update({ _id }, { $inc: { likes: 1 }, likedBy: [user._id] })
       .then(() => PostModel.findById(_id))
       .catch(error => outputError(error))
   },
