@@ -1,18 +1,31 @@
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
-
 import HomePage from './HomePage'
 
-class HomepageContainer extends Component {
-  render() {
-    if (!this.props.loading) {
-      return (
-        <HomePage loadMorePosts={this.props.loadMorePosts} posts={this.props.posts} />
-      )
-    }
+const HomepageContainer = ({ loading, loadMorePosts, posts }) => {
+  if (loading) {
     return <div>Loading...</div>
   }
+
+  return (
+    <HomePage
+      loadMorePosts={loadMorePosts}
+      posts={posts}
+    />
+  )
+}
+
+HomepageContainer.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  loadMorePosts: PropTypes.func.isRequired,
+  posts: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.String,
+      title: PropTypes.String,
+      body: PropTypes.String,
+    })
+  ),
 }
 
 const GET_POSTS = gql`
@@ -27,37 +40,35 @@ const GET_POSTS = gql`
   }
 `
 
-export default graphql(GET_POSTS, {
-  options(props) {
-    return {
+const withPosts = graphql(GET_POSTS, {
+  options: () => ({
+    variables: {
+      offset: 0,
+      limit: 1,
+    },
+    forceFetch: true, // todo: this cause problem with ssr, find a way to solves it
+  }),
+
+  props: ({ data: { loading, viewer: { posts = [] } = {}, fetchMore } }) => ({
+    loading,
+    posts,
+    loadMorePosts: () => fetchMore({
       variables: {
-        offset: 0,
-        limit: 1,
+        offset: posts.length,
       },
-      forceFetch: true,
-    }
-  },
-  props({ data: { loading, viewer: { posts = [] } = {}, fetchMore } }) {
-    return {
-      loading,
-      posts,
-      loadMorePosts() {
-        return fetchMore({
-          variables: {
-            offset: posts.length,
-          },
-          updateQuery: (previousResult, { fetchMoreResult }) => {
-            console.log('previousResult', previousResult)
-            console.log('fetchMoreResult', fetchMoreResult)
-            if (!fetchMoreResult.data) { return previousResult }
-            return Object.assign({}, previousResult, {
-              viewer: {
-                posts: [...previousResult.viewer.posts, ...fetchMoreResult.data.viewer.posts],
-              },
-            })
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        if (!fetchMoreResult.data) {
+          return previousResult
+        }
+
+        return Object.assign({}, previousResult, {
+          viewer: {
+            posts: [...previousResult.viewer.posts, ...fetchMoreResult.data.viewer.posts],
           },
         })
       },
-    }
-  },
-})(HomepageContainer)
+    }),
+  }),
+})
+
+export default withPosts(HomepageContainer)
