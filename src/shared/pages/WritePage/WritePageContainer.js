@@ -69,15 +69,6 @@ const SUBMIT_POST_MUTATION = gql`
 
 const submit = mutate => (title, body) => mutate({
   variables: { title, body },
-  optimisticResponse: {
-    __typename: 'Mutation',
-    addPost: {
-      __typename: 'Post',
-      _id: null,
-      title,
-      body,
-    },
-  },
 })
 
 const withSubmitPost = graphql(SUBMIT_POST_MUTATION, {
