@@ -4,7 +4,7 @@ import {
   GraphQLNonNull,
 } from 'graphql'
 
-import PostModel from '../models/PostModel'
+import PostModel, { postStatus } from '../models/PostModel'
 import postType from '../types/postType'
 import { outputError } from '../utils/helpers'
 
@@ -38,12 +38,21 @@ export const likePostMutation = {
 }
 
 export const deletePostMutation = {
-  type: new GraphQLList(postType),
+  type: postType,
   description: 'Delete a post',
   args: {
     _id: { type: new GraphQLNonNull(GraphQLString) },
   },
-  resolve: (source, { _id }) => PostModel.findById(_id).remove()
-    .then(() => PostModel.find())
-    .catch(error => outputError(error)),
+  resolve: (source, { _id }) => {
+    return PostModel.update(
+      { _id },
+      {
+        $set: {
+          status: postStatus.delete,
+        },
+      }
+    )
+    .then(() => PostModel.findById(_id))
+    .catch(err => outputError(err))
+  },
 }
