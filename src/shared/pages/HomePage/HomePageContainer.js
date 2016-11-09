@@ -9,6 +9,16 @@ class HomepageContainer extends Component {
     this.props.like(post)
   }
 
+  onClickDelete = post => (event) => {
+    event.preventDefault()
+
+    if (!confirm('Are you sure?')) {
+      return
+    }
+
+    this.props.delete(post)
+  }
+
   render() {
     const { loading, loadMorePosts, posts } = this.props
 
@@ -20,6 +30,7 @@ class HomepageContainer extends Component {
       <HomePage
         loadMorePosts={loadMorePosts}
         onClickLike={this.onClickLike}
+        onClickDelete={this.onClickDelete}
         posts={posts}
       />
     )
@@ -30,6 +41,7 @@ HomepageContainer.propTypes = {
   loading: PropTypes.bool.isRequired,
   loadMorePosts: PropTypes.func.isRequired,
   like: PropTypes.func.isRequired,
+  delete: PropTypes.func.isRequired,
   posts: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string,
@@ -57,7 +69,7 @@ const withPosts = graphql(GET_POSTS, {
   options: () => ({
     variables: {
       offset: 0,
-      limit: 1,
+      limit: 2,
     },
     forceFetch: true, // todo: this cause problem with ssr, find a way to solves it
   }),
@@ -112,4 +124,45 @@ const withLikePostFunction = graphql(LIKE_POST_MUTATION, {
   }),
 })
 
-export default withLikePostFunction(withPosts(HomepageContainer))
+const DELETE_POST_MUTATION = gql`
+  mutation deletePost($id: String!) {
+    deletePost(_id: $id) {
+      _id
+      title
+    }
+  }
+`
+
+const deletePost = mutate => post => mutate({
+  variables: { id: post._id },
+  optimisticResponse: {
+    deletePost: {
+      ...post,
+      __typename: 'Post',
+    },
+  },
+  updateQueries: {
+    getPosts: (previousResult, { mutationResult }) => {
+      const { viewer: { posts } } = previousResult
+
+      const nonDeletedPosts = posts.filter(previousPost => (
+        previousPost._id !== mutationResult.data.deletePost._id
+      ))
+
+      return {
+        viewer: {
+          ...previousResult.viewer,
+          posts: nonDeletedPosts,
+        },
+      }
+    },
+  },
+})
+
+const withDeletePostFunction = graphql(DELETE_POST_MUTATION, {
+  props: ({ mutate }) => ({
+    delete: deletePost(mutate),
+  }),
+})
+
+export default withDeletePostFunction(withLikePostFunction(withPosts(HomepageContainer)))

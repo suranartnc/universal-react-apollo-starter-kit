@@ -3,11 +3,11 @@ import { Link } from 'react-router'
 
 import PostList from 'shared/components/Post/PostList/PostList'
 
-function Homepage({ posts, loadMorePosts, onClickLike }) {
+function Homepage({ posts, loadMorePosts, onClickLike, onClickDelete }) {
   return (
     <div>
       <Link to={'write'}>Add Post</Link>
-      <PostList posts={posts} onClickLike={onClickLike} />
+      <PostList posts={posts} onClickLike={onClickLike} onClickDelete={onClickDelete} />
       <button onClick={loadMorePosts}>Load more</button>
     </div>
   )
@@ -16,6 +16,7 @@ function Homepage({ posts, loadMorePosts, onClickLike }) {
 Homepage.propTypes = {
   loadMorePosts: PropTypes.func.isRequired,
   onClickLike: PropTypes.func.isRequired,
+  onClickDelete: PropTypes.func.isRequired,
   posts: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string,
