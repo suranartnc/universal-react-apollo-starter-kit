@@ -9,14 +9,10 @@ import {
 import UserModel from '../models/UserModel'
 import CommentModel from '../models/CommentModel'
 import CategoryModel from '../models/CategoryModel'
-
 import categoryType from './categoryType'
 import authorType from './authorType'
 import commentType from './commentType'
-
-
 import { listArgs } from '../utils/schemaUtils'
-
 import {
   outputError,
 } from '../utils/helpers'
@@ -72,6 +68,10 @@ const postType = new GraphQLObjectType({
       resolve: post => UserModel.findById(post.userId).catch(error => outputError(error)),
     },
     likes: { type: GraphQLInt },
+    status: {
+      type: GraphQLString,
+      resolve: post => post.statusName,
+    },
   }),
 })
 

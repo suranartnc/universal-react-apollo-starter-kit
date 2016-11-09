@@ -1,4 +1,12 @@
 import mongoose from 'mongoose'
+import _ from 'lodash'
+
+const postStatus = {
+  draft: 0,
+  publish: 1,
+  delete: 2,
+  ban: 3,
+}
 
 const PostSchema = new mongoose.Schema({
   type: String,
@@ -41,10 +49,27 @@ const PostSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  status: {
+    type: Number,
+    enum: _.values(postStatus),
+    default: postStatus.draft,
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
+})
+
+PostSchema.set('toObject', {
+  virtuals: true,
+})
+
+PostSchema.set('toJSON', {
+  virtuals: true,
+})
+
+PostSchema.virtual('statusName').get(function getStatusName() {
+  return _.findKey(postStatus, status => status === this.status)
 })
 
 export default mongoose.model('Post', PostSchema)
