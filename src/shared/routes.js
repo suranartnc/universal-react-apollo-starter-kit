@@ -8,6 +8,7 @@ import HomePageContainer from 'shared/pages/HomePage/HomePageContainer'
 import EntryPageContainer from 'shared/pages/EntryPage/EntryPageContainer'
 import WritePageContainer from 'shared/pages/WritePage/WritePageContainer'
 import LoginPageContainer from 'shared/pages/LoginPage/LoginPageContainer'
+import RegisterPageContainer from 'shared/pages/RegisterPage/RegisterPageContainer'
 
 export default function getRoutes() {
   return (
@@ -17,6 +18,7 @@ export default function getRoutes() {
         <Route path="posts/:id" component={EntryPageContainer} />
         <Route path="write" component={WritePageContainer} />
         <Route path="login" component={LoginPageContainer} />
+        <Route path="register" component={RegisterPageContainer} />
       </Route>
     </Route>
   )
