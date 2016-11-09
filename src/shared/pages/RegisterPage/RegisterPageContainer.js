@@ -1,18 +1,17 @@
 import React from 'react'
 import { Link } from 'react-router'
 
-function LoginPageContainer() {
+function RegisterPageContainer() {
   return (
     <div>
       <form>
         <input type="text" placeholder="email" />
         <input type="password" placeholder="password" />
-        <input type="submit" value="Login" />
+        <input type="submit" value="Register" />
       </form>
-      <Link to="/auth/facebook">Login with facebook</Link>
-      <Link to="/register">Register</Link>
+      <Link to="/login">Login</Link>
     </div>
   )
 }
 
-export default LoginPageContainer
+export default RegisterPageContainer
