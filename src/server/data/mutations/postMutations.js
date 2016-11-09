@@ -43,16 +43,8 @@ export const deletePostMutation = {
   args: {
     _id: { type: new GraphQLNonNull(GraphQLString) },
   },
-  resolve: (source, { _id }) => {
-    return PostModel.update(
-      { _id },
-      {
-        $set: {
-          status: postStatus.delete,
-        },
-      }
-    )
-    .then(() => PostModel.findById(_id))
-    .catch(err => outputError(err))
-  },
+  resolve: (source, { _id }) => (
+    PostModel.softDelete(_id)
+      .catch(err => outputError(err))
+  ),
 }
