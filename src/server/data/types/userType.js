@@ -59,19 +59,20 @@ const userType = new GraphQLObjectType({
         ...listArgs,
       },
       resolve: (user, { categoryId, offset = 0, limit = 10, ...args }) => {
-        if (categoryId) {
-          return PostModel.find({
-            categories: {
-              $in: [categoryId],
-            },
-          })
-          .skip(offset)
-          .limit(limit).sort('-date')
-          .catch(error => outputError(error))
+        const query = {
+          deletedAt: null,
         }
-        return PostModel.find()
+
+        if (categoryId) {
+          query.categories = {
+            $in: [categoryId],
+          }
+        }
+
+        return PostModel.find(query)
           .skip(offset)
-          .limit(limit).sort('-date')
+          .limit(limit)
+          .sort('-date')
           .catch(error => outputError(error))
       },
     },
