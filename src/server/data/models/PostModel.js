@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import _ from 'lodash'
+import sanitizeHtml from 'sanitize-html'
 
 const postStatus = {
   draft: 0,
@@ -7,7 +8,6 @@ const postStatus = {
 }
 
 const PostSchema = new mongoose.Schema({
-  type: String,
   title: {
     type: String,
     trim: true,
@@ -31,17 +31,10 @@ const PostSchema = new mongoose.Schema({
     type: Number,
     min: 0,
   },
-  comments: [{
-    body: String,
-    date: Date,
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    },
-  }],
   staffpick: {
     type: Boolean,
     indexed: true,
+    default: false,
   },
   status: {
     type: Number,
@@ -59,6 +52,18 @@ const PostSchema = new mongoose.Schema({
   deletedAt: {
     type: Date,
   },
+})
+
+PostSchema.pre('save', function generateExcerpt(next) {
+  const excerpt = sanitizeHtml(this.body, {
+    allowedTags: [],
+  })
+
+  this.excerpt = _.truncate(excerpt, {
+    length: 150,
+  })
+
+  next()
 })
 
 PostSchema.set('toObject', {
