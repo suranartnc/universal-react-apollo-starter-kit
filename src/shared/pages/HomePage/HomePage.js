@@ -14,17 +14,8 @@ function Homepage({ posts, loadMorePosts, onClickLike, onClickDelete }) {
 }
 
 Homepage.propTypes = {
+  ...PostList.propTypes,
   loadMorePosts: PropTypes.func.isRequired,
-  onClickLike: PropTypes.func.isRequired,
-  onClickDelete: PropTypes.func.isRequired,
-  posts: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string,
-      title: PropTypes.string,
-      body: PropTypes.string,
-      likes: PropTypes.number,
-    })
-  ),
 }
 
 export default Homepage

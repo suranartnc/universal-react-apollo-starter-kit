@@ -17,9 +17,9 @@ function PostList({ posts, onClickLike, onClickDelete }) {
 }
 
 PostList.propTypes = {
-  onClickLike: PropTypes.func.isRequired,
-  onClickDelete: PropTypes.func.isRequired,
-  posts: PropTypes.arrayOf(PropTypes.object),
+  onClickLike: PostItem.propTypes.onClickLike,
+  onClickDelete: PostItem.propTypes.onClickLike,
+  posts: PropTypes.arrayOf(PostItem.propTypes.post),
 }
 
 export default PostList

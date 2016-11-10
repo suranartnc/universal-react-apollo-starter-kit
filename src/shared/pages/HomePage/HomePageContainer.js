@@ -39,17 +39,10 @@ class HomepageContainer extends Component {
 
 HomepageContainer.propTypes = {
   loading: PropTypes.bool.isRequired,
-  loadMorePosts: PropTypes.func.isRequired,
   like: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
-  posts: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string,
-      title: PropTypes.string,
-      body: PropTypes.string,
-      likes: PropTypes.number,
-    })
-  ),
+  loadMorePosts: HomePage.propTypes.loadMorePosts,
+  posts: HomePage.propTypes.posts,
 }
 
 const GET_POSTS = gql`
@@ -58,7 +51,8 @@ const GET_POSTS = gql`
       posts(offset: $offset, limit: $limit) {
         _id
         title
-        body
+        excerpt
+        thumbnail
         likes
       }
     }
@@ -69,7 +63,7 @@ const withPosts = graphql(GET_POSTS, {
   options: () => ({
     variables: {
       offset: 0,
-      limit: 2,
+      limit: 5,
     },
     forceFetch: true, // todo: this cause problem with ssr, find a way to solves it
   }),
@@ -100,8 +94,6 @@ const LIKE_POST_MUTATION = gql`
   mutation likePost($id: String!) {
     likePost(_id: $id) {
       _id
-      title
-      body
       likes
     }
   }
@@ -128,7 +120,6 @@ const DELETE_POST_MUTATION = gql`
   mutation deletePost($id: String!) {
     deletePost(_id: $id) {
       _id
-      title
     }
   }
 `
