@@ -35,6 +35,7 @@ const postType = new GraphQLObjectType({
     },
     excerpt: { type: GraphQLString },
     body: { type: GraphQLString },
+    thumbnail: { type: GraphQLString },
     staffpick: { type: GraphQLBoolean },
     date: {
       type: GraphQLFloat,

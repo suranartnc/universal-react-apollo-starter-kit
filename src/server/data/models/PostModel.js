@@ -13,6 +13,7 @@ const PostSchema = new mongoose.Schema({
     trim: true,
   },
   body: String,
+  thumbnail: String,
   excerpt: String,
   categories: [{
     type: mongoose.Schema.Types.ObjectId,
