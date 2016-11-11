@@ -1,5 +1,5 @@
 FROM mongo:3
 
-COPY ./db /data/db
+ADD ./db.tar.gz .
 
-CMD ["mongod", "--storageEngine", "wiredTiger"]
+CMD ["mongod", "--storageEngine", "wiredTiger", "--nojournal"]
