@@ -30,8 +30,6 @@ import {
 const userType = new GraphQLObjectType({
   name: 'Viewer',
   fields: () => ({
-    // todo: write our own mongo connection
-    // array connection of graphql-relay is useless
     allPosts: {
       type: postConnection.connectionType,
       description: 'List of posts',
@@ -57,6 +55,8 @@ const userType = new GraphQLObjectType({
         PostModel.find()
           .limit(args.first) // todo: uses sort for determine which args will use for limit
           .sort(args.sort)
+          // todo: create our own mongoConnection
+          // arrayConnection of graphql-relay is works only if array is static
           .then(posts => connectionFromArray(posts, args))
           .catch(err => outputError(err))
       ),
