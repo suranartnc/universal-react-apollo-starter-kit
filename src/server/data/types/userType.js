@@ -5,6 +5,13 @@ import {
   GraphQLInt,
 } from 'graphql'
 
+import {
+  connectionArgs,
+  connectionFromArray,
+} from 'graphql-relay'
+
+import postConnection from '../connections/postConnection'
+
 import PostModel from '../models/PostModel'
 import UserModel from '../models/UserModel'
 
@@ -22,7 +29,38 @@ import {
 
 const userType = new GraphQLObjectType({
   name: 'Viewer',
-  fields: {
+  fields: () => ({
+    // todo: write our own mongo connection
+    // array connection of graphql-relay is useless
+    allPosts: {
+      type: postConnection.connectionType,
+      description: 'List of posts',
+      args: {
+        category: {
+          type: GraphQLString,
+        },
+        sort: {
+          type: GraphQLString,
+          defaultValue: '-_id',
+        },
+        ...connectionArgs,
+        first: {
+          ...connectionArgs.first,
+          defaultValue: 10,
+        },
+        last: {
+          ...connectionArgs.last,
+          defaultValue: 10,
+        },
+      },
+      resolve: (viewer, args) => (
+        PostModel.find()
+          .limit(args.first) // todo: uses sort for determine which args will use for limit
+          .sort(args.sort)
+          .then(posts => connectionFromArray(posts, args))
+          .catch(err => outputError(err))
+      ),
+    },
 
     myPosts: {
       type: new GraphQLList(postType),
@@ -97,7 +135,7 @@ const userType = new GraphQLObjectType({
       resolve: (user, { _id }) => UserModel.findById(_id).catch(error => outputError(error)),
     },
 
-  },
+  }),
 })
 
 export default userType
