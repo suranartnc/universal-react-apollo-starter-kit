@@ -7,6 +7,8 @@ import favicon from 'serve-favicon'
 
 import config from 'shared/configs'
 import schema from 'server/data/schema.js'
+import passport from 'passport'
+import routeHandlers from './routes'
 import ssr from './ssr'
 
 const mongodbUri = 'mongodb://localhost:27017/urrsk'
@@ -23,9 +25,10 @@ mongoose.Promise = global.Promise
 const app = express()
 app.use(favicon(path.join(process.cwd(), 'static/favicon.ico')))
 app.use(express.static(path.join(process.cwd(), 'static')))
-
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(passport.initialize())
+app.use(routeHandlers)
 
 app.post('/graphql', (req, res, next) => {
   setTimeout(() => {
