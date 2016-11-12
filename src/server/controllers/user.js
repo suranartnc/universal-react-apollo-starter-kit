@@ -24,7 +24,7 @@ exports.postSignup = (req, res, next) => {
   const errors = null
 
   if (errors) {
-    req.flash('errors', errors)
+    // req.flash('errors', errors)
     return res.redirect('/signup')
   }
 
@@ -47,8 +47,14 @@ exports.postSignup = (req, res, next) => {
       //   }
       //   res.redirect('/')
       // })
-      const token = generateToken(user)
-      res.json({ token })
+      // const token = generateToken(user)
+      // res.json({ token })
+
+      res.cookie('AUTH_TOKEN', generateToken({ email: user.email }), {
+        maxAge: 60 * 30 * 1000,
+        // httpOnly: true
+      })
+      res.redirect('/')
     })
   })
 }

@@ -18,7 +18,7 @@ export default function getRoutes() {
         <Route path="posts/:id" component={EntryPageContainer} />
         <Route path="write" component={WritePageContainer} />
         <Route path="login" component={LoginPageContainer} />
-        <Route path="register" component={RegisterPageContainer} />
+        <Route path="signup" component={RegisterPageContainer} />
       </Route>
     </Route>
   )

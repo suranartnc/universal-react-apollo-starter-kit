@@ -10,7 +10,7 @@ function LoginPageContainer() {
         <input type="submit" value="Login" />
       </form>
       <Link to="/auth/facebook">Login with facebook</Link>
-      <Link to="/register">Register</Link>
+      <Link to="/signup">Register</Link>
     </div>
   )
 }
