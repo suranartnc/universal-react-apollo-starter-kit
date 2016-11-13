@@ -51,12 +51,15 @@ function matchRoutes(req, res) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps && renderProps.components) {
+      // console.log('headers', req.headers.cookie)
       const client = createApolloClient({
         ssrMode: true,
         networkInterface: createNetworkInterface({
           uri: 'http://localhost:3000/graphql',
-          credentials: 'same-origin',
-          headers: req.headers,
+          opts: {
+            credentials: 'same-origin',
+            headers: req.headers,
+          },
         }),
       })
 

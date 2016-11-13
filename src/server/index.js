@@ -37,6 +37,7 @@ app.post('/graphql', (req, res, next) => {
 })
 
 app.use('/graphql', graphqlExpress((req) => {
+  console.log('cookie', req.headers.cookie)
   let user = {
     _id: '5805c26198f0370001ac64a3',  // fake user
   }
