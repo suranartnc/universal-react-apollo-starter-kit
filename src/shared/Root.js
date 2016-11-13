@@ -4,6 +4,8 @@ import { createNetworkInterface } from 'apollo-client'
 import { ApolloProvider } from 'react-apollo'
 import getRoutes from 'shared/routes'
 import createApolloClient from 'shared/createApolloClient'
+import createStore from 'shared/store/createStore'
+import { syncHistoryWithStore } from 'react-router-redux'
 
 const client = createApolloClient({
   initialState: window.__APOLLO_STATE__,
@@ -16,13 +18,15 @@ const client = createApolloClient({
   }),
 })
 
+const store = createStore(client, history, window.__APOLLO_STATE__)
+const history = syncHistoryWithStore(browserHistory, store)
 const routes = getRoutes()
 
 const Root = () => {
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider store={store} client={client}>
       <Router
-        history={browserHistory}
+        history={history}
         routes={routes}
       />
     </ApolloProvider>

@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
+import { connect } from 'react-redux'
+
 import HomePage from './HomePage'
 
 class HomepageContainer extends Component {
@@ -156,4 +158,9 @@ const withDeletePostFunction = graphql(DELETE_POST_MUTATION, {
   }),
 })
 
-export default withDeletePostFunction(withLikePostFunction(withPosts(HomepageContainer)))
+function mapStateToProps(state) {
+  console.log(state)
+  return {}
+}
+
+export default connect(mapStateToProps)(withDeletePostFunction(withLikePostFunction(withPosts(HomepageContainer))))
