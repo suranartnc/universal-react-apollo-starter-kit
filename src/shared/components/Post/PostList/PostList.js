@@ -2,13 +2,13 @@ import React, { PropTypes } from 'react'
 import PostItem from '../PostItem/PostItem'
 import styles from './PostList.scss'
 
-function PostList({ posts }) {
+function PostList({ posts, onClickLike, onClickDelete }) {
   return (
     <div className={styles.container}>
       <ul className={styles.list}>
         {posts.map(post => (
           <li key={post._id} className={styles.item}>
-            <PostItem post={post} />
+            <PostItem post={post} onClickLike={onClickLike} onClickDelete={onClickDelete} />
           </li>
         ))}
       </ul>
@@ -17,7 +17,9 @@ function PostList({ posts }) {
 }
 
 PostList.propTypes = {
-  posts: PropTypes.arrayOf(PropTypes.object),
+  onClickLike: PostItem.propTypes.onClickLike,
+  onClickDelete: PostItem.propTypes.onClickLike,
+  posts: PropTypes.arrayOf(PostItem.propTypes.post),
 }
 
 export default PostList

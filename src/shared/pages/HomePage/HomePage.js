@@ -1,18 +1,21 @@
 import React, { PropTypes } from 'react'
+import { Link } from 'react-router'
 
 import PostList from 'shared/components/Post/PostList/PostList'
 
-function Homepage({ posts, addPost }) {
+function Homepage({ posts, loadMorePosts, onClickLike, onClickDelete }) {
   return (
     <div>
-      <button onClick={addPost}>Add new post</button>
-      <PostList posts={posts} />
+      <Link to={'write'}>Add Post</Link>
+      <PostList posts={posts} onClickLike={onClickLike} onClickDelete={onClickDelete} />
+      <button onClick={loadMorePosts}>Load more</button>
     </div>
   )
 }
 
 Homepage.propTypes = {
-  posts: PropTypes.arrayOf(PropTypes.object),
+  ...PostList.propTypes,
+  loadMorePosts: PropTypes.func.isRequired,
 }
 
 export default Homepage

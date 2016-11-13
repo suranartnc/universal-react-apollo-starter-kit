@@ -19,6 +19,7 @@ const commentType = new GraphQLObjectType({
   name: 'Comment',
   description: 'Represent the type of a comment',
   fields: () => ({
+    _id: { type: GraphQLString },
     body: { type: GraphQLString },
     date: { type: GraphQLFloat },
     author: {

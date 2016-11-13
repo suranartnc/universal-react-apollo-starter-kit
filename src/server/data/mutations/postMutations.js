@@ -4,7 +4,7 @@ import {
   GraphQLNonNull,
 } from 'graphql'
 
-import PostModel from '../models/PostModel'
+import PostModel, { postStatus } from '../models/PostModel'
 import postType from '../types/postType'
 import { outputError } from '../utils/helpers'
 
@@ -16,10 +16,10 @@ export const addPostMutation = {
     body: { type: new GraphQLNonNull(GraphQLString) },
     excerpt: { type: GraphQLString },
     categories: { type: new GraphQLList(GraphQLString), description: 'Id of categories' },
-    userId: { type: new GraphQLNonNull(GraphQLString), description: 'Id of the author' },
   },
-  resolve: (source, args) => {
+  resolve: (source, args, { user }) => {
     const post = Object.assign({}, args)
+    post.userId = user._id
     return PostModel.create(post).catch(error => outputError(error))
   },
 }
@@ -29,22 +29,22 @@ export const likePostMutation = {
   description: 'Like a post',
   args: {
     _id: { type: new GraphQLNonNull(GraphQLString) },
-    userId: { type: new GraphQLNonNull(GraphQLString) },
   },
-  resolve: (source, { _id, userId }) => {
-    return PostModel.update({ _id }, { likes: 1, likedBy: [userId] })
+  resolve: (source, { _id }, { user }) => {
+    return PostModel.update({ _id }, { $inc: { likes: 1 }, likedBy: [user._id] })
       .then(() => PostModel.findById(_id))
       .catch(error => outputError(error))
   },
 }
 
 export const deletePostMutation = {
-  type: new GraphQLList(postType),
+  type: postType,
   description: 'Delete a post',
   args: {
     _id: { type: new GraphQLNonNull(GraphQLString) },
   },
-  resolve: (source, { _id }) => PostModel.findById(_id).remove()
-    .then(() => PostModel.find())
-    .catch(error => outputError(error)),
+  resolve: (source, { _id }) => (
+    PostModel.softDelete(_id)
+      .catch(err => outputError(err))
+  ),
 }
