@@ -1,9 +1,11 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import rootReducer from 'shared/reducers'
 import { routerMiddleware } from 'react-router-redux'
+import authMiddleware from 'shared/middlewares/authMiddleware'
 
 export default (client, history, initialState) => {
   const middlewares = [
+    authMiddleware,
     routerMiddleware(history),
     client.middleware(),
   ]

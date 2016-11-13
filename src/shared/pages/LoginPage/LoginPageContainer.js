@@ -9,8 +9,6 @@ function LoginPageContainer() {
         <input type="password" name="password" placeholder="password" />
         <input type="submit" value="Login" />
       </form>
-      <Link to="/auth/facebook">Login with facebook</Link>
-      <Link to="/signup">Register</Link>
     </div>
   )
 }

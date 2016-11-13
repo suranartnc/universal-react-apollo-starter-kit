@@ -8,7 +8,6 @@ import createStore from 'shared/store/createStore'
 import { syncHistoryWithStore } from 'react-router-redux'
 
 const client = createApolloClient({
-  initialState: window.__APOLLO_STATE__,
   networkInterface: createNetworkInterface({
     uri: 'http://localhost:3000/graphql',
     opts: {
