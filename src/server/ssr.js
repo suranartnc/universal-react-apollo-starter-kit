@@ -4,6 +4,7 @@ import { RouterContext, match } from 'react-router'
 import { createNetworkInterface } from 'apollo-client'
 import { ApolloProvider } from 'react-apollo'
 import { getDataFromTree } from 'react-apollo/server'
+import reactCookie from 'react-cookie'
 import 'isomorphic-fetch'
 import getRoutes from 'shared/routes'
 import config from 'shared/configs'
@@ -47,6 +48,7 @@ function renderPage(content, state) {
 }
 
 export default function (req, res) {
+  reactCookie.plugToRequest(req, res)
   match({
     location: req.originalUrl,
     routes,
