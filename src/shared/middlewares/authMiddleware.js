@@ -22,7 +22,6 @@ export default store => next => action => {
       return next(action)
 
     case MEMBER_LOGOUT:
-      console.log('remove AUTH_TOKEN')
       reactCookie.remove('AUTH_TOKEN')
       return next(action)
 
