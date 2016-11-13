@@ -41,7 +41,7 @@ function renderPage(content, state) {
   `
 }
 
-function matchRoutes(req, res) {
+export default function (req, res) {
   match({
     location: req.originalUrl,
     routes,
@@ -79,8 +79,4 @@ function matchRoutes(req, res) {
       res.status(404).send('Not found')
     }
   })
-}
-
-export default function (req, res) {
-  matchRoutes(req, res)
 }
