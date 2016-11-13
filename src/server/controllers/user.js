@@ -5,7 +5,7 @@ const secretKey = 'u0rewhgpi43h-9thgr4g'
 
 function generateToken(user) {
   const token = jwt.sign({
-    sub: user._id,
+    _id: user._id,
     email: user.email,
     profile: {
       type: user.profile.type,
