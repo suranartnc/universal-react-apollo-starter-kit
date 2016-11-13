@@ -49,8 +49,3 @@ exports.login = (req, res) => {
   })
   res.redirect('/')
 }
-
-exports.logout = (req, res) => {
-  res.clearCookie('AUTH_TOKEN')
-  res.redirect('/')
-}
