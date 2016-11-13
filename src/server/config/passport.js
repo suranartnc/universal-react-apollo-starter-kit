@@ -1,17 +1,14 @@
-import _ from 'lodash'
 import passport from 'passport'
 import User from '../data/models/UserModel'
 
 const LocalStrategy = require('passport-local').Strategy
-const FacebookStrategy = require('passport-facebook').Strategy
-const TwitterStrategy = require('passport-twitter').Strategy
 
 passport.serializeUser((user, done) => {
-  done(null, user.id)
+  done(null, user._id)
 })
 
-passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
+passport.deserializeUser((_id, done) => {
+  User.findById(_id, (err, user) => {
     done(err, user)
   })
 })
@@ -28,6 +25,15 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
     user.comparePassword(password, (err, isMatch) => {
       if (err) { return done(err) }
       if (isMatch) {
+        user = {
+          _id: user._id,
+          email: user.email,
+          profile: {
+            type: user.profile.type,
+            displayName: user.profile.displayName,
+            picture: user.profile.picture,
+          },
+        }
         return done(null, user)
       }
       return done(null, false, { msg: 'Invalid email or password.' })
@@ -39,22 +45,9 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
 /**
  * Login Required middleware.
  */
-exports.isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next()
-  }
-  res.redirect('/login')
-}
-
-/**
- * Authorization Required middleware.
- */
-exports.isAuthorized = (req, res, next) => {
-  const provider = req.path.split('/').slice(-1)[0]
-
-  if (_.find(req.user.tokens, { kind: provider })) {
-    next()
-  } else {
-    res.redirect(`/auth/${provider}`)
-  }
-}
+// exports.isAuthenticated = (req, res, next) => {
+//   if (req.isAuthenticated()) {
+//     return next()
+//   }
+//   res.redirect('/login')
+// }
