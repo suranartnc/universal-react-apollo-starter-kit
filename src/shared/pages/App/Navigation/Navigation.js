@@ -8,22 +8,23 @@ class Nav extends Component {
   renderMemberSection() {
     if (this.props.user.isAuthenticated) {
       return (
-          <li><a href="#" onClick={this.props.memberLogout}>Logout</a></li>
+        <button onClick={this.props.memberLogout}>Logout</button>
       )
     }
 
     return (
-      <li><Link to="/login">Login</Link></li>
+      <ul>
+        <li><Link to="/login">Login</Link></li>
+        <li><Link to="/signup">Register</Link></li>
+      </ul>
     )
   }
 
   render() {
     return (
       <div>
-        <ul>
-          <li><Link to="/" activeClassName="active">Home</Link></li>
-          {this.renderMemberSection()}
-        </ul>
+        <Link to="/" activeClassName="active">Home</Link>
+        {this.renderMemberSection()}
       </div>
     )
   }
