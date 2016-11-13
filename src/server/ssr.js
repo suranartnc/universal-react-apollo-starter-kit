@@ -9,6 +9,7 @@ import getRoutes from 'shared/routes'
 import config from 'shared/configs'
 import createApolloClient from 'shared/createApolloClient'
 import createStore from 'shared/store/createStore'
+import { MEMBER_LOAD_AUTH } from 'shared/actions/userActions'
 
 const routes = getRoutes()
 
@@ -28,7 +29,10 @@ function renderPage(content, state) {
       <body>
         <div id="root">${content}</div>
         <script>
-          window.__APOLLO_STATE__ = ${JSON.stringify({ apollo: { data: state } })}
+          window.__APOLLO_STATE__ = ${JSON.stringify({
+            ...state,
+            apollo: { data: state.apollo.data },
+          })}
         </script>
         ${process.env.NODE_ENV === 'production' ?
           `
@@ -64,6 +68,9 @@ export default function (req, res) {
       })
 
       const store = createStore(client)
+      store.dispatch({
+        type: MEMBER_LOAD_AUTH,
+      })
 
       const component = (
         <ApolloProvider store={store} client={client}>
@@ -73,7 +80,7 @@ export default function (req, res) {
       getDataFromTree(component)
         .then((context) => {
           const content = renderToString(component)
-          const html = renderPage(content, context.store.getState().apollo.data)
+          const html = renderPage(content, context.store.getState())
           res.status(200).send(html)
         })
         .catch(e => console.error('RENDERING ERROR:', e))

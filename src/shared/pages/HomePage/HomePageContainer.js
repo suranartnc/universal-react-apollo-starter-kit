@@ -159,7 +159,7 @@ const withDeletePostFunction = graphql(DELETE_POST_MUTATION, {
 })
 
 function mapStateToProps(state) {
-  console.log(state)
+  // console.log(state.user)
   return {}
 }
 

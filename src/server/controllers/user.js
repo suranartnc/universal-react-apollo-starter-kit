@@ -45,7 +45,7 @@ exports.login = (req, res) => {
   const token = generateToken(req.user)
   res.cookie('AUTH_TOKEN', token, {
     maxAge: 60 * 30 * 1000,
-    // httpOnly: true
+    httpOnly: true,
   })
   res.redirect('/')
 }
