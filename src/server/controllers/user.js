@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import passport from 'passport'
 import User from 'server/data/models/UserModel'
 
 const secretKey = 'u0rewhgpi43h-9thgr4g'
@@ -35,40 +34,23 @@ exports.signup = (req, res, next) => {
     if (existingUser) {
       return res.redirect('/signup')
     }
-    user.save((err, savedUser) => {
+    user.save((err) => {
       if (err) { return next(err) }
       res.redirect('/login')
     })
   })
 }
 
-exports.login = (req, res, next) => {
-
-  const errors = null
-  if (errors) {
-    return res.redirect('/login')
-  }
-
-  passport.authenticate('local', {
-    session: false,
-  }, (err, user, info) => {
-    if (err) { return next(err) }
-    if (!user) {
-      return res.redirect('/login')
-    }
-    req.logIn(user, (err) => {
-      if (err) { return next(err) }
-      const token = generateToken(req.user)
-      res.cookie('AUTH_TOKEN', token, {
-        maxAge: 60 * 30 * 1000,
-        // httpOnly: true
-      })
-      res.redirect(req.session.returnTo || '/')
-    })
-  })(req, res, next)
+exports.login = (req, res) => {
+  const token = generateToken(req.user)
+  res.cookie('AUTH_TOKEN', token, {
+    maxAge: 60 * 30 * 1000,
+    // httpOnly: true
+  })
+  res.redirect('/')
 }
 
 exports.logout = (req, res) => {
-  req.logout()
+  res.clearCookie('AUTH_TOKEN')
   res.redirect('/')
 }
