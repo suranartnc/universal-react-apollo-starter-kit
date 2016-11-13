@@ -4754,6 +4754,10 @@ react-helmet@^3.1.0:
     shallowequal "0.2.2"
     warning "3.0.0"
 
+react-router-redux:
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/react-router-redux/-/react-router-redux-4.0.7.tgz#9b1fde4e70106c50f47214e12bdd888cfb96e2a6"
+
 react-router-scroll@^0.3.2:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/react-router-scroll/-/react-router-scroll-0.3.3.tgz#e57200fd863e728fce8e90be933f5315990fc0e6"
@@ -4887,7 +4891,7 @@ reduce-function-call@^1.0.1:
   dependencies:
     balanced-match "~0.1.0"
 
-redux@^3.3.1:
+redux, redux@^3.3.1:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/redux/-/redux-3.6.0.tgz#887c2b3d0b9bd86eca2be70571c27654c19e188d"
   dependencies:

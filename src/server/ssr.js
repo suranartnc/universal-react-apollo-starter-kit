@@ -8,6 +8,7 @@ import 'isomorphic-fetch'
 import getRoutes from 'shared/routes'
 import config from 'shared/configs'
 import createApolloClient from 'shared/createApolloClient'
+import createStore from 'shared/store/createStore'
 
 const routes = getRoutes()
 
@@ -27,7 +28,7 @@ function renderPage(content, state) {
       <body>
         <div id="root">${content}</div>
         <script>
-          window.__APOLLO_STATE__ = ${JSON.stringify({ apollo: { data: state } })};
+          window.__APOLLO_STATE__ = ${JSON.stringify({ apollo: { data: state } })}
         </script>
         ${process.env.NODE_ENV === 'production' ?
           `
@@ -51,7 +52,6 @@ export default function (req, res) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps && renderProps.components) {
-      // console.log('headers', req.headers.cookie)
       const client = createApolloClient({
         ssrMode: true,
         networkInterface: createNetworkInterface({
@@ -63,8 +63,10 @@ export default function (req, res) {
         }),
       })
 
+      const store = createStore(client)
+
       const component = (
-        <ApolloProvider client={client}>
+        <ApolloProvider store={store} client={client}>
           <RouterContext {...renderProps} />
         </ApolloProvider>
       )
