@@ -13,7 +13,7 @@ export default {
     `webpack-dev-server/client?http://${config.host}:${config.wdsPort}`,
     'webpack/hot/only-dev-server',
     path.join(__dirname, 'src/shared/theme/styles/app.scss'),
-    path.join(__dirname, 'src/client/client.js'),
+    path.join(__dirname, 'src/client/client.dev.js'),
   ],
 
   output: {
