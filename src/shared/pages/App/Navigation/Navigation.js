@@ -8,7 +8,10 @@ class Nav extends Component {
   renderMemberSection() {
     if (this.props.user.isAuthenticated) {
       return (
-        <button onClick={this.props.memberLogout}>Logout</button>
+        <div>
+          <Link to={'/write'}>Add Post</Link>
+          <button onClick={this.props.memberLogout}>Logout</button>
+        </div>
       )
     }
 
