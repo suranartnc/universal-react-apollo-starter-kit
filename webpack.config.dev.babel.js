@@ -1,6 +1,6 @@
-import webpackBaseConfig from './webpack.config.base.babel'
 import path from 'path'
 import webpack from 'webpack'
+import webpackBaseConfig from './webpack.config.base.babel'
 import config from './src/shared/configs'
 
 export default {
@@ -9,6 +9,7 @@ export default {
   devtool: 'cheap-eval-source-map',  // to increase build speed, use "cheap-eval-source-map"
 
   entry: [
+    'react-hot-loader/patch',
     `webpack-dev-server/client?http://${config.host}:${config.wdsPort}`,
     'webpack/hot/only-dev-server',
     path.join(__dirname, 'src/shared/theme/styles/app.scss'),
@@ -19,7 +20,7 @@ export default {
     ...webpackBaseConfig.output,
     publicPath: `http://${config.host}:${config.wdsPort}/build/`,
     filename: '[name].js',
-    chunkFilename: "[name].chunk.js",
+    chunkFilename: '[name].chunk.js',
   },
 
   module: {

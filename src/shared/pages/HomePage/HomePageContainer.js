@@ -40,7 +40,7 @@ class HomepageContainer extends Component {
 }
 
 HomepageContainer.propTypes = {
-  loading: PropTypes.bool.isRequired,
+  loading: PropTypes.bool,
   like: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
   loadMorePosts: HomePage.propTypes.loadMorePosts,

@@ -17,5 +17,13 @@ export default (client, history, initialState) => {
   }
 
   const store = createStore(rootReducer(client), initialState, enhancer)
+
+  if (module.hot) {
+    module.hot.accept('shared/reducers', () => {
+      const nextReducer = require('shared/reducers').default
+      store.replaceReducer(nextReducer)
+    })
+  }
+
   return store
 }
