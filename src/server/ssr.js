@@ -12,8 +12,6 @@ import createApolloClient from 'shared/createApolloClient'
 import createStore from 'shared/store/createStore'
 import { MEMBER_LOAD_AUTH } from 'shared/actions/userActions'
 
-const routes = getRoutes()
-
 const wdsPath = `http://${config.host}:${config.wdsPort}/build/`
 const assetsManifest = process.env.webpackAssets && JSON.parse(process.env.webpackAssets)
 
@@ -49,6 +47,21 @@ function renderPage(content, state) {
 
 export default function (req, res) {
   reactCookie.plugToRequest(req, res)
+  const client = createApolloClient({
+    ssrMode: true,
+    networkInterface: createNetworkInterface({
+      uri: 'http://localhost:3000/graphql',
+      opts: {
+        credentials: 'same-origin',
+        headers: req.headers,
+      },
+    }),
+  })
+  const store = createStore(client)
+  store.dispatch({
+    type: MEMBER_LOAD_AUTH,
+  })
+  const routes = getRoutes(store)
   match({
     location: req.originalUrl,
     routes,
@@ -58,22 +71,6 @@ export default function (req, res) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps && renderProps.components) {
-      const client = createApolloClient({
-        ssrMode: true,
-        networkInterface: createNetworkInterface({
-          uri: 'http://localhost:3000/graphql',
-          opts: {
-            credentials: 'same-origin',
-            headers: req.headers,
-          },
-        }),
-      })
-
-      const store = createStore(client)
-      store.dispatch({
-        type: MEMBER_LOAD_AUTH,
-      })
-
       const component = (
         <ApolloProvider store={store} client={client}>
           <RouterContext {...renderProps} />

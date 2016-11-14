@@ -19,7 +19,7 @@ const client = createApolloClient({
 
 const store = createStore(client, history, window.__APOLLO_STATE__)
 const history = syncHistoryWithStore(browserHistory, store)
-const routes = getRoutes()
+const routes = getRoutes(store)
 
 const Root = () => {
   return (
