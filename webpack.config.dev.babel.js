@@ -1,6 +1,7 @@
-import webpackBaseConfig from './webpack.config.base.babel'
 import path from 'path'
 import webpack from 'webpack'
+import DashboardPlugin from 'webpack-dashboard/plugin'
+import webpackBaseConfig from './webpack.config.base.babel'
 import config from './src/shared/configs'
 
 export default {
@@ -9,17 +10,18 @@ export default {
   devtool: 'cheap-eval-source-map',  // to increase build speed, use "cheap-eval-source-map"
 
   entry: [
+    'react-hot-loader/patch',
     `webpack-dev-server/client?http://${config.host}:${config.wdsPort}`,
     'webpack/hot/only-dev-server',
     path.join(__dirname, 'src/shared/theme/styles/app.scss'),
-    path.join(__dirname, 'src/client/client.js'),
+    path.join(__dirname, 'src/client/client.dev.js'),
   ],
 
   output: {
     ...webpackBaseConfig.output,
     publicPath: `http://${config.host}:${config.wdsPort}/build/`,
     filename: '[name].js',
-    chunkFilename: "[name].chunk.js",
+    chunkFilename: '[name].chunk.js',
   },
 
   module: {
@@ -88,6 +90,7 @@ export default {
         'BROWSER': JSON.stringify(true),
       },
     }),
+    new DashboardPlugin(),
   ],
 
   devServer: {

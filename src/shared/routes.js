@@ -10,13 +10,18 @@ import WritePageContainer from 'shared/pages/WritePage/WritePageContainer'
 import LoginPageContainer from 'shared/pages/LoginPage/LoginPageContainer'
 import RegisterPageContainer from 'shared/pages/RegisterPage/RegisterPageContainer'
 
-export default function getRoutes() {
+export default function getRoutes(store) {
+  const checkAuth = (nextState, replace) => {
+    if (!store.getState().user.isAuthenticated) {
+      replace('/')
+    }
+  }
   return (
     <Route path="/" component={App}>
       <Route component={FullLayout}>
         <IndexRoute component={HomePageContainer} />
         <Route path="posts/:id" component={EntryPageContainer} />
-        <Route path="write" component={WritePageContainer} />
+        <Route onEnter={checkAuth} path="write" component={WritePageContainer} />
         <Route path="login" component={LoginPageContainer} />
         <Route path="signup" component={RegisterPageContainer} />
       </Route>
