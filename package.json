@@ -7,6 +7,8 @@
     "dev": "npm-run-all --parallel dev-ssr dev-hmr",
     "dev-ssr": "better-npm-run dev",
     "dev-hmr": "webpack-dev-server --config webpack.config.dev.babel.js",
+    "dev-dashboard": "npm-run-all --parallel dev-ssr dev-hmr-dashboard",
+    "dev-hmr-dashboard": "webpack-dashboard -- webpack-dev-server --config webpack.config.dev.babel.js",
     "postinstall": "npm run build",
     "build": "better-npm-run build",
     "start": "npm-run-all --parallel start-ssr",
@@ -119,6 +121,7 @@
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.4.1",
     "nodemon": "^1.11.0",
+    "webpack-dashboard": "^0.2.0",
     "webpack-dev-server": "^2.1.0-beta.9"
   }
 }

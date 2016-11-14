@@ -16,6 +16,7 @@ export default {
     vendor: [
       'apollo-client',
       'es6-promise',
+      'graphql-tag',
       'isomorphic-fetch',
       'jwt-decode',
       'react',

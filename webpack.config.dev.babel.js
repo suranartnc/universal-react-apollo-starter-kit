@@ -1,5 +1,6 @@
 import path from 'path'
 import webpack from 'webpack'
+import DashboardPlugin from 'webpack-dashboard/plugin'
 import webpackBaseConfig from './webpack.config.base.babel'
 import config from './src/shared/configs'
 
@@ -89,6 +90,7 @@ export default {
         'BROWSER': JSON.stringify(true),
       },
     }),
+    new DashboardPlugin(),
   ],
 
   devServer: {
