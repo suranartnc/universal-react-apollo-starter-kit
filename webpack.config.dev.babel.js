@@ -34,6 +34,9 @@ export default {
         test: /\.js$/,
         include: projectSource,
         loader: 'babel-loader',
+        options: {
+          cacheDirectory: true,
+        },
       },
       {
         test: /\.css$/,
