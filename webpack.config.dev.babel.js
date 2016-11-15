@@ -9,7 +9,8 @@ const projectSource = path.resolve(__dirname, './src')
 export default {
   ...webpackBaseConfig,
 
-  devtool: '#eval-source-map',
+  cache: true,
+  devtool: 'eval',
 
   entry: [
     'react-hot-loader/patch',
