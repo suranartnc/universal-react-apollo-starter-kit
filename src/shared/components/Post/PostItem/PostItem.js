@@ -1,9 +1,8 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
-import styles from './PostItem.scss'
 
 const PostItem = ({ post, onClickLike, onClickDelete }) => (
-  <article className={styles.article}>
+  <article>
     <Link to={`/posts/${post._id}`}>
       {post.thumbnail && (
         <div>
