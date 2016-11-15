@@ -5,10 +5,8 @@ import {
   GraphQLInt,
 } from 'graphql'
 
-import {
-  connectionArgs,
-  connectionFromArray,
-} from 'graphql-relay'
+import { connectionArgs } from 'graphql-relay'
+import _ from 'lodash'
 
 import postConnection from '../connections/postConnection'
 
@@ -27,6 +25,8 @@ import {
   outputError,
 } from '../utils/helpers'
 
+import { connectionFromMongooseModel } from '../connections/mongoConnection'
+
 const userType = new GraphQLObjectType({
   name: 'Viewer',
   fields: () => ({
@@ -34,7 +34,7 @@ const userType = new GraphQLObjectType({
       type: postConnection.connectionType,
       description: 'List of posts',
       args: {
-        category: {
+        categoryId: {
           type: GraphQLString,
         },
         sort: {
@@ -51,15 +51,14 @@ const userType = new GraphQLObjectType({
           defaultValue: 10,
         },
       },
-      resolve: (viewer, args) => (
-        PostModel.find()
-          .limit(args.first) // todo: uses sort for determine which args will use for limit
-          .sort(args.sort)
-          // todo: create our own mongoConnection
-          // arrayConnection of graphql-relay is works only if array is static
-          .then(posts => connectionFromArray(posts, args))
-          .catch(err => outputError(err))
-      ),
+      resolve: (viewer, args) => connectionFromMongooseModel(PostModel, args, (filter) => {
+        if (filter.categoryId) {
+          filter.categories = filter.categoryId
+          _.unset(filter, 'categoryId')
+        }
+
+        return filter
+      }),
     },
 
     myPosts: {
