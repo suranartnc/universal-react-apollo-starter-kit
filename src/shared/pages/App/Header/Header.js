@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router'
+import Navigation from '../Navigation/Navigation'
+
+import styles from './Header.scss'
 
 class Header extends Component {
   render() {
     return (
-      <header>
-        <div>
-          <Link to="/"><h1>Home</h1></Link>
-        </div>
+      <header className={styles.container}>
+        <Navigation />
       </header>
     )
   }

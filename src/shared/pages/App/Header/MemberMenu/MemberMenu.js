@@ -7,9 +7,7 @@ class MemberMenu extends Component {
   render() {
     return (
       <div>
-        <div>
-          {this.renderProfile()}
-        </div>
+        {this.renderProfile()}
       </div>
     )
   }
