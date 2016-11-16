@@ -5,7 +5,6 @@ import {
   GraphQLInt,
 } from 'graphql'
 
-import { connectionArgs } from 'graphql-relay'
 import _ from 'lodash'
 
 import postConnection from '../connections/postConnection'
@@ -25,7 +24,7 @@ import {
   outputError,
 } from '../utils/helpers'
 
-import { connectionFromMongooseModel } from '../connections/mongoConnection'
+import { connectionIdentifierArgs, connectionFromMongooseIdentifier } from '../connections/mongoConnection'
 
 const userType = new GraphQLObjectType({
   name: 'Viewer',
@@ -33,32 +32,19 @@ const userType = new GraphQLObjectType({
     allPosts: {
       type: postConnection.connectionType,
       description: 'List of posts',
-      args: {
-        categoryId: {
-          type: GraphQLString,
-        },
-        sort: {
-          type: GraphQLString,
-          defaultValue: '-_id',
-        },
-        ...connectionArgs,
-        first: {
-          ...connectionArgs.first,
-          defaultValue: 10,
-        },
-        last: {
-          ...connectionArgs.last,
-          defaultValue: 10,
-        },
-      },
-      resolve: (viewer, args) => connectionFromMongooseModel(PostModel, args, (filter) => {
-        if (filter.categoryId) {
-          filter.categories = filter.categoryId
-          _.unset(filter, 'categoryId')
-        }
+      args: connectionIdentifierArgs,
+      resolve: (viewer, args) => {
+        return connectionFromMongooseIdentifier(PostModel, args, (filter) => {
+          const mappedFilter = { ...filter }
 
-        return filter
-      }),
+          if (mappedFilter.categoryId) {
+            mappedFilter.categories = mappedFilter.categoryId
+            _.unset(mappedFilter, 'categoryId')
+          }
+
+          return mappedFilter
+        })
+      },
     },
 
     myPosts: {

@@ -1,68 +1,102 @@
 import { base64 } from 'graphql-relay/lib/utils/base64'
+import { connectionArgs } from 'graphql-relay'
+import mongoSortEnumType from '../types/enum/mongoSortEnumType'
 
-export function connectionFromMongooseModel(Model, args, filterMapper) {
+export const connectionIdentifierArgs = {
+  ...connectionArgs,
+  last: {
+    ...connectionArgs.last,
+    defaultValue: 10,
+  },
+  first: {
+    ...connectionArgs.first,
+    defaultValue: 10,
+  },
+  sort: {
+    type: mongoSortEnumType,
+    defaultValue: '-1',
+  },
+}
+
+function sanitizeFilter(filter, sanitizer) {
+  if (typeof sanitizer !== 'function') {
+    return filter
+  }
+
+  return sanitizer(filter)
+}
+
+const CURSOR_SEPERATOR = '---'
+
+function identifierToCursor(item, identifier = '_id') {
+  const cursor = `${identifier}${CURSOR_SEPERATOR}${item[identifier]}`
+  return base64(cursor)
+}
+
+function createEdgesFromItems(items, cursorGenerator) {
+  return items.map(item => ({
+    node: item,
+    cursor: cursorGenerator(item),
+  }))
+}
+
+function getBeforeOperator(sort) {
+  return parseFloat(sort) > 0 ? '$lt' : '$gt'
+}
+
+function getAfterOperator(sort) {
+  return parseFloat(sort) > 0 ? '$gt' : '$lt'
+}
+
+export function connectionFromMongooseIdentifier(Model, args, filterSanitizer) {
   const {
     first,
     last,
     before,
     after,
-    sort = '-_id',
+    sort,
     ...filter
   } = args
 
-  const mappedFilter = mapFilter(filter, filterMapper)
+  const sanitizedFilter = sanitizeFilter(filter, filterSanitizer)
 
-  return Model.find(mappedFilter)
-    .sort(sort)
+  return Model.find(sanitizedFilter)
+    .sort({ _id: sort })
     .limit(first)
-    .then((posts) => {
-      const edges = posts.map(post => ({
-        cursor: generateCursor(post, sort),
-        node: post,
-      }))
+    .then((items) => {
+      const edges = createEdgesFromItems(items, identifierToCursor)
 
-      const pageInfo = generatePageInfo(edges)
+      const firstEdge = edges[0]
+      const lastEdge = edges[edges.length - 1]
 
-      return {
-        edges,
-        pageInfo,
+      let findPrev = null
+      let findNext = null
+
+      if (firstEdge) {
+        const beforeOperator = getBeforeOperator(sort)
+        findPrev = Model.findOne({
+          ...sanitizedFilter,
+          _id: { [beforeOperator]: firstEdge.node._id },
+        })
       }
+
+      if (lastEdge) {
+        const afterOperator = getAfterOperator(sort)
+        findNext = Model.findOne({
+          ...sanitizedFilter,
+          _id: { [afterOperator]: lastEdge.node._id },
+        })
+      }
+
+      return Promise.all([findPrev, findNext])
+        .then(([prev, next]) => ({
+          edges,
+          pageInfo: {
+            startCursor: firstEdge.cursor,
+            endCursor: lastEdge.cursor,
+            hasNextPage: !!next,
+            hasPreviousPage: !!prev,
+          },
+        }))
     })
-}
-
-function mapFilter(filter, mapper) {
-  if (typeof mapper !== 'function') {
-    return filter
-  }
-
-  return mapper(filter)
-}
-
-function generateCursor(post, sort) {
-  const sortField = sort.replace('-', '')
-  const rawCursor = `${sortField}:${post[sortField]}`
-
-  return base64(rawCursor)
-}
-
-function generatePageInfo(edges) {
-  const pageInfo = {
-    startCursor: null,
-    endCursor: null,
-    hasPreviousPage: false,
-    hasNextPage: false,
-  }
-
-  const firstEdge = edges[0]
-  const lastEdge = edges[edges.length - 1]
-
-  if (firstEdge) {
-    pageInfo.startCursor = firstEdge.cursor
-  }
-
-  if (lastEdge) {
-    pageInfo.endCursor = lastEdge.cursor
-  }
-
-  return pageInfo
 }
