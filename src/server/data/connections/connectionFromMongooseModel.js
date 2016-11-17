@@ -32,7 +32,7 @@ function encodeCursor(value) {
   return base64(`${value}`)
 }
 
-export default function connectionFromMongooseModel(Model, args) {
+export default async function connectionFromMongooseModel(Model, args) {
   const {
     before,
     after,
@@ -42,33 +42,31 @@ export default function connectionFromMongooseModel(Model, args) {
 
   validateLimit(first, last)
 
-  return Model.find().count()
-    .then((total) => {
-      const query = Model.find().sort({ _id: -1 })
+  const query = Model.find().sort({ _id: -1 })
 
-      if (last) {
-        query.skip(total - last)
-      }
+  if (last) {
+    const totalNodes = await Model.find().count()
+    query.skip(totalNodes - last)
+  }
 
-      if (first) {
-        query.limit(first)
-      }
+  if (first) {
+    query.limit(first)
+  }
 
-      return query.then((nodes) => {
-        const edges = nodes.map(node => ({
-          node,
-          cursor: encodeCursor(node._id),
-        }))
+  const nodes = await query
 
-        return {
-          edges,
-          pageInfo: {
-            startCursor: null,
-            endCursor: null,
-            hasNextPage: false,
-            hasPreviousPage: false,
-          },
-        }
-      })
-    })
+  const edges = nodes.map(node => ({
+    node,
+    cursor: encodeCursor(node._id),
+  }))
+
+  return {
+    edges,
+    pageInfo: {
+      startCursor: null,
+      endCursor: null,
+      hasNextPage: false,
+      hasPreviousPage: false,
+    },
+  }
 }
