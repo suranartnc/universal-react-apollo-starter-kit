@@ -61,9 +61,10 @@ export default async function connectionFromMongooseModel(Model, args) {
     }
   }
 
-  const query = Model.find(filter).sort({ _id: -1 })
+  const query = Model.find(filter)
 
   if (last) {
+    // todo: clone query for do count, not duplicate code
     const totalNodes = await Model.find(filter).count()
     query.skip(last > totalNodes ? 0 : totalNodes - last)
   }
@@ -72,7 +73,7 @@ export default async function connectionFromMongooseModel(Model, args) {
     query.limit(first)
   }
 
-  const nodes = await query
+  const nodes = await query.sort({ _id: -1 })
 
   const edges = nodes.map(node => ({
     node,
