@@ -6,8 +6,7 @@ import {
 } from 'graphql'
 
 import _ from 'lodash'
-
-import postConnection from '../connections/postConnection'
+import { connectionArgs } from 'graphql-relay'
 
 import PostModel from '../models/PostModel'
 import UserModel from '../models/UserModel'
@@ -24,26 +23,18 @@ import {
   outputError,
 } from '../utils/helpers'
 
-import { connectionIdentifierArgs, connectionFromMongooseIdentifier } from '../connections/mongoConnection'
+import postConnection from '../connections/postConnection'
+import connectionFromMongooseModel from '../connections/connectionFromMongooseModel'
 
 const userType = new GraphQLObjectType({
   name: 'Viewer',
   fields: () => ({
-    allPosts: {
+    recentPosts: {
       type: postConnection.connectionType,
       description: 'List of posts',
-      args: connectionIdentifierArgs,
+      args: connectionArgs,
       resolve: (viewer, args) => {
-        return connectionFromMongooseIdentifier(PostModel, args, (filter) => {
-          const mappedFilter = { ...filter }
-
-          if (mappedFilter.categoryId) {
-            mappedFilter.categories = mappedFilter.categoryId
-            _.unset(mappedFilter, 'categoryId')
-          }
-
-          return mappedFilter
-        })
+        return connectionFromMongooseModel(PostModel, args)
       },
     },
 
