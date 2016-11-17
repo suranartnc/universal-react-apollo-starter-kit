@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { base64 } from 'graphql-relay/lib/utils/base64'
+import { base64, unbase64 } from 'graphql-relay/lib/utils/base64'
 
 function validateLimit(first, last) {
   if (!first && !last) {
@@ -32,21 +32,40 @@ function encodeCursor(value) {
   return base64(`${value}`)
 }
 
+function decodeCursor(value) {
+  return unbase64(value)
+}
+
 export default async function connectionFromMongooseModel(Model, args) {
   const {
     before,
     after,
     first,
     last,
+    ...filter
   } = args
 
   validateLimit(first, last)
 
-  const query = Model.find().sort({ _id: -1 })
+  if (before) {
+    filter._id = {
+      ...filter._id,
+      $gt: decodeCursor(before),
+    }
+  }
+
+  if (after) {
+    filter._id = {
+      ...filter._id,
+      $lt: decodeCursor(after),
+    }
+  }
+
+  const query = Model.find(filter).sort({ _id: -1 })
 
   if (last) {
-    const totalNodes = await Model.find().count()
-    query.skip(totalNodes - last)
+    const totalNodes = await Model.find(filter).count()
+    query.skip(last > totalNodes ? 0 : totalNodes - last)
   }
 
   if (first) {
