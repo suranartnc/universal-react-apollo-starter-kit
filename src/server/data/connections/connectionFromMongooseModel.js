@@ -79,16 +79,32 @@ export default async function connectionFromMongooseModel(Model, args) {
     cursor: encodeCursor(node._id),
   }))
 
+  const pageInfo = {
+    startCursor: null,
+    endCursor: null,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  }
+
   const startEdge = edges[0]
   const endEdge = edges[edges.length - 1]
 
+  if (startEdge) {
+    pageInfo.startCursor = startEdge.cursor
+
+    const prevEdge = await Model.findOne({ _id: { $gt: startEdge.node._id } })
+    pageInfo.hasPreviousPage = !!prevEdge
+  }
+
+  if (endEdge) {
+    pageInfo.endCursor = endEdge.cursor
+
+    const nextEdge = await Model.findOne({ _id: { $lt: endEdge.node._id } })
+    pageInfo.hasNextPage = !!nextEdge
+  }
+
   return {
     edges,
-    pageInfo: {
-      startCursor: startEdge ? startEdge.cursor : null,
-      endCursor: endEdge ? endEdge.cursor : null,
-      hasNextPage: false,
-      hasPreviousPage: false,
-    },
+    pageInfo,
   }
 }
