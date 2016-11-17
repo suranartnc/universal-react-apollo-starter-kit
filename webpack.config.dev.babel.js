@@ -4,10 +4,13 @@ import DashboardPlugin from 'webpack-dashboard/plugin'
 import webpackBaseConfig from './webpack.config.base.babel'
 import config from './src/shared/configs'
 
+const projectSource = path.resolve(__dirname, './src')
+
 export default {
   ...webpackBaseConfig,
 
-  devtool: 'cheap-eval-source-map',  // to increase build speed, use "cheap-eval-source-map"
+  cache: true,
+  devtool: 'eval',
 
   entry: [
     'react-hot-loader/patch',
@@ -26,24 +29,23 @@ export default {
 
   module: {
     ...webpackBaseConfig.module,
+    noParse: [
+      path.resolve(__dirname, 'react/dist/react.min.js'),
+      path.resolve(__dirname, 'react-dom/dist/react-dom.min.js'),
+    ],
     rules: [
       ...webpackBaseConfig.module.rules,
       {
         test: /\.js$/,
-        exclude: /node_modules|\.git/,
+        include: projectSource,
         loader: 'babel-loader',
+        options: {
+          cacheDirectory: true,
+        },
       },
       {
         test: /\.css$/,
-        include: path.join(__dirname, 'node_modules', 'medium-editor'),
-        use: [
-          'style-loader',
-          'css-loader',
-        ],
-      },
-      {
-        test: /\.css$/,
-        exclude: /node_modules/,
+        include: projectSource,
         use: [
           'style-loader',
           'css-loader',
@@ -51,7 +53,7 @@ export default {
       },
       {
         test: /\.scss$/,
-        exclude: /node_modules/,
+        include: projectSource,
         use: [
           'style-loader',
           {

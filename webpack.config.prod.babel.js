@@ -134,7 +134,7 @@ export default {
       allChunks: true,
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      name: "vendor",
+      name: 'vendor',
       minChunks: Infinity,
     }),
     new ProgressBarPlugin(),

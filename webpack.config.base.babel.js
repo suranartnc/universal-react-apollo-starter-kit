@@ -29,6 +29,10 @@ export default {
       path.join(__dirname, 'src'),
       path.join(__dirname, 'node_modules'),
     ],
+    alias: {
+      react: 'react/dist/react.min.js',
+      'react-dom': 'react-dom/dist/react-dom.min.js',
+    },
   },
 
   plugins: [
@@ -40,6 +44,6 @@ export default {
           autoprefixer({ browsers: ['last 2 versions', 'IE > 10'] }),
         ],
       },
-    })
+    }),
   ],
 }

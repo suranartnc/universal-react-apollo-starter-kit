@@ -2,60 +2,12 @@
 
 .container {
   display: flex;
-  align-items: center;
+  justify-content: center;
   height: 100%;
-}
-
-.user-wrapper {
-  display: flex;
-  align-items: center;
-}
-
-.photo {
-  width: 40px;
-  height: 40px;
-  border-radius: 100%;
-  overflow: hidden;
-  margin-right: 15px;
-
-  :global(img) {
-    max-width: 100%;
+  a {
+    flex-grow: 1;
+    align-self: center;
+    padding: 5px 25px 5px 0;
+    color: #00ab6b;
   }
-}
-
-.name {
-  max-width: 100px;
-  overflow: hidden;
-
-  @include main-font();
-  @include font-size(24);
-  @include text-truncate();
-}
-
-.action {
-  display: flex;
-  flex-grow: 1;
-
-  @include min-screen( getDeviceWidth('tablet','xlg') + 1) {
-    flex: 0 0 330px;
-  }
-
-  @include min-screen( getDeviceWidth('desktop','md') ) {
-    flex: 0 0 400px;
-  }
-
-  .user {
-    flex: 0 0 50%;
-    border-left: 1px solid $border-color;
-    padding: 0 15px;
-  }
-  .write {
-    flex: 0 0 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 60px;
-    border-left: 1px solid $border-color;
-  }
-
 }

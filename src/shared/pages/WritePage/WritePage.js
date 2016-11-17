@@ -17,7 +17,7 @@ const renderButtons = (isSumitting) => {
 
   return (
     <div>
-      <button type="submit">Summit</button>
+      <button type="submit">Submit</button>
       <Link to={'/'}>Cancel</Link>
     </div>
   )

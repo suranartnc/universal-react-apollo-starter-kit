@@ -1,13 +1,12 @@
 import React, { PropTypes } from 'react'
 import PostItem from '../PostItem/PostItem'
-import styles from './PostList.scss'
 
 function PostList({ posts, onClickLike, onClickDelete }) {
   return (
-    <div className={styles.container}>
-      <ul className={styles.list}>
+    <div>
+      <ul>
         {posts.map(post => (
-          <li key={post._id} className={styles.item}>
+          <li key={post._id}>
             <PostItem post={post} onClickLike={onClickLike} onClickDelete={onClickDelete} />
           </li>
         ))}

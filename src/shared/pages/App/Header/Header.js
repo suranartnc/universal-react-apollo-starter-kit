@@ -1,16 +1,23 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Link } from 'react-router'
 
-class Header extends Component {
-  render() {
-    return (
-      <header>
-        <div>
-          <Link to="/"><h1>Home</h1></Link>
+import Navigation from '../Navigation/Navigation'
+import MemberMenu from './MemberMenu/MemberMenu'
+
+import s from './Header.scss'
+
+function Header() {
+  return (
+    <header className={s.container}>
+      <div className={s.wrapper}>
+        <div className={s.top}>
+          <h1><Link to="/" activeClassName="active">Universal React Apollo Starter Kit</Link></h1>
+          <MemberMenu />
         </div>
-      </header>
-    )
-  }
+        <Navigation />
+      </div>
+    </header>
+  )
 }
 
 export default Header
