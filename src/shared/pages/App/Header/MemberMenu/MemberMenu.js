@@ -11,7 +11,7 @@ class MemberMenu extends Component {
     if (this.props.user.isAuthenticated) {
       return (
         <div className={s.container}>
-          <Link to={'/write'}>Add Post</Link>
+          <Link to={'/write'}>Write a story</Link>
           <button onClick={this.props.memberLogout}>Logout</button>
         </div>
       )
