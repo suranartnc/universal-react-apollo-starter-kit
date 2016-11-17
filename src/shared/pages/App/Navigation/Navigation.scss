@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  padding: 8px 0;
+  border-top: 1px solid rgba(0,0,0,.05);
+  a {
+    padding: 5px 25px 5px 0;
+    color: #999;
+    &:global(.active) {
+      color: #444;
+    }
+  }
+}
