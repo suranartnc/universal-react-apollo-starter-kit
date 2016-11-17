@@ -64,8 +64,7 @@ export default async function connectionFromMongooseModel(Model, args) {
   const query = Model.find(filter)
 
   if (last) {
-    // todo: clone query for do count, not duplicate code
-    const totalNodes = await Model.find(filter).count()
+    const totalNodes = await Model.count(query)
     query.skip(last > totalNodes ? 0 : totalNodes - last)
   }
 
