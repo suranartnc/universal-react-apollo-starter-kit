@@ -33,9 +33,7 @@ const userType = new GraphQLObjectType({
       type: postConnection.connectionType,
       description: 'List of posts',
       args: connectionArgs,
-      resolve: (viewer, args) => {
-        return connectionFromMongooseModel(PostModel, args)
-      },
+      resolve: (viewer, args) => connectionFromMongooseModel(PostModel, args),
     },
 
     myPosts: {

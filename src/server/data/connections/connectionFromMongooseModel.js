@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { base64 } from 'graphql-relay/lib/utils/base64'
 
 function validateLimit(first, last) {
   if (!first && !last) {
@@ -27,6 +28,10 @@ function validateLimit(first, last) {
   }
 }
 
+function encodeCursor(value) {
+  return base64(`${value}`)
+}
+
 export default function connectionFromMongooseModel(Model, args) {
   const {
     before,
@@ -37,17 +42,33 @@ export default function connectionFromMongooseModel(Model, args) {
 
   validateLimit(first, last)
 
-  const query = Model.find().sort({ _id: -1 })
+  return Model.find().count()
+    .then((total) => {
+      const query = Model.find().sort({ _id: -1 })
 
-  query.clone().count().then(count => console.log(count))
+      if (last) {
+        query.skip(total - last)
+      }
 
-  return {
-    edges: [],
-    pageInfo: {
-      startCursor: null,
-      endCursor: null,
-      hasNextPage: false,
-      hasPreviousPage: false,
-    },
-  }
+      if (first) {
+        query.limit(first)
+      }
+
+      return query.then((nodes) => {
+        const edges = nodes.map(node => ({
+          node,
+          cursor: encodeCursor(node._id),
+        }))
+
+        return {
+          edges,
+          pageInfo: {
+            startCursor: null,
+            endCursor: null,
+            hasNextPage: false,
+            hasPreviousPage: false,
+          },
+        }
+      })
+    })
 }
