@@ -80,11 +80,14 @@ export default async function connectionFromMongooseModel(Model, args) {
     cursor: encodeCursor(node._id),
   }))
 
+  const startEdge = edges[0]
+  const endEdge = edges[edges.length - 1]
+
   return {
     edges,
     pageInfo: {
-      startCursor: null,
-      endCursor: null,
+      startCursor: startEdge ? startEdge.cursor : null,
+      endCursor: endEdge ? endEdge.cursor : null,
       hasNextPage: false,
       hasPreviousPage: false,
     },
