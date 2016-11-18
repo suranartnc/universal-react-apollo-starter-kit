@@ -5,7 +5,6 @@ import {
   GraphQLInt,
 } from 'graphql'
 
-import _ from 'lodash'
 import { connectionArgs } from 'graphql-relay'
 
 import PostModel from '../models/PostModel'
