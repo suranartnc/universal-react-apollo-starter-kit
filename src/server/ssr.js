@@ -13,6 +13,7 @@ import createStore from 'shared/store/createStore'
 import { MEMBER_LOAD_AUTH } from 'shared/actions/userActions'
 
 const wdsPath = `http://${config.host}:${config.wdsPort}/build/`
+const serverPath = `http://${config.host}:${config.port}/`
 const assetsManifest = process.env.webpackAssets && JSON.parse(process.env.webpackAssets)
 
 function renderPage(content, state) {
@@ -23,7 +24,7 @@ function renderPage(content, state) {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Universal React GraphQL Starter Kit</title>
-        ${process.env.NODE_ENV === 'production' ? `<link rel="stylesheet" href="${assetsManifest.app.css}" />` : ''}
+        ${process.env.NODE_ENV === 'production' ? `<link rel="stylesheet" href="${assetsManifest.main.css}" />` : ''}
       </head>
       <body>
         <div id="root">${content}</div>
@@ -35,10 +36,13 @@ function renderPage(content, state) {
         </script>
         ${process.env.NODE_ENV === 'production' ?
           `
-            <script src="${assetsManifest.vendor.js}"></script>
-            <script src="${assetsManifest.app.js}"></script>
+            <script src="${serverPath}build/vendor-react.js"></script>
+            <script src="${assetsManifest.main.js}"></script>
           `
-          : `<script src="${wdsPath}main.js"></script>`
+          : `
+            <script src="${serverPath}build/vendor-react.js"></script>
+            <script src="${wdsPath}main.js"></script>
+          `
         }
       </body>
     </html>

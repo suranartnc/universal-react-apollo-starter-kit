@@ -8,28 +8,10 @@ import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 export default {
   ...webpackBaseConfig,
 
-  entry: {
-    app: [
-      path.join(__dirname, 'src/shared/theme/styles/app.scss'),
-      path.join(__dirname, 'src/client/client.prod.js'),
-    ],
-    vendor: [
-      'apollo-client',
-      'es6-promise',
-      'graphql-tag',
-      'isomorphic-fetch',
-      'jwt-decode',
-      'react',
-      'react-apollo',
-      'react-cookie',
-      'react-dom',
-      'react-helmet',
-      'react-redux',
-      'react-router',
-      'react-router-redux',
-      'redux',
-    ],
-  },
+  entry: [
+    path.join(__dirname, 'src/shared/theme/styles/app.scss'),
+    path.join(__dirname, 'src/client/client.prod.js'),
+  ],
 
   output: {
     ...webpackBaseConfig.output,
@@ -133,9 +115,9 @@ export default {
       filename: '[name]-[contenthash].css',
       allChunks: true,
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: Infinity,
+    new webpack.DllReferencePlugin({
+      context: process.cwd(),
+      manifest: require('./static/build/react-manifest.json'),
     }),
     new ProgressBarPlugin(),
   ],

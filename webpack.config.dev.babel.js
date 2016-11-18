@@ -13,7 +13,7 @@ export default {
   devtool: 'eval',
 
   entry: [
-    'react-hot-loader/patch',
+    // 'react-hot-loader/patch',      // turn off by default to increase re-build speed
     `webpack-dev-server/client?http://${config.host}:${config.wdsPort}`,
     'webpack/hot/only-dev-server',
     path.join(__dirname, 'src/shared/theme/styles/app.scss'),
@@ -89,6 +89,10 @@ export default {
       },
     }),
     new DashboardPlugin(),
+    new webpack.DllReferencePlugin({
+      context: process.cwd(),
+      manifest: require('./static/build/react-manifest.json'),
+    }),
   ],
 
   devServer: {
