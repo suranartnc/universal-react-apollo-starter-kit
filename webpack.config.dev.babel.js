@@ -1,47 +1,51 @@
-import webpackBaseConfig from './webpack.config.base.babel'
 import path from 'path'
 import webpack from 'webpack'
+import DashboardPlugin from 'webpack-dashboard/plugin'
+import webpackBaseConfig from './webpack.config.base.babel'
 import config from './src/shared/configs'
+
+const projectSource = path.resolve(__dirname, './src')
 
 export default {
   ...webpackBaseConfig,
 
-  devtool: 'cheap-eval-source-map',  // to increase build speed, use "cheap-eval-source-map"
+  cache: true,
+  devtool: 'eval',
 
   entry: [
+    'react-hot-loader/patch',
     `webpack-dev-server/client?http://${config.host}:${config.wdsPort}`,
     'webpack/hot/only-dev-server',
     path.join(__dirname, 'src/shared/theme/styles/app.scss'),
-    path.join(__dirname, 'src/client/client.js'),
+    path.join(__dirname, 'src/client/client.dev.js'),
   ],
 
   output: {
     ...webpackBaseConfig.output,
     publicPath: `http://${config.host}:${config.wdsPort}/build/`,
     filename: '[name].js',
-    chunkFilename: "[name].chunk.js",
+    chunkFilename: '[name].chunk.js',
   },
 
   module: {
     ...webpackBaseConfig.module,
+    // noParse: [
+    //   path.resolve(__dirname, 'react/dist/react.min.js'),
+    //   path.resolve(__dirname, 'react-dom/dist/react-dom.min.js'),
+    // ],
     rules: [
       ...webpackBaseConfig.module.rules,
       {
         test: /\.js$/,
-        exclude: /node_modules|\.git/,
+        include: projectSource,
         loader: 'babel-loader',
+        options: {
+          cacheDirectory: true,
+        },
       },
       {
         test: /\.css$/,
-        include: path.join(__dirname, 'node_modules', 'medium-editor'),
-        use: [
-          'style-loader',
-          'css-loader',
-        ],
-      },
-      {
-        test: /\.css$/,
-        exclude: /node_modules/,
+        include: projectSource,
         use: [
           'style-loader',
           'css-loader',
@@ -49,7 +53,7 @@ export default {
       },
       {
         test: /\.scss$/,
-        exclude: /node_modules/,
+        include: projectSource,
         use: [
           'style-loader',
           {
@@ -88,6 +92,7 @@ export default {
         'BROWSER': JSON.stringify(true),
       },
     }),
+    new DashboardPlugin(),
   ],
 
   devServer: {

@@ -1,1 +1,1 @@
-# universal-react-relay-starter-kit
+# Universal React Apollo Starter Kit

@@ -11,15 +11,23 @@ export default {
   entry: {
     app: [
       path.join(__dirname, 'src/shared/theme/styles/app.scss'),
-      path.join(__dirname, 'src/client/client.js'),
+      path.join(__dirname, 'src/client/client.prod.js'),
     ],
     vendor: [
+      'apollo-client',
       'es6-promise',
+      'graphql-tag',
       'isomorphic-fetch',
+      'jwt-decode',
       'react',
+      'react-apollo',
+      'react-cookie',
       'react-dom',
       'react-helmet',
+      'react-redux',
       'react-router',
+      'react-router-redux',
+      'redux',
     ],
   },
 
@@ -126,7 +134,7 @@ export default {
       allChunks: true,
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      name: "vendor",
+      name: 'vendor',
       minChunks: Infinity,
     }),
     new ProgressBarPlugin(),

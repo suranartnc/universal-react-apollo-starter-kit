@@ -1,13 +1,22 @@
-import React from 'react'
+import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
 
-const Navigation = () => (
-  <ul>
-    <li>
-      <Link to="/" activeClassName="active">หน้าแรก</Link>
-      <Link to="/login">เข้าสู่ระบบ</Link>
-    </li>
-  </ul>
-)
+import s from './Navigation.scss'
 
-export default Navigation
+class Nav extends Component {
+  render() {
+    return (
+      <div className={s.container}>
+        <Link to={`/`} activeClassName="active">Latest</Link>
+        <Link to={`/popular`}>Popular</Link>
+        <Link to={`/top`}>Editor's Pick</Link>
+      </div>
+    )
+  }
+}
+
+Nav.contextTypes = {
+  router: PropTypes.object
+}
+
+export default Nav

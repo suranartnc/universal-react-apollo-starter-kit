@@ -2,11 +2,16 @@ import path from 'path'
 import mongoose from 'mongoose'
 import express from 'express'
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
+import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import favicon from 'serve-favicon'
+import reactCookie from 'react-cookie'
+import jwt from 'jsonwebtoken'
 
 import config from 'shared/configs'
 import schema from 'server/data/schema.js'
+import passport from 'passport'
+import routeHandlers from './routes'
 import ssr from './ssr'
 
 const mongodbUri = 'mongodb://localhost:27017/urrsk'
@@ -23,9 +28,11 @@ mongoose.Promise = global.Promise
 const app = express()
 app.use(favicon(path.join(process.cwd(), 'static/favicon.ico')))
 app.use(express.static(path.join(process.cwd(), 'static')))
-
+app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(passport.initialize())
+app.use(routeHandlers)
 
 app.post('/graphql', (req, res, next) => {
   setTimeout(() => {
@@ -33,14 +40,16 @@ app.post('/graphql', (req, res, next) => {
   }, 500)
 })
 
-app.use('/graphql', graphqlExpress((req) => {
+app.use('/graphql', graphqlExpress((req, res) => {
   let user = {
-    _id: '5805c26198f0370001ac64a3',  // fake user
+    profile: {
+      type: 'guest',
+    },
   }
-  if (req.user) {                     // actual user
-    user = {
-      _id: req.user._id,
-    }
+  reactCookie.plugToRequest(req, res)
+  const token = reactCookie.load('AUTH_TOKEN')
+  if (token) {
+    user = jwt.decode(token)
   }
 
   return {
