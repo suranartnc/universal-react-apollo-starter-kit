@@ -9,7 +9,7 @@
     "dev-hmr": "webpack-dev-server --config webpack.config.dev.babel.js",
     "dev-dashboard": "npm-run-all --parallel dev-ssr dev-hmr-dashboard",
     "dev-hmr-dashboard": "webpack-dashboard -- webpack-dev-server --config webpack.config.dev.babel.js",
-    "postinstall": "npm run build",
+    "postinstall": "npm run build-vendor && npm run build",
     "build": "better-npm-run build",
     "build-vendor": "webpack -p --config vendor.webpack.config.babel.js",
     "start": "npm-run-all --parallel start-ssr",
