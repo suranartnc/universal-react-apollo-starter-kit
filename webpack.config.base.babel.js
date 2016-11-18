@@ -4,7 +4,7 @@ import autoprefixer from 'autoprefixer'
 
 export default {
   output: {
-    path: path.join(__dirname, "static", "build"),
+    path: path.join(__dirname, 'static', 'build'),
   },
 
   module: {

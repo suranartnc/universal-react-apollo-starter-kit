@@ -11,6 +11,7 @@
     "dev-hmr-dashboard": "webpack-dashboard -- webpack-dev-server --config webpack.config.dev.babel.js",
     "postinstall": "npm run build",
     "build": "better-npm-run build",
+    "build-vendor": "webpack -p --config vendor.webpack.config.babel.js",
     "start": "npm-run-all --parallel start-ssr",
     "start-ssr": "better-npm-run start",
     "lint": "./node_modules/.bin/eslint ./src"

@@ -13,6 +13,7 @@ import createStore from 'shared/store/createStore'
 import { MEMBER_LOAD_AUTH } from 'shared/actions/userActions'
 
 const wdsPath = `http://${config.host}:${config.wdsPort}/build/`
+const serverPath = `http://${config.host}:${config.port}/`
 const assetsManifest = process.env.webpackAssets && JSON.parse(process.env.webpackAssets)
 
 function renderPage(content, state) {
@@ -38,7 +39,10 @@ function renderPage(content, state) {
             <script src="${assetsManifest.vendor.js}"></script>
             <script src="${assetsManifest.app.js}"></script>
           `
-          : `<script src="${wdsPath}main.js"></script>`
+          : `
+            <script src="${serverPath}build/vendor-react.js"></script>
+            <script src="${wdsPath}main.js"></script>
+          `
         }
       </body>
     </html>
