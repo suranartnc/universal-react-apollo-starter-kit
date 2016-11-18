@@ -24,7 +24,7 @@ function renderPage(content, state) {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Universal React GraphQL Starter Kit</title>
-        ${process.env.NODE_ENV === 'production' ? `<link rel="stylesheet" href="${assetsManifest.app.css}" />` : ''}
+        ${process.env.NODE_ENV === 'production' ? `<link rel="stylesheet" href="${assetsManifest.main.css}" />` : ''}
       </head>
       <body>
         <div id="root">${content}</div>
@@ -36,8 +36,8 @@ function renderPage(content, state) {
         </script>
         ${process.env.NODE_ENV === 'production' ?
           `
-            <script src="${assetsManifest.vendor.js}"></script>
-            <script src="${assetsManifest.app.js}"></script>
+            <script src="${serverPath}build/vendor-react.js"></script>
+            <script src="${assetsManifest.main.js}"></script>
           `
           : `
             <script src="${serverPath}build/vendor-react.js"></script>
