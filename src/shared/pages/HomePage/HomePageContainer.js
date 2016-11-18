@@ -48,14 +48,22 @@ HomepageContainer.propTypes = {
 }
 
 const GET_POSTS = gql`
-  query getPosts($offset: Int, $limit: Int) {
+  query getPosts($first: Int, $after: String) {
     viewer {
-      posts(offset: $offset, limit: $limit) {
-        _id
-        title
-        excerpt
-        thumbnail
-        likes
+      recentPosts(first: $first, after: $after) {
+        edges {
+          node {
+            _id
+            title
+            excerpt
+            thumbnail
+            likes
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
     }
   }
@@ -64,32 +72,49 @@ const GET_POSTS = gql`
 const withPosts = graphql(GET_POSTS, {
   options: () => ({
     variables: {
-      offset: 0,
-      limit: 5,
+      first: 5,
+      after: '',
     },
-    forceFetch: true, // todo: this cause problem with ssr, find a way to solves it
   }),
 
-  props: ({ data: { loading, viewer: { posts = [] } = {}, fetchMore } }) => ({
-    loading,
-    posts,
-    loadMorePosts: () => fetchMore({
-      variables: {
-        offset: posts.length,
-      },
-      updateQuery: (previousResult, { fetchMoreResult }) => {
-        if (!fetchMoreResult.data) {
-          return previousResult
-        }
+  props: (fetchResult) => {
+    const { data: { loading, viewer: { recentPosts = {} } = {}, fetchMore } } = fetchResult
 
-        return Object.assign({}, previousResult, {
-          viewer: {
-            posts: [...previousResult.viewer.posts, ...fetchMoreResult.data.viewer.posts],
-          },
-        })
-      },
-    }),
-  }),
+    const { edges = [], pageInfo = {} } = recentPosts
+
+    const posts = edges.map(edge => edge.node)
+    const { hasNextPage } = pageInfo
+
+    return {
+      loading,
+      posts,
+      hasNextPage,
+      loadMorePosts: () => fetchMore({
+        variables: {
+          after: pageInfo.endCursor,
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          if (!fetchMoreResult.data) {
+            return previousResult
+          }
+
+          return {
+            ...fetchMoreResult.data,
+            viewer: {
+              ...fetchMoreResult.data.viewer,
+              recentPosts: {
+                ...fetchMoreResult.data.viewer.recentPosts,
+                edges: [
+                  ...previousResult.viewer.recentPosts.edges,
+                  ...fetchMoreResult.data.viewer.recentPosts.edges,
+                ],
+              },
+            },
+          }
+        },
+      }),
+    }
+  },
 })
 
 const LIKE_POST_MUTATION = gql`
