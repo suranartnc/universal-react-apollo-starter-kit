@@ -29,10 +29,6 @@ export default {
 
   module: {
     ...webpackBaseConfig.module,
-    // noParse: [
-    //   path.resolve(__dirname, 'react/dist/react.min.js'),
-    //   path.resolve(__dirname, 'react-dom/dist/react-dom.min.js'),
-    // ],
     rules: [
       ...webpackBaseConfig.module.rules,
       {
