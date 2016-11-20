@@ -24,6 +24,7 @@ function renderPage(content, state) {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Universal React GraphQL Starter Kit</title>
+        <link rel="stylesheet" href="${serverPath}css/bootstrap-flex.min.css">
         ${process.env.NODE_ENV === 'production' ? `<link rel="stylesheet" href="${assetsManifest.main.css}" />` : ''}
       </head>
       <body>
