@@ -13,6 +13,7 @@ export default {
   devtool: 'eval',
 
   entry: [
+    'react-hot-loader/patch',
     'webpack-hot-middleware/client',
     path.join(__dirname, 'src/shared/theme/styles/app.scss'),
     path.join(__dirname, 'src/client/client.dev.js'),
