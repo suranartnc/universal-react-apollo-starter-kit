@@ -56,16 +56,16 @@ export default {
             options: {
               module: true,
               importLoaders: 2,
+              sourceMap: true,
               localIdentName: '[name]__[local]___[hash:base64:5]',
             },
           },
-          'postcss-loader',
           {
             loader: 'sass-loader',
             options: {
               outputStyle: 'expanded',
               sourceMap: true,
-              includePaths: [path.join(__dirname, "src/shared/theme/styles")],
+              includePaths: [path.join(__dirname, 'src/shared/theme/styles')],
             },
           },
         ],
@@ -83,8 +83,8 @@ export default {
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('development'),
-        'BROWSER': JSON.stringify(true),
+        NODE_ENV: JSON.stringify('development'),
+        BROWSER: JSON.stringify(true),
       },
     }),
     new DashboardPlugin(),
