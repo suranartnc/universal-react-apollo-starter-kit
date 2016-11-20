@@ -64,6 +64,13 @@ app.use('/graphiql', graphiqlExpress({
 
 if (!config.isProduction) {
   const compiler = webpack(webpackConfig)
+
+  // Webpack DashboardPlugin
+  // const Dashboard = require('webpack-dashboard')
+  // const DashboardPlugin = require('webpack-dashboard/plugin')
+  // const dashboard = new Dashboard()
+  // compiler.apply(new DashboardPlugin(dashboard.setData))
+
   app.use(webpackDevMiddleware(compiler, {
     noInfo: true,
     publicPath: webpackConfig.output.publicPath,
