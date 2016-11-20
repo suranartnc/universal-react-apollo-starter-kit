@@ -6,7 +6,7 @@ import s from './Navigation.scss'
 class Nav extends Component {
   render() {
     return (
-      <div className={s.container}>
+      <div className={`row ${s.container}`}>
         <Link to={`/`} activeClassName="active">Latest</Link>
         <Link to={`/popular`}>Popular</Link>
         <Link to={`/top`}>Editor's Pick</Link>

@@ -18,7 +18,7 @@ class MemberMenu extends Component {
     }
 
     return (
-      <div className={s.container}>
+      <div className={`row flex-items-xs-right ${s.container}`}>
         <Link to={`/login`}>Login</Link>
         <Link to={`/signup`}>Register</Link>
       </div>
