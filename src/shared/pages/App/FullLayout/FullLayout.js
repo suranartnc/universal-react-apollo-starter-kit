@@ -9,7 +9,7 @@ const FullLayout = props => (
   <div>
     <Header />
     <Sidebar />
-    <div className={styles.main}>
+    <div className={`container ${styles.main}`}>
       {props.children}
     </div>
   </div>
