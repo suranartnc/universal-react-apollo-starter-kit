@@ -13,9 +13,7 @@ export default {
   devtool: 'eval',
 
   entry: [
-    // 'react-hot-loader/patch',      // turn off by default to increase re-build speed
-    `webpack-dev-server/client?http://${config.host}:${config.wdsPort}`,
-    'webpack/hot/only-dev-server',
+    'webpack-hot-middleware/client',
     path.join(__dirname, 'src/shared/theme/styles/app.scss'),
     path.join(__dirname, 'src/client/client.dev.js'),
   ],
@@ -94,11 +92,4 @@ export default {
       manifest: require('./static/build/react-manifest.json'),
     }),
   ],
-
-  devServer: {
-    port: config.wdsPort,
-    hot: true,
-    inline: false,
-    historyApiFallback: true,
-  },
 }

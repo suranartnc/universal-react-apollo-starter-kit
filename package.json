@@ -114,7 +114,9 @@
     "sass-loader": "^4.0.2",
     "serve-favicon": "^2.3.0",
     "style-loader": "^0.13.1",
-    "webpack": "^2.1.0-beta.25"
+    "webpack": "^2.1.0-beta.25",
+    "webpack-dev-middleware": "^1.8.4",
+    "webpack-hot-middleware": "^2.13.2"
   },
   "devDependencies": {
     "babel-eslint": "^7.0.0",
@@ -125,6 +127,5 @@
     "eslint-plugin-react": "^6.4.1",
     "nodemon": "^1.11.0",
     "webpack-dashboard": "^0.2.0",
-    "webpack-dev-server": "^2.1.0-beta.9"
   }
 }
