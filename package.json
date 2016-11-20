@@ -126,6 +126,6 @@
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.4.1",
     "nodemon": "^1.11.0",
-    "webpack-dashboard": "^0.2.0",
+    "webpack-dashboard": "^0.2.0"
   }
 }
