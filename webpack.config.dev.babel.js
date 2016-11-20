@@ -55,7 +55,7 @@ export default {
             loader: 'css-loader',
             options: {
               module: true,
-              importLoaders: 2,
+              importLoaders: 1,
               sourceMap: true,
               localIdentName: '[name]__[local]___[hash:base64:5]',
             },
@@ -63,7 +63,6 @@ export default {
           {
             loader: 'sass-loader',
             options: {
-              outputStyle: 'expanded',
               sourceMap: true,
               includePaths: [path.join(__dirname, 'src/shared/theme/styles')],
             },
