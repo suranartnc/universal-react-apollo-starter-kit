@@ -1,9 +1,10 @@
-import webpackBaseConfig from './webpack.config.base.babel'
 import webpack from 'webpack'
 import path from 'path'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import AssetsPlugin from 'assets-webpack-plugin'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
+import autoprefixer from 'autoprefixer'
+import webpackBaseConfig from './webpack.config.base.babel'
 
 export default {
   ...webpackBaseConfig,
@@ -36,7 +37,7 @@ export default {
               {
                 modules: false,
                 loose: true,
-              }
+              },
             ],
             'react',
             'stage-0',
@@ -47,7 +48,7 @@ export default {
             'transform-react-remove-prop-types',
             'transform-react-pure-class-to-function',
           ],
-        }
+        },
       },
       {
         test: /\.css$/,
@@ -76,11 +77,11 @@ export default {
             {
               loader: 'sass-loader',
               query: {
-                includePaths: [path.join(__dirname, "src/shared/theme/styles")],
+                includePaths: [path.join(__dirname, 'src/shared/theme/styles')],
               },
             },
           ],
-        })
+        }),
       },
       {
         test: /\.(jpg|png|gif)$/,
@@ -96,15 +97,15 @@ export default {
     ...webpackBaseConfig.plugins,
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('production'),
-        'BROWSER': JSON.stringify(true),
+        NODE_ENV: JSON.stringify('production'),
+        BROWSER: JSON.stringify(true),
       },
     }),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin({
       compressor: {
-        warnings: false
-      }
+        warnings: false,
+      },
     }),
     new AssetsPlugin({
       filename: 'assets.json',
@@ -114,6 +115,15 @@ export default {
     new ExtractTextPlugin({
       filename: '[name]-[contenthash].css',
       allChunks: true,
+    }),
+    new webpack.LoaderOptionsPlugin({
+      test: /\.scss$/,
+      options: {
+        context: __dirname,
+        postcss: [
+          autoprefixer({ browsers: ['last 2 versions', 'IE > 10'] }),
+        ],
+      },
     }),
     new webpack.DllReferencePlugin({
       context: process.cwd(),

@@ -13,9 +13,8 @@ export default {
   devtool: 'eval',
 
   entry: [
-    // 'react-hot-loader/patch',      // turn off by default to increase re-build speed
-    `webpack-dev-server/client?http://${config.host}:${config.wdsPort}`,
-    'webpack/hot/only-dev-server',
+    'react-hot-loader/patch',
+    'webpack-hot-middleware/client',
     path.join(__dirname, 'src/shared/theme/styles/app.scss'),
     path.join(__dirname, 'src/client/client.dev.js'),
   ],
@@ -56,17 +55,16 @@ export default {
             loader: 'css-loader',
             options: {
               module: true,
-              importLoaders: 2,
+              importLoaders: 1,
+              sourceMap: true,
               localIdentName: '[name]__[local]___[hash:base64:5]',
             },
           },
-          'postcss-loader',
           {
             loader: 'sass-loader',
             options: {
-              outputStyle: 'expanded',
               sourceMap: true,
-              includePaths: [path.join(__dirname, "src/shared/theme/styles")],
+              includePaths: [path.join(__dirname, 'src/shared/theme/styles')],
             },
           },
         ],
@@ -84,8 +82,8 @@ export default {
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('development'),
-        'BROWSER': JSON.stringify(true),
+        NODE_ENV: JSON.stringify('development'),
+        BROWSER: JSON.stringify(true),
       },
     }),
     new DashboardPlugin(),
@@ -94,11 +92,4 @@ export default {
       manifest: require('./static/build/react-manifest.json'),
     }),
   ],
-
-  devServer: {
-    port: config.wdsPort,
-    hot: true,
-    inline: false,
-    historyApiFallback: true,
-  },
 }

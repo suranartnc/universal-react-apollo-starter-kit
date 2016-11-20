@@ -6,12 +6,7 @@ import Root from 'shared/Root'
 
 const mountNode = document.getElementById('root')
 
-render(
-  <AppContainer>
-    <Root />
-  </AppContainer>,
-  mountNode
-)
+render(<AppContainer><Root /></AppContainer>, mountNode)
 
 if (module.hot) {
   module.hot.accept('shared/Root', () => {
