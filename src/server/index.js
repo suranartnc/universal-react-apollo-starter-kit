@@ -8,6 +8,8 @@ import favicon from 'serve-favicon'
 import reactCookie from 'react-cookie'
 import jwt from 'jsonwebtoken'
 import webpack from 'webpack'
+import webpackDevMiddleware from 'webpack-dev-middleware'
+import webpackHotMiddleware from 'webpack-hot-middleware'
 
 import config from 'shared/configs'
 import schema from 'server/data/schema.js'
@@ -36,12 +38,6 @@ app.use(bodyParser.json())
 app.use(passport.initialize())
 app.use(routeHandlers)
 
-app.post('/graphql', (req, res, next) => {
-  setTimeout(() => {
-    next()
-  }, 500)
-})
-
 app.use('/graphql', graphqlExpress((req, res) => {
   let user = {
     profile: {
@@ -68,11 +64,11 @@ app.use('/graphiql', graphiqlExpress({
 
 if (!config.isProduction) {
   const compiler = webpack(webpackConfig)
-  app.use(require('webpack-dev-middleware')(compiler, {
+  app.use(webpackDevMiddleware(compiler, {
     noInfo: true,
     publicPath: webpackConfig.output.publicPath,
   }))
-  app.use(require('webpack-hot-middleware')(compiler))
+  app.use(webpackHotMiddleware(compiler))
 }
 
 app.use(ssr)
