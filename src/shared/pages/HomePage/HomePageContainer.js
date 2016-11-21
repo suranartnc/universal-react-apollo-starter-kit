@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
 
 import {
@@ -52,8 +53,14 @@ HomepageContainer.propTypes = {
 }
 
 function mapStateToProps(state) {
-  // console.log(state.user)
-  return {}
+  return { user: state.user }
 }
 
-export default connect(mapStateToProps)(withDeletePostFunction(withLikePostFunction(withPosts(HomepageContainer))))
+const withAll = compose(
+  withPosts,
+  withLikePostFunction,
+  withDeletePostFunction,
+  connect(mapStateToProps),
+)
+
+export default withAll(HomepageContainer)
