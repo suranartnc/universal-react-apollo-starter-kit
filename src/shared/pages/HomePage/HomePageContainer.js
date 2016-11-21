@@ -160,16 +160,20 @@ const deletePost = mutate => post => mutate({
   },
   updateQueries: {
     getPosts: (previousResult, { mutationResult }) => {
-      const { viewer: { posts } } = previousResult
+      const { viewer: { posts: { edges } } } = previousResult
 
-      const nonDeletedPosts = posts.filter(previousPost => (
-        previousPost._id !== mutationResult.data.deletePost._id
+      const nonDeletedEdges = edges.filter(edge => (
+        edge.node._id !== mutationResult.data.deletePost._id
       ))
 
       return {
+        ...previousResult,
         viewer: {
           ...previousResult.viewer,
-          posts: nonDeletedPosts,
+          posts: {
+            ...previousResult.viewer.posts,
+            edges: nonDeletedEdges,
+          },
         },
       }
     },
