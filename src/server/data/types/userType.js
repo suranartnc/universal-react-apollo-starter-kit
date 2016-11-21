@@ -28,7 +28,7 @@ import connectionFromMongooseModel from '../connections/connectionFromMongooseMo
 const userType = new GraphQLObjectType({
   name: 'Viewer',
   fields: () => ({
-    recentPosts: {
+    posts: {
       type: postConnection.connectionType,
       description: 'List of posts',
       args: connectionArgs,
@@ -51,40 +51,6 @@ const userType = new GraphQLObjectType({
           userId: user._id,
         })
         .catch(error => outputError(error))
-      },
-    },
-
-    posts: {
-      type: new GraphQLList(postType),
-      description: 'Recent posts in the blog',
-      args: {
-        categoryId: {
-          type: GraphQLString,
-        },
-        offset: {
-          type: GraphQLInt,
-        },
-        limit: {
-          type: GraphQLInt,
-        },
-        ...listArgs,
-      },
-      resolve: (user, { categoryId, offset = 0, limit = 10, ...args }) => {
-        const query = {
-          deletedAt: null,
-        }
-
-        if (categoryId) {
-          query.categories = {
-            $in: [categoryId],
-          }
-        }
-
-        return PostModel.find(query)
-          .skip(offset)
-          .limit(limit)
-          .sort('-date')
-          .catch(error => outputError(error))
       },
     },
 

@@ -48,9 +48,9 @@ HomepageContainer.propTypes = {
 }
 
 const GET_POSTS = gql`
-  query getPosts($first: Int, $after: String) {
+  query getPosts($limit: Int, $after: String) {
     viewer {
-      recentPosts(first: $first, after: $after) {
+      posts(first: $limit, after: $after) {
         edges {
           node {
             _id
@@ -72,22 +72,21 @@ const GET_POSTS = gql`
 const withPosts = graphql(GET_POSTS, {
   options: () => ({
     variables: {
-      first: 5,
+      limit: 5,
       after: '',
     },
   }),
 
   props: (fetchResult) => {
-    const { data: { loading, viewer: { recentPosts = {} } = {}, fetchMore } } = fetchResult
+    const { data: { loading, viewer: { posts = {} } = {}, fetchMore } } = fetchResult
 
-    const { edges = [], pageInfo = {} } = recentPosts
+    const { edges = [], pageInfo = {} } = posts
 
-    const posts = edges.map(edge => edge.node)
     const { hasNextPage } = pageInfo
 
     return {
       loading,
-      posts,
+      posts: edges.map(edge => edge.node),
       hasNextPage,
       loadMorePosts: () => fetchMore({
         variables: {
@@ -102,11 +101,11 @@ const withPosts = graphql(GET_POSTS, {
             ...fetchMoreResult.data,
             viewer: {
               ...fetchMoreResult.data.viewer,
-              recentPosts: {
-                ...fetchMoreResult.data.viewer.recentPosts,
+              posts: {
+                ...fetchMoreResult.data.viewer.posts,
                 edges: [
-                  ...previousResult.viewer.recentPosts.edges,
-                  ...fetchMoreResult.data.viewer.recentPosts.edges,
+                  ...previousResult.viewer.posts.edges,
+                  ...fetchMoreResult.data.viewer.posts.edges,
                 ],
               },
             },
@@ -161,16 +160,20 @@ const deletePost = mutate => post => mutate({
   },
   updateQueries: {
     getPosts: (previousResult, { mutationResult }) => {
-      const { viewer: { posts } } = previousResult
+      const { viewer: { posts: { edges } } } = previousResult
 
-      const nonDeletedPosts = posts.filter(previousPost => (
-        previousPost._id !== mutationResult.data.deletePost._id
+      const nonDeletedEdges = edges.filter(edge => (
+        edge.node._id !== mutationResult.data.deletePost._id
       ))
 
       return {
+        ...previousResult,
         viewer: {
           ...previousResult.viewer,
-          posts: nonDeletedPosts,
+          posts: {
+            ...previousResult.viewer.posts,
+            edges: nonDeletedEdges,
+          },
         },
       }
     },
