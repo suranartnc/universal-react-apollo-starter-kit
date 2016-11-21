@@ -1,7 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
 import { connect } from 'react-redux'
+
+import {
+  GET_POSTS,
+  LIKE_POST_MUTATION,
+  DELETE_POST_MUTATION,
+} from 'shared/modules/post/query'
 
 import HomePage from './HomePage'
 
@@ -46,28 +51,6 @@ HomepageContainer.propTypes = {
   loadMorePosts: HomePage.propTypes.loadMorePosts,
   posts: HomePage.propTypes.posts,
 }
-
-const GET_POSTS = gql`
-  query getPosts($limit: Int, $after: String) {
-    viewer {
-      posts(first: $limit, after: $after) {
-        edges {
-          node {
-            _id
-            title
-            excerpt
-            thumbnail
-            likes
-          }
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
-      }
-    }
-  }
-`
 
 const withPosts = graphql(GET_POSTS, {
   options: () => ({
@@ -116,14 +99,6 @@ const withPosts = graphql(GET_POSTS, {
   },
 })
 
-const LIKE_POST_MUTATION = gql`
-  mutation likePost($id: String!) {
-    likePost(_id: $id) {
-      _id
-      likes
-    }
-  }
-`
 const likePostFunction = mutate => post => mutate({
   variables: { id: post._id },
   optimisticResponse: {
@@ -141,14 +116,6 @@ const withLikePostFunction = graphql(LIKE_POST_MUTATION, {
     like: likePostFunction(mutate),
   }),
 })
-
-const DELETE_POST_MUTATION = gql`
-  mutation deletePost($id: String!) {
-    deletePost(_id: $id) {
-      _id
-    }
-  }
-`
 
 const deletePost = mutate => post => mutate({
   variables: { id: post._id },
