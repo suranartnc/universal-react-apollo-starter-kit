@@ -7,46 +7,28 @@ import {
   DELETE_POST_MUTATION,
 } from 'shared/modules/post/postQueries'
 
-export const withPosts = fetchEntities(GET_POSTS,
+export const withPosts = fetchEntities(
+  GET_POSTS,
   {
     limit: 5,
     after: '',
   },
-  (fetchResult) => {
-    const { data: { loading, viewer: { posts = {} } = {}, fetchMore } } = fetchResult
-
-    const { edges = [], pageInfo = {} } = posts
-
-    const { hasNextPage } = pageInfo
-
+  (previousResult, { fetchMoreResult }) => {
+    if (!fetchMoreResult.data) {
+      return previousResult
+    }
     return {
-      loading,
-      posts: edges.map(edge => edge.node),
-      hasNextPage,
-      loadMorePosts: () => fetchMore({
-        variables: {
-          after: pageInfo.endCursor,
+      ...fetchMoreResult.data,
+      viewer: {
+        ...fetchMoreResult.data.viewer,
+        posts: {
+          ...fetchMoreResult.data.viewer.posts,
+          edges: [
+            ...previousResult.viewer.posts.edges,
+            ...fetchMoreResult.data.viewer.posts.edges,
+          ],
         },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          if (!fetchMoreResult.data) {
-            return previousResult
-          }
-
-          return {
-            ...fetchMoreResult.data,
-            viewer: {
-              ...fetchMoreResult.data.viewer,
-              posts: {
-                ...fetchMoreResult.data.viewer.posts,
-                edges: [
-                  ...previousResult.viewer.posts.edges,
-                  ...fetchMoreResult.data.viewer.posts.edges,
-                ],
-              },
-            },
-          }
-        },
-      }),
+      },
     }
   },
 )
