@@ -13,74 +13,20 @@ export const withPosts = fetchEntities(
     limit: 5,
     after: '',
   },
-  (previousResult, { fetchMoreResult }) => {
-    if (!fetchMoreResult.data) {
-      return previousResult
-    }
-    return {
-      ...fetchMoreResult.data,
-      viewer: {
-        ...fetchMoreResult.data.viewer,
-        posts: {
-          ...fetchMoreResult.data.viewer.posts,
-          edges: [
-            ...previousResult.viewer.posts.edges,
-            ...fetchMoreResult.data.viewer.posts.edges,
-          ],
-        },
+  (current, next) => ({
+    ...next.data,
+    viewer: {
+      ...next.data.viewer,
+      posts: {
+        ...next.data.viewer.posts,
+        edges: [
+          ...current.viewer.posts.edges,
+          ...next.data.viewer.posts.edges,
+        ],
       },
-    }
-  },
+    },
+  }),
 )
-
-
-
-// export const withPosts = graphql(GET_POSTS, {
-//   options: () => ({
-//     variables: {
-//       limit: 5,
-//       after: '',
-//     },
-//   }),
-
-//   props: (fetchResult) => {
-//     const { data: { loading, viewer: { posts = {} } = {}, fetchMore } } = fetchResult
-
-//     const { edges = [], pageInfo = {} } = posts
-
-//     const { hasNextPage } = pageInfo
-
-//     return {
-//       loading,
-//       posts: edges.map(edge => edge.node),
-//       hasNextPage,
-//       loadMorePosts: () => fetchMore({
-//         variables: {
-//           after: pageInfo.endCursor,
-//         },
-//         updateQuery: (previousResult, { fetchMoreResult }) => {
-//           if (!fetchMoreResult.data) {
-//             return previousResult
-//           }
-
-//           return {
-//             ...fetchMoreResult.data,
-//             viewer: {
-//               ...fetchMoreResult.data.viewer,
-//               posts: {
-//                 ...fetchMoreResult.data.viewer.posts,
-//                 edges: [
-//                   ...previousResult.viewer.posts.edges,
-//                   ...fetchMoreResult.data.viewer.posts.edges,
-//                 ],
-//               },
-//             },
-//           }
-//         },
-//       }),
-//     }
-//   },
-// })
 
 const likePostFunction = mutate => post => mutate({
   variables: { id: post._id },

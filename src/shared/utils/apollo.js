@@ -1,6 +1,6 @@
 import { graphql } from 'react-apollo'
 
-export function fetchEntities(query, variables, updateQuery) {
+export function fetchEntities(query, variables, reducer) {
   return graphql(query, {
     options: (ownProps) => {
       if (typeof variables === 'function') {
@@ -32,7 +32,12 @@ export function fetchEntities(query, variables, updateQuery) {
           variables: {
             after: pageInfo.endCursor,
           },
-          updateQuery,
+          updateQuery: (previousResult, { fetchMoreResult }) => {
+            if (!fetchMoreResult.data) {
+              return previousResult
+            }
+            return reducer(previousResult, fetchMoreResult)
+          },
         }),
       }
     },
