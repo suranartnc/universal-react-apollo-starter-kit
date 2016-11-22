@@ -7,7 +7,7 @@ import {
   DELETE_POST_MUTATION,
 } from 'shared/modules/post/postQueries'
 
-export const withPosts = fetchEntities(GET_POSTS, {
+export const withPosts = fetchEntities('posts', GET_POSTS, {
   limit: 5,
   after: '',
 })

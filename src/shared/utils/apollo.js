@@ -1,7 +1,7 @@
 import { graphql } from 'react-apollo'
 import update from 'immutability-helper'
 
-export function fetchEntities(query, variables) {
+export function fetchEntities(entityName, query, variables) {
   return graphql(query, {
     options: (ownProps) => {
       if (typeof variables === 'function') {
@@ -17,7 +17,7 @@ export function fetchEntities(query, variables) {
           loading,
           fetchMore,
           viewer: {
-            posts: {
+            [entityName]: {
               edges = [],
               pageInfo = {},
             } = {},
@@ -28,7 +28,7 @@ export function fetchEntities(query, variables) {
       return {
         loading,
         hasNextPage: pageInfo.hasNextPage,
-        posts: edges.map(edge => edge.node),
+        [entityName]: edges.map(edge => edge.node),
         loadMore: () => fetchMore({
           variables: {
             after: pageInfo.endCursor,
@@ -39,12 +39,12 @@ export function fetchEntities(query, variables) {
             }
             return update(previousResult, {
               viewer: {
-                posts: {
+                [entityName]: {
                   pageInfo: {
-                    $set: fetchMoreResult.data.viewer.posts.pageInfo,
+                    $set: fetchMoreResult.data.viewer[entityName].pageInfo,
                   },
                   edges: {
-                    $push: fetchMoreResult.data.viewer.posts.edges,
+                    $push: fetchMoreResult.data.viewer[entityName].edges,
                   },
                 },
               },
