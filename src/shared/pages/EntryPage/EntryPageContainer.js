@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
-import { graphql } from 'react-apollo'
+import { withPost } from 'shared/modules/post/postActions'
 
-import { GET_POST } from 'shared/modules/post/postQueries'
 import EntryPage from './EntryPage'
 
 class EntryPageContainer extends Component {
@@ -23,12 +22,4 @@ EntryPageContainer.propTypes = {
   }),
 }
 
-export default graphql(GET_POST, {
-  options: ({ params }) => {
-    return {
-      variables: {
-        id: params.id,
-      },
-    }
-  },
-})(EntryPageContainer)
+export default withPost(params => params.id)(EntryPageContainer)
