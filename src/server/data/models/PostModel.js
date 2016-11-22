@@ -91,4 +91,12 @@ PostSchema.statics.softDelete = function softDelete(_id) {
     })
 }
 
+function beforeFind(next) {
+  this.where('deletedAt').equals(null)
+  next()
+}
+
+PostSchema.pre('find', beforeFind)
+PostSchema.pre('findOne', beforeFind)
+
 export default mongoose.model('Post', PostSchema)
