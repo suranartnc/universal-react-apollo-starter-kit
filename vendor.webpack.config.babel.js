@@ -7,6 +7,7 @@ export default {
       'apollo-client',
       'es6-promise',
       'graphql-tag',
+      'immutability-helper',
       'isomorphic-fetch',
       'jwt-decode',
       'react',
