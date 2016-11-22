@@ -1,6 +1,7 @@
 import { graphql } from 'react-apollo'
+import update from 'immutability-helper'
 
-export function fetchEntities(query, variables, reducer) {
+export function fetchEntities(query, variables) {
   return graphql(query, {
     options: (ownProps) => {
       if (typeof variables === 'function') {
@@ -36,19 +37,18 @@ export function fetchEntities(query, variables, reducer) {
             if (!fetchMoreResult.data) {
               return previousResult
             }
-            return {
-              ...fetchMoreResult.data,
+            return update(previousResult, {
               viewer: {
-                ...fetchMoreResult.data.viewer,
                 posts: {
-                  ...fetchMoreResult.data.viewer.posts,
-                  edges: [
-                    ...previousResult.viewer.posts.edges,
-                    ...fetchMoreResult.data.viewer.posts.edges,
-                  ],
+                  pageInfo: {
+                    $set: fetchMoreResult.data.viewer.posts.pageInfo,
+                  },
+                  edges: {
+                    $push: fetchMoreResult.data.viewer.posts.edges,
+                  },
                 },
               },
-            }
+            })
           },
         }),
       }
