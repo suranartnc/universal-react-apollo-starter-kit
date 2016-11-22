@@ -1,6 +1,16 @@
 import { graphql } from 'react-apollo'
 import update from 'immutability-helper'
 
+export function fetchEntity(query) {
+  return graphql(query, {
+    options: ({ params }) => ({
+      variables: {
+        id: params.id,
+      },
+    }),
+  })
+}
+
 export function fetchEntities(entityName, query, variables) {
   return graphql(query, {
     options: (ownProps) => {

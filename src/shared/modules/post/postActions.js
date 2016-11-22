@@ -1,5 +1,4 @@
-import { graphql } from 'react-apollo'
-import { fetchEntities, updateEntity, deleteEntityById } from 'shared/utils/apollo'
+import { fetchEntities, fetchEntity, updateEntity, deleteEntityById } from 'shared/utils/apollo'
 
 import {
   GET_POSTS,
@@ -17,13 +16,7 @@ export const withPosts = fetchEntities(
   }
 )
 
-export const withPost = getId => graphql(GET_POST, {
-  options: ({ params }) => ({
-    variables: {
-      id: getId(params),
-    },
-  }),
-})
+export const withPost = fetchEntity(GET_POST)
 
 export const withLikePostFunction = updateEntity(
   'like',

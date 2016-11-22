@@ -22,4 +22,4 @@ EntryPageContainer.propTypes = {
   }),
 }
 
-export default withPost(params => params.id)(EntryPageContainer)
+export default withPost(EntryPageContainer)
