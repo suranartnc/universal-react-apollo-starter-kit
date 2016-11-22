@@ -1,4 +1,5 @@
 import { graphql } from 'react-apollo'
+import { fetchEntities } from 'shared/utils/apollo'
 
 import {
   GET_POSTS,
@@ -6,15 +7,12 @@ import {
   DELETE_POST_MUTATION,
 } from 'shared/modules/post/postQueries'
 
-export const withPosts = graphql(GET_POSTS, {
-  options: () => ({
-    variables: {
-      limit: 5,
-      after: '',
-    },
-  }),
-
-  props: (fetchResult) => {
+export const withPosts = fetchEntities(GET_POSTS,
+  {
+    limit: 5,
+    after: '',
+  },
+  (fetchResult) => {
     const { data: { loading, viewer: { posts = {} } = {}, fetchMore } } = fetchResult
 
     const { edges = [], pageInfo = {} } = posts
@@ -51,7 +49,56 @@ export const withPosts = graphql(GET_POSTS, {
       }),
     }
   },
-})
+)
+
+
+
+// export const withPosts = graphql(GET_POSTS, {
+//   options: () => ({
+//     variables: {
+//       limit: 5,
+//       after: '',
+//     },
+//   }),
+
+//   props: (fetchResult) => {
+//     const { data: { loading, viewer: { posts = {} } = {}, fetchMore } } = fetchResult
+
+//     const { edges = [], pageInfo = {} } = posts
+
+//     const { hasNextPage } = pageInfo
+
+//     return {
+//       loading,
+//       posts: edges.map(edge => edge.node),
+//       hasNextPage,
+//       loadMorePosts: () => fetchMore({
+//         variables: {
+//           after: pageInfo.endCursor,
+//         },
+//         updateQuery: (previousResult, { fetchMoreResult }) => {
+//           if (!fetchMoreResult.data) {
+//             return previousResult
+//           }
+
+//           return {
+//             ...fetchMoreResult.data,
+//             viewer: {
+//               ...fetchMoreResult.data.viewer,
+//               posts: {
+//                 ...fetchMoreResult.data.viewer.posts,
+//                 edges: [
+//                   ...previousResult.viewer.posts.edges,
+//                   ...fetchMoreResult.data.viewer.posts.edges,
+//                 ],
+//               },
+//             },
+//           }
+//         },
+//       }),
+//     }
+//   },
+// })
 
 const likePostFunction = mutate => post => mutate({
   variables: { id: post._id },
