@@ -55,3 +55,44 @@ export function fetchEntities(entityName, query, variables) {
     },
   })
 }
+
+export function updateEntity(action, query, variables, mutation) {
+  return graphql(query, {
+    props: ({ mutate }) => ({
+      [action]: item => mutate({
+        variables: variables(item),
+        optimisticResponse: {
+          ...mutation(item),
+        },
+      }),
+    }),
+  })
+}
+
+export function deleteEntityById(entityName, query) {
+  return graphql(query, {
+    props: ({ mutate }) => ({
+      delete: item => mutate({
+        variables: {
+          id: item._id,
+        },
+        updateQueries: {
+          getPosts: (previousResult) => {
+            const { viewer: { posts: { edges } } } = previousResult
+            return update(previousResult, {
+              viewer: {
+                [entityName]: {
+                  edges: {
+                    $set: edges.filter(edge => (
+                      edge.node._id !== item._id
+                    )),
+                  },
+                },
+              },
+            })
+          },
+        },
+      }),
+    }),
+  })
+}
