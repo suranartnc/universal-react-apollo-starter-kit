@@ -67,13 +67,11 @@ const SUBMIT_POST_MUTATION = gql`
   }
 `
 
-const submit = mutate => (title, body) => mutate({
-  variables: { title, body },
-})
-
 const withSubmitPost = graphql(SUBMIT_POST_MUTATION, {
   props: ({ mutate }) => ({
-    submit: submit(mutate),
+    submit: (title, body) => mutate({
+      variables: { title, body },
+    }),
   }),
 })
 
