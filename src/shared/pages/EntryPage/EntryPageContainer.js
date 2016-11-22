@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
 
+import { GET_POST } from 'shared/modules/post/postQueries'
 import EntryPage from './EntryPage'
 
 class EntryPageContainer extends Component {
@@ -22,19 +22,6 @@ EntryPageContainer.propTypes = {
     body: PropTypes.string,
   }),
 }
-
-
-const GET_POST = gql`
-  query getPost($id: String!) {
-    viewer {
-      post(_id: $id) {
-        _id
-        title
-        body
-      }
-    }
-  }
-`
 
 export default graphql(GET_POST, {
   options: ({ params }) => {
