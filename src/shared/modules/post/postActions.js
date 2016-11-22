@@ -7,26 +7,10 @@ import {
   DELETE_POST_MUTATION,
 } from 'shared/modules/post/postQueries'
 
-export const withPosts = fetchEntities(
-  GET_POSTS,
-  {
-    limit: 5,
-    after: '',
-  },
-  (current, next) => ({
-    ...next.data,
-    viewer: {
-      ...next.data.viewer,
-      posts: {
-        ...next.data.viewer.posts,
-        edges: [
-          ...current.viewer.posts.edges,
-          ...next.data.viewer.posts.edges,
-        ],
-      },
-    },
-  }),
-)
+export const withPosts = fetchEntities(GET_POSTS, {
+  limit: 5,
+  after: '',
+})
 
 const likePostFunction = mutate => post => mutate({
   variables: { id: post._id },

@@ -36,7 +36,19 @@ export function fetchEntities(query, variables, reducer) {
             if (!fetchMoreResult.data) {
               return previousResult
             }
-            return reducer(previousResult, fetchMoreResult)
+            return {
+              ...fetchMoreResult.data,
+              viewer: {
+                ...fetchMoreResult.data.viewer,
+                posts: {
+                  ...fetchMoreResult.data.viewer.posts,
+                  edges: [
+                    ...previousResult.viewer.posts.edges,
+                    ...fetchMoreResult.data.viewer.posts.edges,
+                  ],
+                },
+              },
+            }
           },
         }),
       }
