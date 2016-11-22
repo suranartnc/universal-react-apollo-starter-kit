@@ -22,6 +22,18 @@ export const GET_POSTS = gql`
   }
 `
 
+export const GET_POST = gql`
+  query getPost($id: String!) {
+    viewer {
+      post(_id: $id) {
+        _id
+        title
+        body
+      }
+    }
+  }
+`
+
 export const LIKE_POST_MUTATION = gql`
   mutation likePost($id: String!) {
     likePost(_id: $id) {
