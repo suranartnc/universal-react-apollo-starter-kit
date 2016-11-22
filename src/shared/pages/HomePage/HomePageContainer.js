@@ -27,7 +27,7 @@ class HomepageContainer extends Component {
   }
 
   render() {
-    const { loading, loadMorePosts, posts } = this.props
+    const { loading, loadMore, posts } = this.props
 
     if (loading) {
       return <div>Loading...</div>
@@ -35,7 +35,7 @@ class HomepageContainer extends Component {
 
     return (
       <HomePage
-        loadMorePosts={loadMorePosts}
+        loadMore={loadMore}
         onClickLike={this.onClickLike}
         onClickDelete={this.onClickDelete}
         posts={posts}
@@ -48,7 +48,7 @@ HomepageContainer.propTypes = {
   loading: PropTypes.bool,
   like: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
-  loadMorePosts: HomePage.propTypes.loadMorePosts,
+  loadMore: HomePage.propTypes.loadMore,
   posts: HomePage.propTypes.posts,
 }
 

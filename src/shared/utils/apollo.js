@@ -29,7 +29,7 @@ export function fetchEntities(query, variables) {
         loading,
         hasNextPage: pageInfo.hasNextPage,
         posts: edges.map(edge => edge.node),
-        loadMorePosts: () => fetchMore({
+        loadMore: () => fetchMore({
           variables: {
             after: pageInfo.endCursor,
           },
