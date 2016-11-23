@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { withRouter } from 'react-router'
-import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+import { withSubmitPost } from 'shared/modules/post/postActions'
 import WritePage from './Writepage'
 
 class WritePageContainer extends Component {
@@ -57,22 +56,4 @@ WritePageContainer.propTypes = {
   submit: PropTypes.func.isRequired,
 }
 
-const SUBMIT_POST_MUTATION = gql`
-  mutation addPost($title: String!, $body: String!) {
-    addPost(title: $title, body: $body, categories: []) {
-      _id,
-      title,
-      body
-    }
-  }
-`
-
-const withSubmitPost = graphql(SUBMIT_POST_MUTATION, {
-  props: ({ mutate }) => ({
-    submit: (title, body) => mutate({
-      variables: { title, body },
-    }),
-  }),
-})
-
-export default withSubmitPost(withRouter(WritePageContainer))
+export default withRouter(withSubmitPost(WritePageContainer))

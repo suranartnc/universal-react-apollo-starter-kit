@@ -50,3 +50,13 @@ export const DELETE_POST_MUTATION = gql`
     }
   }
 `
+
+export const SUBMIT_POST_MUTATION = gql`
+  mutation addPost($title: String!, $body: String!) {
+    addPost(title: $title, body: $body, categories: []) {
+      _id,
+      title,
+      body
+    }
+  }
+`

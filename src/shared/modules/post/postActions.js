@@ -1,3 +1,5 @@
+import { graphql } from 'react-apollo'
+
 import { fetchEntities, fetchEntity, updateEntity, deleteEntityById } from 'shared/utils/apollo'
 
 import {
@@ -5,6 +7,7 @@ import {
   GET_POST,
   LIKE_POST_MUTATION,
   DELETE_POST_MUTATION,
+  SUBMIT_POST_MUTATION,
 } from 'shared/modules/post/postQueries'
 
 export const withPosts = fetchEntities(
@@ -36,3 +39,11 @@ export const withDeletePostFunction = deleteEntityById(
   'posts',
   DELETE_POST_MUTATION,
 )
+
+export const withSubmitPost = graphql(SUBMIT_POST_MUTATION, {
+  props: ({ mutate }) => ({
+    submit: (title, body) => mutate({
+      variables: { title, body },
+    }),
+  }),
+})
