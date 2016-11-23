@@ -40,8 +40,11 @@ app.use(routeHandlers)
 
 app.use('/graphql', graphqlExpress((req, res) => {
   let user = {
+    _id: '',
+    email: '',
     profile: {
       type: 'guest',
+      picture: '',
     },
   }
   reactCookie.plugToRequest(req, res)

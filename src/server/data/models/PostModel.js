@@ -79,13 +79,15 @@ PostSchema.virtual('statusName').get(function getStatusName() {
   return _.findKey(postStatus, status => status === this.status)
 })
 
-PostSchema.statics.softDelete = function softDelete(_id) {
+PostSchema.statics.softDelete = function softDelete(_id, userId) {
   return this.findOne({ _id })
     .then((post) => {
       if (!post) {
         throw new Error(`Post ${_id} does not exists`)
       }
-
+      if (post.userId.toString() !== userId) {
+        throw new Error('Permission denied')
+      }
       post.deletedAt = Date.now() // eslint-disable-line no-param-reassign
       return post.save()
     })

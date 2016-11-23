@@ -24,6 +24,7 @@ class HomepageContainer extends Component {
     }
 
     this.props.delete(post)
+      .catch(err => alert(err.message))
   }
 
   render() {
