@@ -12,9 +12,8 @@ const renderErrors = (errors) => {
 
 const renderButtons = (isSumitting) => {
   if (isSumitting) {
-    return <p>Posting</p>
+    return <p>Posting...</p>
   }
-
   return (
     <div>
       <button type="submit">Submit</button>
@@ -24,19 +23,16 @@ const renderButtons = (isSumitting) => {
 }
 
 const WritePage = ({ onSubmit, submitting, errors }) => (
-  <form onSubmit={onSubmit}>
+  <form method="post" onSubmit={onSubmit}>
     {errors && renderErrors(errors)}
-
     <div>
       <label htmlFor="title">Title</label>
       <input type="text" id="title" name="title" />
     </div>
-
     <div>
       <label htmlFor="body">Body</label>
       <textarea name="body" id="body" cols="50" rows="5" />
     </div>
-
     {renderButtons(submitting)}
   </form>
 )

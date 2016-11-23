@@ -11,6 +11,9 @@ class WritePageContainer extends Component {
 
   onSubmit = (e) => {
     e.preventDefault()
+
+    const { submit, router } = this.props
+
     this.setState({
       submitting: true,
       errors: null,
@@ -18,16 +21,17 @@ class WritePageContainer extends Component {
 
     const { title, body } = e.target
 
-    this.props.submit({
+    submit({
       title: title.value,
       body: body.value,
-    }).then((res) => {
+    })
+    .then((res) => {
       if (res.errors) {
         return this.onSubmitError(res.errors)
       }
-
-      return this.props.router.push('/')
-    }).catch(err => this.onSubmitError([err]))
+      return router.push('/')
+    })
+    .catch(err => this.onSubmitError([err]))
   }
 
   onSubmitError = (errors) => {
