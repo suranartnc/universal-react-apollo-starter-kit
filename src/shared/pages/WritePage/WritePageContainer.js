@@ -18,10 +18,10 @@ class WritePageContainer extends Component {
 
     const { title, body } = e.target
 
-    this.props.submit(
-      title.value,
-      body.value
-    ).then((res) => {
+    this.props.submit({
+      title: title.value,
+      body: body.value,
+    }).then((res) => {
       if (res.errors) {
         return this.onSubmitError(res.errors)
       }
