@@ -29,6 +29,7 @@ export const withLikePostFunction = updateEntity(
     likePost: {
       ...post,
       likes: post.likes + 1,
+      haveLiked: true,
     },
   })
 )

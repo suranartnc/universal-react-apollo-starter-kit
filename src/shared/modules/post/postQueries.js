@@ -11,6 +11,7 @@ export const GET_POSTS = gql`
             excerpt
             thumbnail
             likes
+            haveLiked
           }
         }
         pageInfo {
@@ -39,6 +40,7 @@ export const LIKE_POST_MUTATION = gql`
     likePost(_id: $id) {
       _id
       likes
+      haveLiked
     }
   }
 `
