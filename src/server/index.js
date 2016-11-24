@@ -7,16 +7,12 @@ import bodyParser from 'body-parser'
 import favicon from 'serve-favicon'
 import reactCookie from 'react-cookie'
 import jwt from 'jsonwebtoken'
-import webpack from 'webpack'
-import webpackDevMiddleware from 'webpack-dev-middleware'
-import webpackHotMiddleware from 'webpack-hot-middleware'
 
 import config from 'shared/configs'
 import schema from 'server/data/schema.js'
 import passport from 'passport'
 import routeHandlers from './routes'
 import ssr from './ssr'
-import webpackConfig from '../../webpack.config.dev.babel.js'
 
 const mongodbUri = 'mongodb://localhost:27017/urrsk'
 mongoose.connect(mongodbUri)
@@ -64,22 +60,6 @@ app.use('/graphql', graphqlExpress((req, res) => {
 app.use('/graphiql', graphiqlExpress({
   endpointURL: '/graphql',
 }))
-
-if (!config.isProduction) {
-  const compiler = webpack(webpackConfig)
-
-  // Webpack DashboardPlugin
-  // const Dashboard = require('webpack-dashboard')
-  // const DashboardPlugin = require('webpack-dashboard/plugin')
-  // const dashboard = new Dashboard()
-  // compiler.apply(new DashboardPlugin(dashboard.setData))
-
-  app.use(webpackDevMiddleware(compiler, {
-    noInfo: true,
-    publicPath: webpackConfig.output.publicPath,
-  }))
-  app.use(webpackHotMiddleware(compiler))
-}
 
 app.use(ssr)
 
