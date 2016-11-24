@@ -6,11 +6,13 @@ import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import favicon from 'serve-favicon'
+import passport from 'passport'
 import reactCookie from 'react-cookie'
 import jwt from 'jsonwebtoken'
 
 import config from 'shared/configs'
 import schema from 'server/data/schema.js'
+import routeHandlers from './routes'
 
 const mongodbUri = 'mongodb://localhost:27017/urrsk'
 mongoose.connect(mongodbUri)
@@ -29,6 +31,8 @@ app.use(express.static(path.join(process.cwd(), 'static')))
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(passport.initialize())
+app.use(routeHandlers)
 
 app.use('/graphiql', graphiqlExpress({
   endpointURL: '/',
