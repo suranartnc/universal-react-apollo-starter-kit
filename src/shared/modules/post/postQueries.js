@@ -11,6 +11,7 @@ export const GET_POSTS = gql`
             excerpt
             thumbnail
             likes
+            haveLiked
           }
         }
         pageInfo {
@@ -35,10 +36,11 @@ export const GET_POST = gql`
 `
 
 export const LIKE_POST_MUTATION = gql`
-  mutation likePost($id: String!) {
-    likePost(_id: $id) {
+  mutation likePost($id: String!, $action: LikePostMutationAction!) {
+    likePost(_id: $id, action: $action) {
       _id
       likes
+      haveLiked
     }
   }
 `

@@ -24,11 +24,13 @@ export const withLikePostFunction = updateEntity(
   LIKE_POST_MUTATION,
   post => ({
     id: post._id,
+    action: post.haveLiked ? 'UNLIKE' : 'LIKE',
   }),
   post => ({
     likePost: {
       ...post,
       likes: post.likes + 1,
+      haveLiked: true,
     },
   })
 )

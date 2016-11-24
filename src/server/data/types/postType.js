@@ -71,6 +71,20 @@ const postType = new GraphQLObjectType({
       resolve: post => UserModel.findById(post.userId).catch(error => outputError(error)),
     },
     likes: { type: GraphQLInt },
+    haveLiked: {
+      type: GraphQLBoolean,
+      resolve: (post, args, { user }) => {
+        if (!user) {
+          return false
+        }
+
+        if (!post.likedBy) {
+          return false
+        }
+
+        return post.likedBy.indexOf(user._id) !== -1
+      },
+    },
     status: {
       type: GraphQLString,
       resolve: post => post.statusName,

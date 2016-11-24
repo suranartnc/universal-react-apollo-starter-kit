@@ -2,9 +2,10 @@ import {
   GraphQLList,
   GraphQLString,
   GraphQLNonNull,
+  GraphQLEnumType,
 } from 'graphql'
 
-import PostModel, { postStatus } from '../models/PostModel'
+import PostModel from '../models/PostModel'
 import postType from '../types/postType'
 import { outputError } from '../utils/helpers'
 
@@ -24,16 +25,64 @@ export const addPostMutation = {
   },
 }
 
+const LIKE_POST = 'like'
+const UNLIKE_POST = 'unlike'
+
+const likePostMutationAction = new GraphQLEnumType({
+  name: 'LikePostMutationAction',
+  description: 'Action for like mutation',
+  values: {
+    LIKE: {
+      value: LIKE_POST,
+      description: 'Like a post',
+    },
+    UNLIKE: {
+      value: UNLIKE_POST,
+      description: 'Unlike a post',
+    },
+  },
+})
+
 export const likePostMutation = {
   type: postType,
   description: 'Like a post',
   args: {
     _id: { type: new GraphQLNonNull(GraphQLString) },
+    action: { type: new GraphQLNonNull(likePostMutationAction) },
   },
-  resolve: (source, { _id }, { user }) => {
-    return PostModel.update({ _id }, { $inc: { likes: 1 }, likedBy: [user._id] })
-      .then(() => PostModel.findById(_id))
-      .catch(error => outputError(error))
+  resolve: (source, { _id, action }, { user }) => {
+    if (!user._id) {
+      throw new Error('Authentication is required for this function')
+    }
+
+    const condition = { _id }
+
+    const update = {
+      likes: -1,
+      operation: '$pull',
+    }
+
+    if (action === LIKE_POST) {
+      condition.likedBy = { $ne: user._id }
+
+      update.likes = 1
+      update.operation = '$push'
+    }
+
+    return PostModel.findOneAndUpdate(
+      condition,
+      {
+        $inc: { likes: update.likes },
+        [update.operation]: { likedBy: user._id },
+      },
+      { new: true },
+    ).then((updatedPost) => {
+      if (!updatedPost) {
+        throw new Error(`You cannot ${action} this post`)
+      }
+
+      return updatedPost
+    })
   },
 }
 
