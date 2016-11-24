@@ -31,6 +31,10 @@ export const likePostMutation = {
     _id: { type: new GraphQLNonNull(GraphQLString) },
   },
   resolve: (source, { _id }, { user }) => {
+    if (!user._id) {
+      throw new Error('Authentication is required for this function')
+    }
+
     return PostModel.update({ _id }, { $inc: { likes: 1 }, likedBy: [user._id] })
       .then(() => PostModel.findById(_id))
       .catch(error => outputError(error))

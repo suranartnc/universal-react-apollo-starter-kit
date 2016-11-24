@@ -13,7 +13,11 @@ import HomePage from './HomePage'
 class HomepageContainer extends Component {
   onClickLike = post => (event) => {
     event.preventDefault()
+
     this.props.like(post)
+      .then(undefined, (err) => {
+        alert(err.message)
+      })
   }
 
   onClickDelete = post => (event) => {
