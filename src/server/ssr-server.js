@@ -15,6 +15,10 @@ app.use('/api', proxy({
   target: 'http://localhost:3002',
 }))
 
+app.use('/graphql', proxy({
+  target: 'http://localhost:3002',
+}))
+
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
