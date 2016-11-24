@@ -2,10 +2,6 @@ import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 
 function PostItem({ post, onClickLike, onClickDelete }) {
-  const likeButton = post.haveLiked
-    ? <button type="button" onClick={onClickLike(post)}>Unlike</button>
-    : <button type="button" onClick={onClickLike(post)}>Like</button>
-
   return (
     <article>
       <Link to={`/posts/${post._id}`}>
@@ -25,7 +21,7 @@ function PostItem({ post, onClickLike, onClickDelete }) {
           <p>{post.likes} likes</p>
         </div>
         <div>
-          {likeButton}
+          <button type="button" onClick={onClickLike(post)}>{post.haveLiked ? 'Unlike' : 'Like'}</button>
           <button type="button" onClick={onClickDelete(post)}>Delete</button>
         </div>
       </footer>
