@@ -4,7 +4,7 @@ import {
   GraphQLNonNull,
 } from 'graphql'
 
-import PostModel, { postStatus } from '../models/PostModel'
+import PostModel from '../models/PostModel'
 import postType from '../types/postType'
 import { outputError } from '../utils/helpers'
 
@@ -35,9 +35,23 @@ export const likePostMutation = {
       throw new Error('Authentication is required for this function')
     }
 
-    return PostModel.update({ _id }, { $inc: { likes: 1 }, likedBy: [user._id] })
-      .then(() => PostModel.findById(_id))
-      .catch(error => outputError(error))
+    return PostModel.findOneAndUpdate(
+      {
+        _id,
+        likedBy: { $ne: user._id },
+      },
+      {
+        $inc: { likes: 1 },
+        $push: { likedBy: user._id },
+      },
+      { new: true },
+    ).then((updatedPost) => {
+      if (!updatedPost) {
+        throw new Error('You cannot like this post')
+      }
+
+      return updatedPost
+    })
   },
 }
 
