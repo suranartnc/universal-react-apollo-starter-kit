@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { withRouter } from 'react-router'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 
@@ -14,7 +15,14 @@ class HomepageContainer extends Component {
   onClickLike = post => (event) => {
     event.preventDefault()
 
-    this.props.like(post)
+    const { user, router, like } = this.props
+
+    if (!user.isAuthenticated) {
+      router.push('/login')
+      return
+    }
+
+    like(post)
       .then(undefined, (err) => {
         alert(err.message)
       })
@@ -50,6 +58,12 @@ class HomepageContainer extends Component {
 }
 
 HomepageContainer.propTypes = {
+  user: PropTypes.shape({
+    isAuthenticated: PropTypes.bool.isRequired,
+  }).isRequired,
+  router: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
   loading: PropTypes.bool,
   like: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
@@ -65,6 +79,7 @@ const withAll = compose(
   withPosts,
   withLikePostFunction,
   withDeletePostFunction,
+  withRouter,
   connect(mapStateToProps),
 )
 
