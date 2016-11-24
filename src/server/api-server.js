@@ -1,6 +1,7 @@
 import path from 'path'
 import mongoose from 'mongoose'
 import express from 'express'
+import cors from 'cors'
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
@@ -10,9 +11,6 @@ import jwt from 'jsonwebtoken'
 
 import config from 'shared/configs'
 import schema from 'server/data/schema.js'
-import passport from 'passport'
-import routeHandlers from './routes'
-import ssr from './ssr'
 
 const mongodbUri = 'mongodb://localhost:27017/urrsk'
 mongoose.connect(mongodbUri)
@@ -31,10 +29,12 @@ app.use(express.static(path.join(process.cwd(), 'static')))
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(passport.initialize())
-app.use(routeHandlers)
 
-app.use('/graphql', graphqlExpress((req, res) => {
+app.use('/graphiql', graphiqlExpress({
+  endpointURL: '/',
+}))
+
+app.use('/graphql', cors(), graphqlExpress((req, res) => {
   let user = {
     _id: '',
     email: '',
@@ -54,19 +54,17 @@ app.use('/graphql', graphqlExpress((req, res) => {
     context: {
       user,
     },
+    // formatError() {
+
+    // },
+    // debug: true,
   }
 }))
 
-app.use('/graphiql', graphiqlExpress({
-  endpointURL: '/graphql',
-}))
-
-app.use(ssr)
-
-app.listen(config.port, (err) => {
+app.listen(config.apiPort, (err) => {
   if (err) {
     console.log(err)
     return
   }
-  console.log(`Web server listening on ${config.host}:${config.port}`)
+  console.log(`GraphQL server listening on ${config.apiHost}:${config.apiPort}`)
 })
