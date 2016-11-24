@@ -3,7 +3,7 @@ module.exports = {
     isProduction: false,
     host: 'localhost',
     port: 3000,
-    wdsPort: 3000,
+    wdsPort: 3001,
     apiHost: 'localhost',
     apiPort: 3002,
   },
