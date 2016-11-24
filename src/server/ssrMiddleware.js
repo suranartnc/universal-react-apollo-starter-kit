@@ -55,7 +55,8 @@ export default function (req, res) {
   const client = createApolloClient({
     ssrMode: true,
     networkInterface: createNetworkInterface({
-      uri: `http://${config.host}:${config.apiPort}/graphql`,
+      // uri: `http://${config.apiHost}:${config.apiPort}/graphql`,
+      uri: `http://${config.host}:${config.port}/graphql`,
       opts: {
         credentials: 'same-origin',
         headers: req.headers,

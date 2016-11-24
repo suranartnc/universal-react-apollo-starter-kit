@@ -29,6 +29,10 @@ app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
+app.use('/graphiql', graphiqlExpress({
+  endpointURL: '/',
+}))
+
 app.use('/graphql', graphqlExpress((req, res) => {
   let user = {
     _id: '',
@@ -52,14 +56,10 @@ app.use('/graphql', graphqlExpress((req, res) => {
   }
 }))
 
-app.use('/graphiql', graphiqlExpress({
-  endpointURL: '/graphql',
-}))
-
 app.listen(config.apiPort, (err) => {
   if (err) {
     console.log(err)
     return
   }
-  console.log(`GraphQL server listening on ${config.host}:${config.apiPort}`)
+  console.log(`GraphQL server listening on ${config.apiHost}:${config.apiPort}`)
 })
