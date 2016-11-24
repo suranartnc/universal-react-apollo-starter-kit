@@ -1,10 +1,10 @@
-import config from 'shared/configs'
 import path from 'path'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import favicon from 'serve-favicon'
 import passport from 'passport'
+import config from '../shared/configs'
 import routeHandlers from './routes'
 import ssrMiddleware from './ssrMiddleware'
 

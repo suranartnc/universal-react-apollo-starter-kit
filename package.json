@@ -24,11 +24,10 @@
       }
     },
     "dev-hmr": {
-      "command": "node .",
+      "command": "node ./dev-server",
       "env": {
         "NODE_ENV": "development",
-        "NODE_PATH": "./src",
-        "HMR": "yes"
+        "NODE_PATH": "./src"
       }
     },
     "build": {
@@ -47,11 +46,10 @@
       }
     },
     "start-api": {
-      "command": "node .",
+      "command": "node ./api-server",
       "env": {
         "NODE_ENV": "development",
-        "NODE_PATH": "./src",
-        "API": "yes"
+        "NODE_PATH": "./src"
       }
     }
   },

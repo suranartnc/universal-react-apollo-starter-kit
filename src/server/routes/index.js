@@ -1,6 +1,6 @@
 import express from 'express'
 import passport from 'passport'
-import userController from 'server/controllers/user'
+import userController from '../controllers/user'
 import passportConfig from 'server/config/passport'
 
 const requiredSignin = passport.authenticate('local', { session: false })
