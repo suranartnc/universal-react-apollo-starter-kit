@@ -6,10 +6,11 @@ import getRoutes from 'shared/routes'
 import createApolloClient from 'shared/createApolloClient'
 import createStore from 'shared/store/createStore'
 import { syncHistoryWithStore } from 'react-router-redux'
+import config from 'shared/configs'
 
 const client = createApolloClient({
   networkInterface: createNetworkInterface({
-    uri: 'http://localhost:3000/graphql',
+    uri: `http://${config.host}:${config.apiPort}/graphql`,
     opts: {
       credentials: 'same-origin',
     },

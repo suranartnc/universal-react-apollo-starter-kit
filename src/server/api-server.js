@@ -10,9 +10,6 @@ import jwt from 'jsonwebtoken'
 
 import config from 'shared/configs'
 import schema from 'server/data/schema.js'
-import passport from 'passport'
-import routeHandlers from './routes'
-import ssr from './ssr'
 
 const mongodbUri = 'mongodb://localhost:27017/urrsk'
 mongoose.connect(mongodbUri)
@@ -31,8 +28,6 @@ app.use(express.static(path.join(process.cwd(), 'static')))
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(passport.initialize())
-app.use(routeHandlers)
 
 app.use('/graphql', graphqlExpress((req, res) => {
   let user = {
@@ -61,12 +56,10 @@ app.use('/graphiql', graphiqlExpress({
   endpointURL: '/graphql',
 }))
 
-app.use(ssr)
-
-app.listen(config.port, (err) => {
+app.listen(config.apiPort, (err) => {
   if (err) {
     console.log(err)
     return
   }
-  console.log(`Web server listening on ${config.host}:${config.port}`)
+  console.log(`GraphQL server listening on ${config.host}:${config.apiPort}`)
 })
