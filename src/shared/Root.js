@@ -10,7 +10,7 @@ import config from 'shared/configs'
 
 const client = createApolloClient({
   networkInterface: createNetworkInterface({
-    uri: `http://${config.host}:${config.port}/graphql`,
+    uri: `http://${config.apiHost}:${config.apiPort}/graphql`,
     opts: {
       credentials: 'same-origin',
     },
