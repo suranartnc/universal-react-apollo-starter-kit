@@ -7,7 +7,6 @@ import {
   GraphQLBoolean,
 } from 'graphql'
 
-import UserModel from '../models/UserModel'
 import CommentModel from '../models/CommentModel'
 import CategoryModel from '../models/CategoryModel'
 import categoryType from './categoryType'
@@ -68,7 +67,10 @@ const postType = new GraphQLObjectType({
     },
     author: {
       type: authorType,
-      resolve: post => UserModel.findById(post.userId).catch(error => outputError(error)),
+      resolve: (post, args, { UserModel }) => (
+        UserModel.findById(post.userId)
+          .catch(error => outputError(error)
+      )),
     },
     likes: { type: GraphQLInt },
     haveLiked: {
