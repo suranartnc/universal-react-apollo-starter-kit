@@ -5,8 +5,6 @@ import {
 
 import { connectionArgs } from 'graphql-relay'
 
-import UserModel from '../models/UserModel'
-
 import postType from './postType'
 import authorType from './authorType'
 
@@ -64,14 +62,14 @@ const userType = new GraphQLObjectType({
     authors: {
       type: new GraphQLList(authorType),
       description: 'Available authors in the blog',
-      resolve: () => UserModel.find().catch(error => outputError(error)),
+      resolve: (viewer, args, { UserModel }) => UserModel.find().catch(error => outputError(error)),
     },
 
     author: {
       type: authorType,
       description: 'Author by _id',
       args: singleArgs,
-      resolve: (user, { _id }) => UserModel.findById(_id).catch(error => outputError(error)),
+      resolve: (user, { _id }, { UserModel }) => UserModel.findById(_id).catch(error => outputError(error)),
     },
 
   }),
