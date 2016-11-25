@@ -49,6 +49,7 @@ app.use('/graphql', graphqlExpress((req, res) => {
       user,
       PostModel: mongoose.model('Post'),
       UserModel: mongoose.model('User'),
+      CommentModel: mongoose.model('Comment'),
     },
     // formatError() {
 
