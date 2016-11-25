@@ -34,7 +34,7 @@ const userType = new GraphQLObjectType({
       type: new GraphQLList(postType),
       description: 'List of posts written by viewer',
       args: listArgs,
-      resolve: (user, { limit }, { PostModel }) => {
+      resolve: (viewer, { limit }, { PostModel }) => {
         if (limit >= 0) {
           return PostModel.find({
             userId: user._id,
@@ -53,7 +53,7 @@ const userType = new GraphQLObjectType({
       type: postType,
       description: 'Post by _id',
       args: singleArgs,
-      resolve: (user, { _id }, { PostModel }) => (
+      resolve: (viewer, { _id }, { PostModel }) => (
         PostModel.findById(_id)
           .catch(error => outputError(error))
       ),
@@ -69,7 +69,7 @@ const userType = new GraphQLObjectType({
       type: authorType,
       description: 'Author by _id',
       args: singleArgs,
-      resolve: (user, { _id }, { UserModel }) => UserModel.findById(_id).catch(error => outputError(error)),
+      resolve: (viewer, { _id }, { UserModel }) => UserModel.findById(_id).catch(error => outputError(error)),
     },
 
   }),
