@@ -6,9 +6,6 @@ import {
   GraphQLString,
 } from 'graphql'
 
-import UserModel from '../models/UserModel'
-import CommentModel from '../models/CommentModel'
-
 import authorType from './authorType'
 
 import {
@@ -24,7 +21,10 @@ const commentType = new GraphQLObjectType({
     date: { type: GraphQLFloat },
     author: {
       type: authorType,
-      resolve: comment => UserModel.findById(comment.userId).catch(error => outputError(error)),
+      resolve: (comment, args, { UserModel }) => (
+        UserModel.findById(comment.userId)
+          .catch(error => outputError(error)
+      )),
     },
     replies: {
       type: new GraphQLList(commentType),
@@ -35,18 +35,17 @@ const commentType = new GraphQLObjectType({
           description: 'Limit the replies returing',
         },
       },
-      resolve: (comment, { limit }) => {
-        if (limit >= 0) {
-          return CommentModel.find({
-            repliedTo: comment._id,
-          })
-          .limit(limit).sort('-date')
-          .catch(error => outputError(error))
-        }
-        return CommentModel.find({
+      resolve: (comment, { limit }, { CommentModel }) => {
+        const query = CommentModel.find({
           repliedTo: comment._id,
         })
-        .catch(error => outputError(error))
+        .sort('-date')
+
+        if (limit >= 0) {
+          query.limit(limit)
+        }
+
+        return query.catch(error => outputError(error))
       },
     },
   }),

@@ -1,14 +1,9 @@
 import {
   GraphQLObjectType,
-  GraphQLString,
   GraphQLList,
-  GraphQLInt,
 } from 'graphql'
 
 import { connectionArgs } from 'graphql-relay'
-
-import PostModel from '../models/PostModel'
-import UserModel from '../models/UserModel'
 
 import postType from './postType'
 import authorType from './authorType'
@@ -32,25 +27,29 @@ const userType = new GraphQLObjectType({
       type: postConnection.connectionType,
       description: 'List of posts',
       args: connectionArgs,
-      resolve: (viewer, args) => connectionFromMongooseModel(PostModel, args),
+      resolve: (viewer, args, { PostModel }) => connectionFromMongooseModel(PostModel, args),
     },
 
     myPosts: {
       type: new GraphQLList(postType),
       description: 'List of posts written by viewer',
       args: listArgs,
-      resolve: (user, { limit }) => {
-        if (limit >= 0) {
-          return PostModel.find({
-            userId: user._id,
-          })
-          .limit(limit).sort('-date')
-          .catch(error => outputError(error))
+      resolve: (viewer, { limit }, { PostModel }) => {
+        if (!viewer._id) {
+          throw new Error('Required authentication')
         }
-        return PostModel.find({
-          userId: user._id,
+
+        const query = PostModel.find({
+          userId: viewer._id,
         })
+        .sort('-date')
         .catch(error => outputError(error))
+
+        if (limit >= 0) {
+          query.limit(limit)
+        }
+
+        return query
       },
     },
 
@@ -58,20 +57,26 @@ const userType = new GraphQLObjectType({
       type: postType,
       description: 'Post by _id',
       args: singleArgs,
-      resolve: (user, { _id }) => PostModel.findById(_id).catch(error => outputError(error)),
+      resolve: (viewer, { _id }, { PostModel }) => (
+        PostModel.findById(_id)
+          .catch(error => outputError(error))
+      ),
     },
 
     authors: {
       type: new GraphQLList(authorType),
       description: 'Available authors in the blog',
-      resolve: () => UserModel.find().catch(error => outputError(error)),
+      resolve: (viewer, args, { UserModel }) => UserModel.find().catch(error => outputError(error)),
     },
 
     author: {
       type: authorType,
       description: 'Author by _id',
       args: singleArgs,
-      resolve: (user, { _id }) => UserModel.findById(_id).catch(error => outputError(error)),
+      resolve: (viewer, { _id }, { UserModel }) => (
+        UserModel.findById(_id)
+          .catch(error => outputError(error)
+      )),
     },
 
   }),

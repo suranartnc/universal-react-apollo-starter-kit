@@ -6,6 +6,7 @@ module.exports = {
     wdsPort: 3001,
     apiHost: 'localhost',
     apiPort: 3002,
+    mongoConnectionString: 'mongodb://localhost:27017/urrsk',
   },
   production: {
     isProduction: true,
@@ -13,5 +14,6 @@ module.exports = {
     port: process.env.PORT || 3000,
     apiHost: process.env.APIHOST || 'localhost',
     apiPort: process.env.APIPORT || 3002,
+    mongoConnectionString: 'mongodb://localhost:27017/urrsk',
   },
 }[process.env.NODE_ENV || 'development']
