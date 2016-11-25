@@ -35,17 +35,21 @@ const userType = new GraphQLObjectType({
       description: 'List of posts written by viewer',
       args: listArgs,
       resolve: (viewer, { limit }, { PostModel }) => {
-        if (limit >= 0) {
-          return PostModel.find({
-            userId: user._id,
-          })
-          .limit(limit).sort('-date')
-          .catch(error => outputError(error))
+        if (!viewer._id) {
+          throw new Error('Required authentication')
         }
-        return PostModel.find({
-          userId: user._id,
+
+        const query = PostModel.find({
+          userId: viewer._id,
         })
+        .sort('-date')
         .catch(error => outputError(error))
+
+        if (limit >= 0) {
+          query.limit(limit)
+        }
+
+        return query
       },
     },
 
