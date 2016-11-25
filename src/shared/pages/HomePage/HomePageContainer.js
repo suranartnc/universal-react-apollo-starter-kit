@@ -40,7 +40,7 @@ class HomepageContainer extends Component {
   }
 
   render() {
-    const { loading, loadMore, posts } = this.props
+    const { loading, refetch, loadMore, posts } = this.props
 
     if (loading) {
       return <div>Loading...</div>
@@ -49,6 +49,7 @@ class HomepageContainer extends Component {
     return (
       <HomePage
         loadMore={loadMore}
+        refetch={refetch}
         onClickLike={this.onClickLike}
         onClickDelete={this.onClickDelete}
         posts={posts}
@@ -68,6 +69,7 @@ HomepageContainer.propTypes = {
   like: PropTypes.func.isRequired,
   delete: PropTypes.func.isRequired,
   loadMore: HomePage.propTypes.loadMore,
+  refetch: HomePage.propTypes.refetch,
   posts: HomePage.propTypes.posts,
 }
 
