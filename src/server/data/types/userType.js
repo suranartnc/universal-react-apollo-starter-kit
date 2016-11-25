@@ -73,7 +73,10 @@ const userType = new GraphQLObjectType({
       type: authorType,
       description: 'Author by _id',
       args: singleArgs,
-      resolve: (viewer, { _id }, { UserModel }) => UserModel.findById(_id).catch(error => outputError(error)),
+      resolve: (viewer, { _id }, { UserModel }) => (
+        UserModel.findById(_id)
+          .catch(error => outputError(error)
+      )),
     },
 
   }),
