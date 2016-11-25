@@ -35,6 +35,7 @@ export function fetchEntities(entityName, query, variables) {
       const {
         data: {
           loading,
+          refetch,
           fetchMore,
           viewer: {
             [entityName]: {
@@ -47,6 +48,7 @@ export function fetchEntities(entityName, query, variables) {
 
       return {
         loading,
+        refetch,
         hasNextPage: pageInfo.hasNextPage,
         [entityName]: edges.map(edge => edge.node),
         loadMore: () => fetchMore({
