@@ -34,7 +34,7 @@ app.use(passport.initialize())
 app.use(routeHandlers)
 
 app.use('/graphiql', graphiqlExpress({
-  endpointURL: '/',
+  endpointURL: '/graphql',
 }))
 
 app.use('/graphql', graphqlExpress((req, res) => {
@@ -56,6 +56,7 @@ app.use('/graphql', graphqlExpress((req, res) => {
     schema,
     context: {
       user,
+      PostModel: mongoose.model('Post'),
     },
     // formatError() {
 

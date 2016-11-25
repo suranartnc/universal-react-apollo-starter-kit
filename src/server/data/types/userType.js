@@ -1,13 +1,10 @@
 import {
   GraphQLObjectType,
-  GraphQLString,
   GraphQLList,
-  GraphQLInt,
 } from 'graphql'
 
 import { connectionArgs } from 'graphql-relay'
 
-import PostModel from '../models/PostModel'
 import UserModel from '../models/UserModel'
 
 import postType from './postType'
@@ -32,14 +29,14 @@ const userType = new GraphQLObjectType({
       type: postConnection.connectionType,
       description: 'List of posts',
       args: connectionArgs,
-      resolve: (viewer, args) => connectionFromMongooseModel(PostModel, args),
+      resolve: (viewer, args, { PostModel }) => connectionFromMongooseModel(PostModel, args),
     },
 
     myPosts: {
       type: new GraphQLList(postType),
       description: 'List of posts written by viewer',
       args: listArgs,
-      resolve: (user, { limit }) => {
+      resolve: (user, { limit }, { PostModel }) => {
         if (limit >= 0) {
           return PostModel.find({
             userId: user._id,
@@ -58,7 +55,10 @@ const userType = new GraphQLObjectType({
       type: postType,
       description: 'Post by _id',
       args: singleArgs,
-      resolve: (user, { _id }) => PostModel.findById(_id).catch(error => outputError(error)),
+      resolve: (user, { _id }, { PostModel }) => (
+        PostModel.findById(_id)
+          .catch(error => outputError(error))
+      ),
     },
 
     authors: {
