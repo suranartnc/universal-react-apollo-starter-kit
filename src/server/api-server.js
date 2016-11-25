@@ -1,5 +1,4 @@
 import path from 'path'
-import mongoose from 'mongoose'
 import express from 'express'
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
 import cookieParser from 'cookie-parser'
@@ -12,17 +11,9 @@ import jwt from 'jsonwebtoken'
 import config from 'shared/configs'
 import schema from 'server/data/schema.js'
 import routeHandlers from './routes'
+import mongooseConnector from './data/mongoose/connector'
 
-const mongodbUri = 'mongodb://localhost:27017/urrsk'
-mongoose.connect(mongodbUri)
-mongoose.connection.on('connected', () => {
-  console.log('%s MongoDB connection established!', "Yes, ")
-})
-mongoose.connection.on('error', () => {
-  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', "No!!")
-  process.exit()
-})
-mongoose.Promise = global.Promise
+const mongoose = mongooseConnector(config.mongoConnectionString)
 
 const app = express()
 app.use(favicon(path.join(process.cwd(), 'static/favicon.ico')))
