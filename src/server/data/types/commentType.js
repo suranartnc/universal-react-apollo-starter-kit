@@ -6,7 +6,6 @@ import {
   GraphQLString,
 } from 'graphql'
 
-import UserModel from '../models/UserModel'
 import CommentModel from '../models/CommentModel'
 
 import authorType from './authorType'
@@ -24,7 +23,10 @@ const commentType = new GraphQLObjectType({
     date: { type: GraphQLFloat },
     author: {
       type: authorType,
-      resolve: comment => UserModel.findById(comment.userId).catch(error => outputError(error)),
+      resolve: (comment, args, { UserModel }) => (
+        UserModel.findById(comment.userId)
+          .catch(error => outputError(error)
+      )),
     },
     replies: {
       type: new GraphQLList(commentType),
