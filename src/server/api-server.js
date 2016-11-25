@@ -1,7 +1,6 @@
 import path from 'path'
 import mongoose from 'mongoose'
 import express from 'express'
-import cors from 'cors'
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
@@ -38,7 +37,7 @@ app.use('/graphiql', graphiqlExpress({
   endpointURL: '/',
 }))
 
-app.use('/graphql', cors(), graphqlExpress((req, res) => {
+app.use('/graphql', graphqlExpress((req, res) => {
   let user = {
     _id: '',
     email: '',
