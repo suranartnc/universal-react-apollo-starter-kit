@@ -1,7 +1,6 @@
 import passport from 'passport'
-import User from '../data/models/UserModel'
-
-const LocalStrategy = require('passport-local').Strategy
+import { Strategy as LocalStrategy } from 'passport-local'
+import User from '../data/mongoose/models/user'
 
 /**
  * Sign in using Email and Password.

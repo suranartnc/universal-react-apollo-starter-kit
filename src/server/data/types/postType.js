@@ -7,8 +7,6 @@ import {
   GraphQLBoolean,
 } from 'graphql'
 
-import CommentModel from '../models/CommentModel'
-import CategoryModel from '../models/CategoryModel'
 import categoryType from './categoryType'
 import authorType from './authorType'
 import commentType from './commentType'
@@ -25,12 +23,14 @@ const postType = new GraphQLObjectType({
     title: { type: GraphQLString },
     categories: {
       type: new GraphQLList(categoryType),
-      resolve: post => CategoryModel.find({
-        _id: {
-          $in: post.categories,
-        },
-      })
-      .catch(error => outputError(error)),
+      resolve: (post, args, { CategoryModel }) => (
+        CategoryModel.find({
+          _id: {
+            $in: post.categories,
+          },
+        })
+        .catch(error => outputError(error))
+      ),
     },
     excerpt: { type: GraphQLString },
     body: { type: GraphQLString },
@@ -49,7 +49,7 @@ const postType = new GraphQLObjectType({
       type: new GraphQLList(commentType),
       description: 'A post\'s collection of comments',
       args: listArgs,
-      resolve: (post, { limit }) => {
+      resolve: (post, { limit }, { CommentModel }) => {
         if (limit > 0) {
           CommentModel.find({
             postId: post._id,

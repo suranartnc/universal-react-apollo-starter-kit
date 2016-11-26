@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import User from 'server/data/models/UserModel'
+import User from '../data/mongoose/models/user'
 
 const secretKey = 'u0rewhgpi43h-9thgr4g'
 
@@ -18,7 +18,6 @@ function generateToken(user) {
 }
 
 exports.signup = (req, res, next) => {
-
   const errors = null
   if (errors) {
     return res.redirect('/signup')

@@ -5,7 +5,6 @@ import {
   GraphQLEnumType,
 } from 'graphql'
 
-import PostModel from '../models/PostModel'
 import postType from '../types/postType'
 import { outputError } from '../utils/helpers'
 
@@ -18,7 +17,7 @@ export const addPostMutation = {
     excerpt: { type: GraphQLString },
     categories: { type: new GraphQLList(GraphQLString), description: 'Id of categories' },
   },
-  resolve: (source, args, { user }) => {
+  resolve: (source, args, { user, PostModel }) => {
     const post = Object.assign({}, args)
     post.userId = user._id
     return PostModel.create(post).catch(error => outputError(error))
@@ -50,7 +49,7 @@ export const likePostMutation = {
     _id: { type: new GraphQLNonNull(GraphQLString) },
     action: { type: new GraphQLNonNull(likePostMutationAction) },
   },
-  resolve: (source, { _id, action }, { user }) => {
+  resolve: (source, { _id, action }, { user, PostModel }) => {
     if (!user._id) {
       throw new Error('Authentication is required for this function')
     }
@@ -92,7 +91,7 @@ export const deletePostMutation = {
   args: {
     _id: { type: new GraphQLNonNull(GraphQLString) },
   },
-  resolve: (source, { _id }, { user }) => (
+  resolve: (source, { _id }, { user, PostModel }) => (
     PostModel.softDelete(_id, user._id)
       .catch(err => outputError(err))
   ),
