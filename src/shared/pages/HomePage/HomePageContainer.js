@@ -3,6 +3,9 @@ import { withRouter } from 'react-router'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 
+import update from 'immutability-helper'
+import gql from 'graphql-tag'
+
 import {
   withPosts,
   withLikePostFunction,
@@ -12,6 +15,8 @@ import {
 import HomePage from './HomePage'
 
 class HomepageContainer extends Component {
+  subscription = null
+
   onClickLike = post => (event) => {
     event.preventDefault()
 
@@ -39,9 +44,51 @@ class HomepageContainer extends Component {
       .catch(err => alert(err.message))
   }
 
+  componentDidMount() {
+    const SUBSCRIPTION_QUERY = gql`
+      subscription newPosts {
+        postAdded {
+          _id
+          excerpt
+          haveLiked
+          likes
+          thumbnail
+          title
+        }
+      }
+    `
+    // we don't resubscribe on changed props, because it never happens in our app
+    if (!this.subscription) {
+      this.subscription = this.props.subscribeToMore({
+        document: SUBSCRIPTION_QUERY,
+        // variables: { repoFullName: nextProps.entry.repository.full_name },
+        updateQuery: (previousResult, { subscriptionData }) => {
+
+          console.log('==subscriptionData', subscriptionData)
+
+          const newPost = subscriptionData.data.postAdded
+          const newResult = update(previousResult, {
+            viewer: {
+              posts: {
+                edges: {
+                  $push: [{
+                    node: newPost,
+                  }],
+                },
+              },
+            },
+          })
+          // console.log('previousResult', previousResult)
+          // console.log('new result', newResult)
+          return newResult
+        },
+      })
+    }
+  }
+
   render() {
     const { loading, refetch, loadMore, posts } = this.props
-
+    console.log('received posts', this.props)
     if (loading) {
       return <div>Loading...</div>
     }
@@ -70,6 +117,7 @@ HomepageContainer.propTypes = {
   delete: PropTypes.func.isRequired,
   loadMore: HomePage.propTypes.loadMore,
   refetch: HomePage.propTypes.refetch,
+  subscribeToMore: PropTypes.func.isRequired,
   posts: HomePage.propTypes.posts,
 }
 

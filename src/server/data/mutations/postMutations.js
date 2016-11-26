@@ -24,9 +24,8 @@ export const addPostMutation = {
     return PostModel.create(post).catch(error => outputError(error))
       .then(({ _id }) => PostModel.findById(_id))
       .then((postAdded) => {
-        console.log('boradcast a new post: ', postAdded)
         pubsub.publish('postAdded', postAdded)
-        return post
+        return postAdded
       })
   },
 }

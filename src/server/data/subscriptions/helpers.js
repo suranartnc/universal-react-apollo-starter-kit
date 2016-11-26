@@ -24,13 +24,16 @@ subscriptionManager.subscribe({
     subscription newPosts {
       postAdded {
         _id
+        excerpt
+        haveLiked
+        likes
+        thumbnail
         title
-        body
       }
     }
   `,
   context: {},
-  callback: (err, data) => console.log(data),
+  callback: (err, data) => console.log('subscription data', data),
 })
 
 export { subscriptionManager, pubsub }

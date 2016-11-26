@@ -93,7 +93,7 @@ new SubscriptionServer(
     // the obSubscribe function is called for every new subscription
     // and we use it to set the GraphQL context for this subscription
     onSubscribe: (msg, params) => {
-      console.log('onSubscribe', msg, params)
+      // console.log('onSubscribe', msg, params)
       const user = {
         _id: '',
         email: '',
