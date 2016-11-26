@@ -11,6 +11,8 @@ import {
   deletePostMutation,
 } from './mutations/postMutations'
 
+import { postAddedSubscription } from './subscriptions/postSubscriptions'
+
 const mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
@@ -20,9 +22,17 @@ const mutationType = new GraphQLObjectType({
   },
 })
 
+const subscriptionType = new GraphQLObjectType({
+  name: 'Subscription',
+  fields: {
+    postAdded: postAddedSubscription,
+  },
+})
+
 const Schema = new GraphQLSchema({
   query: queryType,
   mutation: mutationType,
+  subscription: subscriptionType,
 })
 
 export default Schema

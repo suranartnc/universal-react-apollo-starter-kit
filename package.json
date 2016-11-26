@@ -96,6 +96,7 @@
     "graphql": "^0.7.2",
     "graphql-relay": "^0.4.3",
     "graphql-server-express": "^0.4.3",
+    "graphql-subscriptions": "^0.2.1",
     "graphql-tag": "^0.1.15",
     "http-proxy-middleware": "^0.17.2",
     "immutability-helper": "^2.0.0",
