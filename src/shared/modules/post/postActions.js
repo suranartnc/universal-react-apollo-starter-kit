@@ -1,4 +1,4 @@
-import { createEntity, fetchEntities, fetchEntity, updateEntity, deleteEntityById } from 'shared/utils/apollo'
+import { createEntity, fetchEntities, fetchEntity, updateEntity, deleteEntityById } from 'shared/utils/apollo/crud'
 
 import {
   GET_POSTS,

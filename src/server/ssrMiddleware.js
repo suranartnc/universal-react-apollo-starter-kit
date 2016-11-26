@@ -8,7 +8,7 @@ import reactCookie from 'react-cookie'
 import 'isomorphic-fetch'
 import getRoutes from 'shared/routes'
 import config from 'shared/configs'
-import createApolloClient from 'shared/createApolloClient'
+import createApolloClient from 'shared/utils/apollo/createApolloClient'
 import createStore from 'shared/store/createStore'
 import { MEMBER_LOAD_AUTH } from 'shared/actions/userActions'
 
