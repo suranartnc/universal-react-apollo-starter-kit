@@ -50,19 +50,18 @@ const postType = new GraphQLObjectType({
       description: 'A post\'s collection of comments',
       args: listArgs,
       resolve: (post, { limit }, { CommentModel }) => {
-        if (limit > 0) {
-          CommentModel.find({
-            postId: post._id,
-            repliedTo: null,
-          })
-          .limit(limit)
-          .sort('-date')
-          .catch(error => outputError(error))
-        }
-        return CommentModel.find({
+        const query = CommentModel.find({
           postId: post._id,
           repliedTo: null,
-        }).catch(error => outputError(error))
+        })
+        .sort('-date')
+        .catch(error => outputError(error))
+
+        if (limit > 0) {
+          query.limit(limit)
+        }
+
+        return query
       },
     },
     author: {
