@@ -11,7 +11,7 @@ const subscriptionManager = new SubscriptionManager({
     // }),
     postAdded: (options, args) => ({    // subscription name
       postAdded: {                      // channel name
-        filter: post => {
+        filter: post => {               // wheter the receiving data is related to the channel that client subscribed ?
           return true
         },
       },

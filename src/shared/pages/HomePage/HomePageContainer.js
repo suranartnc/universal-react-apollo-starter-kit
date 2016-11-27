@@ -44,7 +44,7 @@ class HomepageContainer extends Component {
       .catch(err => alert(err.message))
   }
 
-  componentDidMount() {
+  subscribe(updateQuery) {
     const SUBSCRIPTION_QUERY = gql`
       subscription newPosts {
         postAdded {
@@ -61,34 +61,36 @@ class HomepageContainer extends Component {
     if (!this.subscription) {
       this.subscription = this.props.subscribeToMore({
         document: SUBSCRIPTION_QUERY,
-        // variables: { repoFullName: nextProps.entry.repository.full_name },
-        updateQuery: (previousResult, { subscriptionData }) => {
-
-          console.log('==subscriptionData', subscriptionData)
-
-          const newPost = subscriptionData.data.postAdded
-          const newResult = update(previousResult, {
-            viewer: {
-              posts: {
-                edges: {
-                  $push: [{
-                    node: newPost,
-                  }],
-                },
-              },
-            },
-          })
-          // console.log('previousResult', previousResult)
-          // console.log('new result', newResult)
-          return newResult
-        },
+        // variables: {},
+        updateQuery,
       })
     }
   }
 
+  componentDidMount() {
+    this.subscribe((previousResult, { subscriptionData }) => {
+      console.log('==subscriptionData', subscriptionData)
+
+      const newPost = subscriptionData.data.postAdded
+      const newResult = update(previousResult, {
+        viewer: {
+          posts: {
+            edges: {
+              $push: [{
+                node: newPost,
+              }],
+            },
+          },
+        },
+      })
+      console.log('new result', newResult)
+      return newResult
+    })
+  }
+
   render() {
     const { loading, refetch, loadMore, posts } = this.props
-    console.log('received posts', this.props)
+    console.log(this.props.posts)
     if (loading) {
       return <div>Loading...</div>
     }

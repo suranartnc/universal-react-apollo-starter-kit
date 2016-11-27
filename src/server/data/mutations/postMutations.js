@@ -5,7 +5,7 @@ import {
   GraphQLEnumType,
 } from 'graphql'
 
-import { pubsub } from '../subscriptions/helpers'
+import { pubsub } from '../subscriptions/setup'
 import postType from '../types/postType'
 import { outputError } from '../utils/helpers'
 

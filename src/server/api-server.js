@@ -10,7 +10,7 @@ import jwt from 'jsonwebtoken'
 
 import { createServer } from 'http'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
-import { subscriptionManager } from 'server/data/subscriptions/helpers'
+import { subscriptionManager } from 'server/data/subscriptions/setup'
 
 import config from 'shared/configs'
 import schema from 'server/data/schema.js'
