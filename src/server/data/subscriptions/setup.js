@@ -6,14 +6,10 @@ const subscriptionManager = new SubscriptionManager({
   schema,
   pubsub,
   setupFunctions: {
-    // commentAdded: (options, args) => ({
-    //   commentAdded: comment => comment.repository_name === args.repoFullName,
-    // }),
-    postAdded: (options, args) => ({    // subscription name
-      postAdded: {                      // channel name
-        filter: post => {               // wheter the receiving data is related to the channel that client subscribed ?
-          return true
-        },
+    postAdded: (options, args) => ({    // subscription query name
+      postAdded: post => {              // channel name (same as subscription query name)
+        // return post.cat_id === args.cat_id
+        return true                     // wheter the receiving data is related to the channel that client subscribed ?
       },
     }),
   },

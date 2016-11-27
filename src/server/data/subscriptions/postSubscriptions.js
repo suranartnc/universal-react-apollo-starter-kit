@@ -4,7 +4,6 @@ export const postAddedSubscription = {
   type: postType,
   description: 'When a new post has been added',
   resolve: (post) => {
-    console.log('new post: ', post)
     return post
   },
 }
