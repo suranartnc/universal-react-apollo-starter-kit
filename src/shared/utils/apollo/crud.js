@@ -120,3 +120,11 @@ export function deleteEntityById(entityName, query) {
     }),
   })
 }
+
+export function addSubscription(subscribeToMore, query, updateQuery) {
+  return subscribeToMore({
+    document: query,
+    // variables: {},
+    updateQuery,
+  })
+}

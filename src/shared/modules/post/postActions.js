@@ -1,4 +1,13 @@
-import { createEntity, fetchEntities, fetchEntity, updateEntity, deleteEntityById } from 'shared/utils/apollo/crud'
+import update from 'immutability-helper'
+
+import {
+  createEntity,
+  fetchEntities,
+  fetchEntity,
+  updateEntity,
+  deleteEntityById,
+  addSubscription,
+} from 'shared/utils/apollo/crud'
 
 import {
   GET_POSTS,
@@ -6,6 +15,7 @@ import {
   LIKE_POST_MUTATION,
   DELETE_POST_MUTATION,
   SUBMIT_POST_MUTATION,
+  NEW_POSTS_SUBSCRIPTION,
 } from 'shared/modules/post/postQueries'
 
 export const withPosts = fetchEntities(
@@ -41,3 +51,23 @@ export const withDeletePostFunction = deleteEntityById(
 )
 
 export const withSubmitPost = createEntity(SUBMIT_POST_MUTATION)
+
+export const addNewPostsSubscription = subscribeToMore => addSubscription(
+  subscribeToMore,
+  NEW_POSTS_SUBSCRIPTION,
+  (previousResult, { subscriptionData }) => {
+    const newPost = subscriptionData.data.postAdded
+    const newResult = update(previousResult, {
+      viewer: {
+        posts: {
+          edges: {
+            $unshift: [{
+              node: newPost,
+            }],
+          },
+        },
+      },
+    })
+    return newResult
+  }
+)

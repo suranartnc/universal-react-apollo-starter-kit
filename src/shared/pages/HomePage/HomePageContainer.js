@@ -3,13 +3,14 @@ import { withRouter } from 'react-router'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 
-import update from 'immutability-helper'
-import gql from 'graphql-tag'
+// import update from 'immutability-helper'
+// import gql from 'graphql-tag'
 
 import {
   withPosts,
   withLikePostFunction,
   withDeletePostFunction,
+  addNewPostsSubscription,
 } from 'shared/modules/post/postActions'
 
 import HomePage from './HomePage'
@@ -44,45 +45,10 @@ class HomepageContainer extends Component {
       .catch(err => alert(err.message))
   }
 
-  subscribe(updateQuery) {
-    const SUBSCRIPTION_QUERY = gql`
-      subscription newPosts {
-        postAdded {
-          _id
-          excerpt
-          haveLiked
-          likes
-          thumbnail
-          title
-        }
-      }
-    `
-    // we don't resubscribe on changed props, because it never happens in our app
-    if (!this.subscription) {
-      this.subscription = this.props.subscribeToMore({
-        document: SUBSCRIPTION_QUERY,
-        // variables: {},
-        updateQuery,
-      })
-    }
-  }
-
   componentDidMount() {
-    this.subscribe((previousResult, { subscriptionData }) => {
-      const newPost = subscriptionData.data.postAdded
-      const newResult = update(previousResult, {
-        viewer: {
-          posts: {
-            edges: {
-              $unshift: [{
-                node: newPost,
-              }],
-            },
-          },
-        },
-      })
-      return newResult
-    })
+    if (!this.subscription) {
+      this.subscription = addNewPostsSubscription(this.props.subscribeToMore)
+    }
   }
 
   render() {
