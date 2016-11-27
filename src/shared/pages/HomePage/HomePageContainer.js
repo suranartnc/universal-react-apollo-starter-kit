@@ -3,15 +3,21 @@ import { withRouter } from 'react-router'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 
+// import update from 'immutability-helper'
+// import gql from 'graphql-tag'
+
 import {
   withPosts,
   withLikePostFunction,
   withDeletePostFunction,
+  addNewPostsSubscription,
 } from 'shared/modules/post/postActions'
 
 import HomePage from './HomePage'
 
 class HomepageContainer extends Component {
+  subscription = null
+
   onClickLike = post => (event) => {
     event.preventDefault()
 
@@ -39,9 +45,14 @@ class HomepageContainer extends Component {
       .catch(err => alert(err.message))
   }
 
+  componentDidMount() {
+    if (!this.subscription) {
+      this.subscription = addNewPostsSubscription(this.props.subscribeToMore)
+    }
+  }
+
   render() {
     const { loading, refetch, loadMore, posts } = this.props
-
     if (loading) {
       return <div>Loading...</div>
     }
@@ -70,6 +81,7 @@ HomepageContainer.propTypes = {
   delete: PropTypes.func.isRequired,
   loadMore: HomePage.propTypes.loadMore,
   refetch: HomePage.propTypes.refetch,
+  subscribeToMore: PropTypes.func.isRequired,
   posts: HomePage.propTypes.posts,
 }
 

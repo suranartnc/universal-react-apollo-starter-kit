@@ -1109,7 +1109,7 @@ babylon@^6.11.0, babylon@^6.11.2:
   version "6.13.1"
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.13.1.tgz#adca350e088f0467647157652bafead6ddb8dfdb"
 
-backo2@1.0.2:
+backo2@1.0.2, backo2@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/backo2/-/backo2-1.0.2.tgz#31ab1ac8b129363463e35b3ebb69f4dfcfba7947"
 
@@ -2146,7 +2146,7 @@ es6-promise@3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-3.2.1.tgz#ec56233868032909207170c39448e24449dd1fc4"
 
-es6-promise@^3.0.2:
+es6-promise@^3.0.2, es6-promise@^3.2.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-3.3.1.tgz#a08cdde84ccdbf34d027a1451bc91d4bcd28a613"
 
@@ -2790,11 +2790,18 @@ graphql-server-module-graphiql@^0.4.3:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/graphql-server-module-graphiql/-/graphql-server-module-graphiql-0.4.3.tgz#f82b92b99bb1e1b4b285c86bf6fcfa60b3a7a805"
 
+graphql-subscriptions@^0.2.0:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.2.1.tgz#9c46fdee043b2a51b7aaa61f8645c25410d806e4"
+  dependencies:
+    es6-promise "^3.2.1"
+    graphql "^0.7.0"
+
 graphql-tag@^0.1.13, graphql-tag@^0.1.15:
   version "0.1.16"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-0.1.16.tgz#dc91350b19093b4771a013b55f32ee2290567c4e"
 
-graphql@^0.7.2:
+graphql@^0.7.0, graphql@^0.7.2:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.7.2.tgz#cc894a32823399b8a0cb012b9e9ecad35cd00f72"
   dependencies:
@@ -3234,7 +3241,7 @@ is-symbol@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/is-symbol/-/is-symbol-1.0.1.tgz#3cc59f00025194b6ab2e38dbae6689256b660572"
 
-is-typedarray@~1.0.0:
+is-typedarray@^1.0.0, is-typedarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/is-typedarray/-/is-typedarray-1.0.0.tgz#e479c80858df0c1b11ddda6940f96011fcda4a9a"
 
@@ -3950,7 +3957,7 @@ mute-stream@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.5.tgz#8fbfabb0a98a253d3184331f9e8deb7372fac6c0"
 
-nan@^2.3.0, nan@^2.3.2:
+nan@^2.3.0, nan@^2.3.2, nan@^2.3.3:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.4.0.tgz#fb3c59d45fe4effe215f0b890f8adf6eb32d2232"
 
@@ -5699,6 +5706,16 @@ style-loader@^0.13.1:
   dependencies:
     loader-utils "^0.2.7"
 
+subscriptions-transport-ws@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/subscriptions-transport-ws/-/subscriptions-transport-ws-0.3.1.tgz#b263d0147d47a1d109487633cf940a7907a9bdc0"
+  dependencies:
+    backo2 "^1.0.2"
+    graphql-subscriptions "^0.2.0"
+    lodash.isobject "^3.0.2"
+    lodash.isstring "^4.0.1"
+    websocket "^1.0.23"
+
 supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
@@ -5845,6 +5862,12 @@ type-is@~1.6.13:
 typed-graphql@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/typed-graphql/-/typed-graphql-1.0.2.tgz#4c0f788775d552df4d4ec3d73f25469252f40fb8"
+
+typedarray-to-buffer@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/typedarray-to-buffer/-/typedarray-to-buffer-3.1.2.tgz#1017b32d984ff556eba100f501589aba1ace2e04"
+  dependencies:
+    is-typedarray "^1.0.0"
 
 typedarray@~0.0.5:
   version "0.0.6"
@@ -6104,6 +6127,15 @@ webpack@^2.1.0-beta.25:
     webpack-sources "^0.1.0"
     yargs "^4.7.1"
 
+websocket@^1.0.23:
+  version "1.0.23"
+  resolved "https://registry.yarnpkg.com/websocket/-/websocket-1.0.23.tgz#20de8ec4a7126b09465578cd5dbb29a9c296aac6"
+  dependencies:
+    debug "^2.2.0"
+    nan "^2.3.3"
+    typedarray-to-buffer "^3.1.2"
+    yaeti "^0.0.4"
+
 whatwg-fetch@>=0.10.0, whatwg-fetch@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-1.0.0.tgz#01c2ac4df40e236aaa18480e3be74bd5c8eb798e"
@@ -6214,6 +6246,10 @@ xtraverse@0.1.x:
 y18n@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-3.2.1.tgz#6d15fba884c08679c0d77e88e7759e811e07fa41"
+
+yaeti@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/yaeti/-/yaeti-0.0.4.tgz#89fe739c45ac4491028973193262a837693a66b6"
 
 yallist@^2.0.0:
   version "2.0.0"

@@ -8,6 +8,10 @@ import passport from 'passport'
 import reactCookie from 'react-cookie'
 import jwt from 'jsonwebtoken'
 
+import { createServer } from 'http'
+import { SubscriptionServer } from 'subscriptions-transport-ws'
+import { subscriptionManager } from 'server/data/subscriptions/setup'
+
 import config from 'shared/configs'
 import schema from 'server/data/schema.js'
 import routeHandlers from './routes'
@@ -24,11 +28,7 @@ app.use(bodyParser.json())
 app.use(passport.initialize())
 app.use(routeHandlers)
 
-app.use('/graphiql', graphiqlExpress({
-  endpointURL: '/graphql',
-}))
-
-app.use('/graphql', graphqlExpress((req, res) => {
+function getUser(req, res) {
   let user = {
     _id: '',
     email: '',
@@ -42,7 +42,15 @@ app.use('/graphql', graphqlExpress((req, res) => {
   if (token) {
     user = jwt.decode(token)
   }
+  return user
+}
 
+app.use('/graphiql', graphiqlExpress({
+  endpointURL: '/graphql',
+}))
+
+app.use('/graphql', graphqlExpress((req, res) => {
+  const user = getUser(req, res)
   return {
     schema,
     context: {
@@ -66,3 +74,44 @@ app.listen(config.apiPort, (err) => {
   }
   console.log(`GraphQL server listening on ${config.apiHost}:${config.apiPort}`)
 })
+
+// WebSocket server for subscriptions
+const websocketServer = createServer((request, response) => {
+  response.writeHead(404)
+  response.end()
+})
+
+websocketServer.listen(config.wsPort, () => console.log( // eslint-disable-line no-console
+  `Websocket Server is now running on http://localhost:${config.wsPort}`
+))
+
+// eslint-disable-next-line
+new SubscriptionServer(
+  {
+    subscriptionManager,
+
+    // the obSubscribe function is called for every new subscription
+    // and we use it to set the GraphQL context for this subscription
+    onSubscribe: (msg, params) => {
+      // console.log('onSubscribe', msg, params)
+      const user = {
+        _id: '',
+        email: '',
+        profile: {
+          type: 'guest',
+          picture: '',
+        },
+      }
+      return Object.assign({}, params, {
+        context: {
+          user,
+          PostModel: mongoose.model('Post'),
+          UserModel: mongoose.model('User'),
+          CommentModel: mongoose.model('Comment'),
+          CategoryModel: mongoose.model('Category'),
+        },
+      })
+    },
+  },
+  websocketServer
+)

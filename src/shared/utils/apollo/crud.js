@@ -37,6 +37,7 @@ export function fetchEntities(entityName, query, variables) {
           loading,
           refetch,
           fetchMore,
+          subscribeToMore,
           viewer: {
             [entityName]: {
               edges = [],
@@ -49,6 +50,7 @@ export function fetchEntities(entityName, query, variables) {
       return {
         loading,
         refetch,
+        subscribeToMore,
         hasNextPage: pageInfo.hasNextPage,
         [entityName]: edges.map(edge => edge.node),
         loadMore: () => fetchMore({
@@ -116,5 +118,13 @@ export function deleteEntityById(entityName, query) {
         },
       }),
     }),
+  })
+}
+
+export function addSubscription(subscribeToMore, query, updateQuery) {
+  return subscribeToMore({
+    document: query,
+    // variables: {},
+    updateQuery,
   })
 }

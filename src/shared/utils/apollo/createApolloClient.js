@@ -5,7 +5,6 @@ export default options => new ApolloClient(Object.assign({}, {
     if (!object._id || !object.__typename) {
       return null
     }
-
     return `${object.__typename}:${object._id}`
   },
 }, options))

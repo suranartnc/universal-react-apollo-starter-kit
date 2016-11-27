@@ -62,3 +62,16 @@ export const SUBMIT_POST_MUTATION = gql`
     }
   }
 `
+
+export const NEW_POSTS_SUBSCRIPTION = gql`
+  subscription newPosts {
+    postAdded {
+      _id
+      excerpt
+      haveLiked
+      likes
+      thumbnail
+      title
+    }
+  }
+`

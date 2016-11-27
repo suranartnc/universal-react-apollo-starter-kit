@@ -5,6 +5,7 @@ import {
   GraphQLEnumType,
 } from 'graphql'
 
+import { pubsub } from '../subscriptions/setup'
 import postType from '../types/postType'
 import { outputError } from '../utils/helpers'
 
@@ -21,6 +22,11 @@ export const addPostMutation = {
     const post = Object.assign({}, args)
     post.userId = user._id
     return PostModel.create(post).catch(error => outputError(error))
+      .then(({ _id }) => PostModel.findById(_id))
+      .then((postAdded) => {
+        pubsub.publish('postAdded', postAdded)
+        return postAdded
+      })
   },
 }
 
