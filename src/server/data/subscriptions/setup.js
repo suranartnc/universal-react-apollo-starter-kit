@@ -19,21 +19,4 @@ const subscriptionManager = new SubscriptionManager({
   },
 })
 
-subscriptionManager.subscribe({
-  query: `
-    subscription newPosts {
-      postAdded {
-        _id
-        excerpt
-        haveLiked
-        likes
-        thumbnail
-        title
-      }
-    }
-  `,
-  context: {},
-  callback: (err, data) => console.log('subscription data', data),
-})
-
 export { subscriptionManager, pubsub }

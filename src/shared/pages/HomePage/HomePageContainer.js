@@ -69,28 +69,24 @@ class HomepageContainer extends Component {
 
   componentDidMount() {
     this.subscribe((previousResult, { subscriptionData }) => {
-      console.log('==subscriptionData', subscriptionData)
-
       const newPost = subscriptionData.data.postAdded
       const newResult = update(previousResult, {
         viewer: {
           posts: {
             edges: {
-              $push: [{
+              $unshift: [{
                 node: newPost,
               }],
             },
           },
         },
       })
-      console.log('new result', newResult)
       return newResult
     })
   }
 
   render() {
     const { loading, refetch, loadMore, posts } = this.props
-    console.log(this.props.posts)
     if (loading) {
       return <div>Loading...</div>
     }
