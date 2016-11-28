@@ -17,7 +17,7 @@ import schema from 'server/data/schema.js'
 import routeHandlers from './routes'
 import mongooseConnector from './data/mongoose/connector'
 
-import { postLoader } from './data/loaders'
+import createLoaders from './data/loaders'
 
 const mongoose = mongooseConnector(config.mongoConnectionString)
 
@@ -54,6 +54,11 @@ app.use('/graphiql', graphiqlExpress({
 app.use('/graphql', graphqlExpress((req, res) => {
   const user = getUser(req, res)
 
+  const loaders = createLoaders({
+    authUser: user,
+    PostModel: mongoose.model('Post'),
+  })
+
   return {
     schema,
     context: {
@@ -62,7 +67,7 @@ app.use('/graphql', graphqlExpress((req, res) => {
       UserModel: mongoose.model('User'),
       CommentModel: mongoose.model('Comment'),
       CategoryModel: mongoose.model('Category'),
-      PostLoader: postLoader(mongoose.model('Post')),
+      ...loaders,
     },
     // formatError() {
 
