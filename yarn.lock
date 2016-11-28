@@ -1817,6 +1817,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+dataloader@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/dataloader/-/dataloader-1.2.0.tgz#3f73ea657c492c860c1633348adc55ca9bf2107e"
+
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
@@ -2790,7 +2794,7 @@ graphql-server-module-graphiql@^0.4.3:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/graphql-server-module-graphiql/-/graphql-server-module-graphiql-0.4.3.tgz#f82b92b99bb1e1b4b285c86bf6fcfa60b3a7a805"
 
-graphql-subscriptions@^0.2.0:
+graphql-subscriptions@^0.2.0, graphql-subscriptions@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.2.1.tgz#9c46fdee043b2a51b7aaa61f8645c25410d806e4"
   dependencies:
