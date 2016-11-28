@@ -25,7 +25,23 @@ const queryType = new GraphQLObjectType({
           '5824438f9d70c627a82daa27', // test load duplicate id
         ]
 
-        return postIds.map(postId => context.PostLoader.load(postId))
+        const posts = postIds.map(postId => context.PostLoader.load(postId))
+
+        const nextTickPostIds = [
+          '5824438f9d70c627a82daa27',
+          '5824438f9d70c627a82daa28',
+          '5824438f9d70c627a82daa2d', // next tick will load this id only
+        ]
+
+        nextTickPostIds.forEach((nextPostId) => {
+          posts.push(new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(context.PostLoader.load(nextPostId))
+            }, 1000)
+          }))
+        })
+
+        return Promise.all(posts)
       },
     },
   }),
