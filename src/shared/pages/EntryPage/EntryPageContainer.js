@@ -7,7 +7,7 @@ class EntryPageContainer extends Component {
   render() {
     if (!this.props.data.loading) {
       return (
-        <EntryPage post={this.props.data.viewer.post} />
+        <EntryPage post={this.props.data.post} />
       )
     }
     return <div>Loading...</div>

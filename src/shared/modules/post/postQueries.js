@@ -2,22 +2,20 @@ import gql from 'graphql-tag'
 
 export const GET_POSTS = gql`
   query getPosts($limit: Int, $after: String) {
-    viewer {
-      posts(first: $limit, after: $after) {
-        edges {
-          node {
-            _id
-            title
-            excerpt
-            thumbnail
-            likes
-            haveLiked
-          }
+    posts(first: $limit, after: $after) {
+      edges {
+        node {
+          _id
+          title
+          excerpt
+          thumbnail
+          likes
+          haveLiked
         }
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
   }
@@ -25,12 +23,10 @@ export const GET_POSTS = gql`
 
 export const GET_POST = gql`
   query getPost($id: String!) {
-    viewer {
-      post(_id: $id) {
-        _id
-        title
-        body
-      }
+    post(_id: $id) {
+      _id
+      title
+      body
     }
   }
 `

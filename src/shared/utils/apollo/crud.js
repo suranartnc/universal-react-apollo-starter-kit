@@ -38,11 +38,9 @@ export function fetchEntities(entityName, query, variables) {
           refetch,
           fetchMore,
           subscribeToMore,
-          viewer: {
-            [entityName]: {
-              edges = [],
-              pageInfo = {},
-            } = {},
+          [entityName]: {
+            edges = [],
+            pageInfo = {},
           } = {},
         },
       } = fetchResult
@@ -62,14 +60,12 @@ export function fetchEntities(entityName, query, variables) {
               return previousResult
             }
             return update(previousResult, {
-              viewer: {
-                [entityName]: {
-                  pageInfo: {
-                    $set: fetchMoreResult.data.viewer[entityName].pageInfo,
-                  },
-                  edges: {
-                    $push: fetchMoreResult.data.viewer[entityName].edges,
-                  },
+              [entityName]: {
+                pageInfo: {
+                  $set: fetchMoreResult.data[entityName].pageInfo,
+                },
+                edges: {
+                  $push: fetchMoreResult.data[entityName].edges,
                 },
               },
             })
@@ -102,15 +98,13 @@ export function deleteEntityById(entityName, query) {
         },
         updateQueries: {
           getPosts: (previousResult) => {
-            const { viewer: { posts: { edges } } } = previousResult
+            const { posts: { edges } } = previousResult
             return update(previousResult, {
-              viewer: {
-                [entityName]: {
-                  edges: {
-                    $set: edges.filter(edge => (
-                      edge.node._id !== item._id
-                    )),
-                  },
+              [entityName]: {
+                edges: {
+                  $set: edges.filter(edge => (
+                    edge.node._id !== item._id
+                  )),
                 },
               },
             })

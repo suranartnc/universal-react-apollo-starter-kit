@@ -58,13 +58,11 @@ export const addNewPostsSubscription = subscribeToMore => addSubscription(
   (previousResult, { subscriptionData }) => {
     const newPost = subscriptionData.data.postAdded
     const newResult = update(previousResult, {
-      viewer: {
-        posts: {
-          edges: {
-            $unshift: [{
-              node: newPost,
-            }],
-          },
+      posts: {
+        edges: {
+          $unshift: [{
+            node: newPost,
+          }],
         },
       },
     })
