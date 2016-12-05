@@ -2790,7 +2790,7 @@ graphql-server-module-graphiql@^0.4.3:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/graphql-server-module-graphiql/-/graphql-server-module-graphiql-0.4.3.tgz#f82b92b99bb1e1b4b285c86bf6fcfa60b3a7a805"
 
-graphql-subscriptions@^0.2.0:
+graphql-subscriptions@^0.2.0, graphql-subscriptions@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.2.1.tgz#9c46fdee043b2a51b7aaa61f8645c25410d806e4"
   dependencies:
@@ -4375,7 +4375,7 @@ passport:
     passport-strategy "1.x.x"
     pause "0.0.1"
 
-passport-facebook:
+passport-facebook@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/passport-facebook/-/passport-facebook-2.1.1.tgz#c39d0b52ae4d59163245a4e21a7b9b6321303311"
   dependencies:
