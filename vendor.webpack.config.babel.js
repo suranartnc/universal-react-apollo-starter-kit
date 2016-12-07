@@ -17,6 +17,7 @@ export default {
       'react-helmet',
       'react-redux',
       'react-router',
+      'react-router-scroll/lib/useScroll',
       'react-router-redux',
       'redux',
     ],
