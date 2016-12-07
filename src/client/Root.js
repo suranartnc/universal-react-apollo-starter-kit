@@ -1,5 +1,6 @@
 import React from 'react'
-import { Router, browserHistory } from 'react-router'
+import { Router, browserHistory, applyRouterMiddleware } from 'react-router'
+import useScroll from 'react-router-scroll/lib/useScroll'
 
 import { createNetworkInterface } from 'apollo-client'
 import { Client } from 'subscriptions-transport-ws'
@@ -41,6 +42,7 @@ const Root = () => (
     <Router
       history={history}
       routes={routes}
+      render={applyRouterMiddleware(useScroll())}
     />
   </ApolloProvider>
 )

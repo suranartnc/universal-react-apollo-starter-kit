@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 
-import Root from 'shared/Root'
+import Root from './Root'
 
 const mountNode = document.getElementById('root')
 
